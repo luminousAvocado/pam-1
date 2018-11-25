@@ -21,6 +21,8 @@ indent_size = 2
 # JSON files
 [*.json]
 indent_size = 2
+[*.md]
+trim_trailing_whitespace = false
 ############################### 
 # .NET Coding Conventions     # 
 ############################### 

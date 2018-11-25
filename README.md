@@ -13,6 +13,7 @@ Code is fine, though Visual Studio 2017 is preferred as it has better support fo
 
 1. Clone the Git repository.
 2. Copy `appsettings.sample.json` to `appsettings.json`, and edit `appsettings.json` to match your environment.
+   Also copy `appsettings.json` to the PAM.Test project if you want to run the unit tests.
 3. Run the following commands inside the project folder to create the database:
 ```
     $ dotnet ef migrations add InitialSchema
