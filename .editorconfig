@@ -6,11 +6,21 @@ root = true
 # All files 
 [*] 
 indent_style = space 
+insert_final_newline = true 
+trim_trailing_whitespace = true
 # Code files 
 [*.{cs,csx,vb,vbx}] 
 indent_size = 4 
-insert_final_newline = true 
 charset = utf-8-bom 
+# Xml project files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size = 2
+# Xml config files
+[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 2
+# JSON files
+[*.json]
+indent_size = 2
 ############################### 
 # .NET Coding Conventions     # 
 ############################### 
