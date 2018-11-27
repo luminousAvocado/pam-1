@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using PAM.Data;
 
 namespace PAM.Test.Data
 {
-    public class DataServiceFixture
+    public class DataServiceFixture : IDisposable
     {
         public DataServiceFixture()
         {
@@ -15,9 +18,22 @@ namespace PAM.Test.Data
             DbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
                 .UseSqlServer(configuration.GetConnectionString("UnitTestConnection"))
                 .Options;
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+
+            LoggerFactory = serviceProvider.GetService<ILoggerFactory>()
+                .AddConsole(LogLevel.Debug);
         }
 
         public DbContextOptions<AppDbContext> DbContextOptions { get; }
 
+        public ILoggerFactory LoggerFactory { get; }
+
+        public void Dispose()
+        {
+            LoggerFactory.Dispose();
+        }
     }
 }

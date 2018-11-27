@@ -1,4 +1,6 @@
-﻿using PAM.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PAM.Data;
 using Xunit;
 
 namespace PAM.Test.Data
@@ -6,19 +8,21 @@ namespace PAM.Test.Data
     [Collection(nameof(DataServiceCollection))]
     public class OrganizationServiceTests
     {
-        DataServiceFixture _dataServiceFixture;
+        readonly DbContextOptions<AppDbContext> _dbContextOptions;
+        readonly ILogger<OrganizationService> _logger;
 
         public OrganizationServiceTests(DataServiceFixture dataServiceFixture)
         {
-            _dataServiceFixture = dataServiceFixture;
+            _dbContextOptions = dataServiceFixture.DbContextOptions;
+            _logger = dataServiceFixture.LoggerFactory.CreateLogger<OrganizationService>();
         }
 
         [Fact]
         public void GetBureausTest()
         {
-            using (var dbContext = new AppDbContext(_dataServiceFixture.DbContextOptions))
+            using (var dbContext = new AppDbContext(_dbContextOptions))
             {
-                var orgnizationService = new OrganizationService(dbContext);
+                var orgnizationService = new OrganizationService(dbContext, _logger);
                 Assert.Equal(14, orgnizationService.GetBureaus().Count);
             }
         }
