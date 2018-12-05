@@ -9,16 +9,11 @@ namespace PAM.Models
         public int SystemId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Name { get; set; }
 
-        [MaxLength(255)]
         public string Description { get; set; }
-
-        [MaxLength(255)]
         public string Owner { get; set; }
-
-        public bool Retired { get; set; }
+        public bool Retired { get; set; } = false;
     }
 
     [Table("UnitSystems")]

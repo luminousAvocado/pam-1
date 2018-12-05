@@ -10,23 +10,18 @@ namespace PAM.Models
         public int LocationId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Address { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string City { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string State { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Zip { get; set; }
     }
 
@@ -36,11 +31,9 @@ namespace PAM.Models
         public int BureauTypeId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Code { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string DisplayCode { get; set; }
     }
 
@@ -50,11 +43,9 @@ namespace PAM.Models
         public int BureauId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Code { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Description { get; set; }
 
         public int? BureauTypeId { get; set; }
@@ -70,14 +61,11 @@ namespace PAM.Models
         public int UnitTypeId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Code { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string DisplayCode { get; set; }
 
-        [MaxLength(255)]
         public string Description { get; set; }
 
         public int? DisplayOrder { get; set; }
@@ -89,12 +77,11 @@ namespace PAM.Models
         public int UnitId { get; set; }
 
         [Required]
-        [MaxLength(255)]
         public string Name { get; set; }
 
         public int BureauId { get; set; }
         public int? UnitTypeId { get; set; }
-        public int? ParentUnitId { get; set; }
+        public int? ParentId { get; set; }
 
         public int? DisplayOrder { get; set; }
 
