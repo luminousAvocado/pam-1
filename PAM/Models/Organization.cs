@@ -9,19 +9,10 @@ namespace PAM.Models
     {
         public int LocationId { get; set; }
 
-        [Required]
         public string Name { get; set; }
-
-        [Required]
         public string Address { get; set; }
-
-        [Required]
         public string City { get; set; }
-
-        [Required]
         public string State { get; set; }
-
-        [Required]
         public string Zip { get; set; }
     }
 
@@ -49,10 +40,9 @@ namespace PAM.Models
         public string Description { get; set; }
 
         public int? BureauTypeId { get; set; }
-        public int? DisplayOrder { get; set; }
-
-        // navigation property
         public BureauType BureauType { get; set; }
+
+        public int? DisplayOrder { get; set; }
     }
 
     [Table("UnitTypes")]
@@ -80,17 +70,19 @@ namespace PAM.Models
         public string Name { get; set; }
 
         public int BureauId { get; set; }
+        public Bureau Bureau { get; set; }
+
         public int? UnitTypeId { get; set; }
+        public UnitType UnitType { get; set; }
+
         public int? ParentId { get; set; }
+        public Unit Parent { get; set; }
+
+        [InverseProperty(nameof(Parent))]
+        public ICollection<Unit> Children { get; set; }
 
         public int? DisplayOrder { get; set; }
 
-        // navigation properties
-        public Bureau Bureau { get; set; }
-        public UnitType UnitType { get; set; }
-        public Unit Parent { get; set; }
-        [InverseProperty("Parent")]
-        public ICollection<Unit> Children { get; set; }
         public ICollection<UnitSystem> Systems { get; set; }
     }
 }

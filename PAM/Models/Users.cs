@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PAM.Models
@@ -23,11 +24,18 @@ namespace PAM.Models
         [Required]
         public string Email { get; set; }
 
+        public string Title { get; set; }
+        public string Department { get; set; }
+        public string Phone { get; set; }
+
         public bool IsAdmin { get; set; } = false;
         public bool IsApprover { get; set; } = false;
         public bool IsProcessor { get; set; } = false;
+
+        public ICollection<SystemAccess> SystemAccesses { get; set; }
     }
 
+    [Table("Requesters")]
     public class Requester
     {
         public int RequesterId { get; set; }
@@ -48,7 +56,10 @@ namespace PAM.Models
         public string Email { get; set; }
 
         public int? BureauId { get; set; }
+        public Bureau Bureau { get; set; }
+
         public int? UnitId { get; set; }
+        public Unit Unit { get; set; }
 
         public string MiddleName { get; set; }
 
@@ -62,9 +73,5 @@ namespace PAM.Models
         public string WorkZip { get; set; }
         public string WorkPhone { get; set; }
         public string CellPhone { get; set; }
-
-        // navigation properties
-        public Bureau Bureau { get; set; }
-        public Unit Unit { get; set; }
     }
 }

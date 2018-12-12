@@ -8,8 +8,11 @@ PAM is developed by Jaime Borunda, Kevork Gilabouchian, James Kang, Brandon Lam,
 
 ## Set Up Development Environment
 
-ASP.NET Core 2.1 and Microsoft SQL Server are required. As for an IDE, either Visual Studio 2017 or Visual Studio
+ASP.NET Core 2.2 and Microsoft SQL Server are required. As for an IDE, either Visual Studio 2017 or Visual Studio
 Code is fine, though Visual Studio 2017 is preferred as it has better support for coding rules in `.editorconfig`.
+
+*If you installed Visual Studio 2017 before ASP.NET 2.2 was released (12/4/2018), you need to download and install
+the [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2).*
 
 1. Clone the Git repository.
 2. Copy `appsettings.sample.json` to `appsettings.json`, and edit `appsettings.json` to match your environment.
