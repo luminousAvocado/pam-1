@@ -53,7 +53,7 @@ namespace PAM.Data
             {
                 EmployeeId = 1,
                 Username = _configuration.GetSection("Presets")["AdminUser"],
-                EmployeeNumber = "1234",
+                EmployeeNumber = "1111",
                 Email = "admin@localhost.localdomain",
                 FirstName = "PAM",
                 LastName = "Admin",

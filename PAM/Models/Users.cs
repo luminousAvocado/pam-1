@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PAM.Models
 {
@@ -33,6 +35,27 @@ namespace PAM.Models
         public bool IsProcessor { get; set; } = false;
 
         public ICollection<SystemAccess> SystemAccesses { get; set; }
+
+        public ClaimsIdentity ToClaimsIdentity()
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("EmployeeId", EmployeeId.ToString()),
+                new Claim("EmployeeNumber", EmployeeNumber),
+                new Claim(ClaimTypes.NameIdentifier, Username),
+                new Claim(ClaimTypes.GivenName, FirstName),
+                new Claim(ClaimTypes.Surname, LastName),
+                new Claim(ClaimTypes.Email, Email),
+                new Claim("Title", Title),
+                new Claim("Department", Department),
+                new Claim("Phone", Phone)
+            };
+            if (IsAdmin) claims.Add(new Claim("IsAdmin", "true"));
+            if (IsApprover) claims.Add(new Claim("IsApprover", "true"));
+            if (IsProcessor) claims.Add(new Claim("IsProcessor", "true"));
+
+            return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        }
     }
 
     [Table("Requesters")]

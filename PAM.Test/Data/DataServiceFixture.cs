@@ -11,21 +11,22 @@ namespace PAM.Test.Data
     {
         public DataServiceFixture()
         {
-            var configuration = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
             DbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("UnitTestConnection"))
+                .UseSqlServer(Configuration.GetConnectionString("UnitTestConnection"))
                 .Options;
 
             var serviceProvider = new ServiceCollection()
-                .AddLogging()
+                .AddLogging(config => config.AddConsole())
                 .BuildServiceProvider();
 
-            LoggerFactory = serviceProvider.GetService<ILoggerFactory>()
-                .AddConsole(LogLevel.Debug);
+            LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
         }
+
+        public IConfiguration Configuration { get; }
 
         public DbContextOptions<AppDbContext> DbContextOptions { get; }
 

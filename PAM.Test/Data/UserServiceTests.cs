@@ -7,26 +7,27 @@ using Xunit;
 namespace PAM.Test.Data
 {
     [Collection(nameof(DataServiceCollection))]
-    public class OrganizationServiceTests
+    public class UserServiceTests
     {
         readonly IConfiguration _configuration;
         readonly DbContextOptions<AppDbContext> _dbContextOptions;
-        readonly ILogger<OrganizationService> _logger;
+        readonly ILogger<UserService> _logger;
 
-        public OrganizationServiceTests(DataServiceFixture dataServiceFixture)
+        public UserServiceTests(DataServiceFixture dataServiceFixture)
         {
             _configuration = dataServiceFixture.Configuration;
             _dbContextOptions = dataServiceFixture.DbContextOptions;
-            _logger = dataServiceFixture.LoggerFactory.CreateLogger<OrganizationService>();
+            _logger = dataServiceFixture.LoggerFactory.CreateLogger<UserService>();
         }
 
         [Fact]
-        public void GetBureausTest()
+        public void GetAdminTest()
         {
             using (var dbContext = new AppDbContext(_dbContextOptions, _configuration))
             {
-                var orgnizationService = new OrganizationService(dbContext, _logger);
-                Assert.Equal(14, orgnizationService.GetBureaus().Count);
+                string username = _configuration.GetSection("Presets")["AdminUser"];
+                var userService = new UserService(dbContext, _logger);
+                Assert.NotNull(userService.GetEmployeeByUsername(username));
             }
         }
     }
