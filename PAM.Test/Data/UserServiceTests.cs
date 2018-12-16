@@ -25,7 +25,7 @@ namespace PAM.Test.Data
         {
             using (var dbContext = new AppDbContext(_dbContextOptions, _configuration))
             {
-                string username = _configuration.GetSection("Presets")["AdminUser"];
+                string username = _configuration.GetValue<string>("Presets:AdminUser");
                 var userService = new UserService(dbContext, _logger);
                 Assert.NotNull(userService.GetEmployeeByUsername(username));
             }

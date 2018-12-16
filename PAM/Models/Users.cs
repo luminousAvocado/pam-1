@@ -96,5 +96,9 @@ namespace PAM.Models
         public string WorkZip { get; set; }
         public string WorkPhone { get; set; }
         public string CellPhone { get; set; }
+
+        // derived properties
+        [NotMapped]
+        public string Name => $"{FirstName} {LastName}";
     }
 }
