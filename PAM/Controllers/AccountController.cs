@@ -62,7 +62,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
 
-            return RedirectToAction("MyRegistrations", "Home");
+            return RedirectToAction("MyRegistrations", "Home", user);
         }
 
         [HttpPost]

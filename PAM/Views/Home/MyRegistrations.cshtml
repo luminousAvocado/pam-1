@@ -3,31 +3,31 @@
 }
 
 <body>
-    <p style="font-size: 40px;">My Registrations</p>
-    <hr>
-    <div class="shadow-container">
+    <p style="font-size: 40px;">Registration Requests
+        <a href="/Home/NewRegistrations" type="button" class="btn btn-info float-right">+ New Request</a>
+    </p>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#drafts"> Drafts </a>
+                <a class="nav-link active" data-toggle="tab" href="#myreg"> My Registrations </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#submitted"> Submitted </a>
+                <a class="nav-link" data-toggle="tab" href="#status"> Status </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#completed"> Completed </a>
+                <a class="nav-link" data-toggle="tab" href="#allreg"> All Requests </a>
             </li>
         </ul>
         <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade show active" id="drafts">
+            <div class="tab-pane fade show active" id="myreg">
                 <table class="table table-hover table-responsive-xl">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col"> # </th>
                             <th scope="col"> Date / Department </th>
-                            <th scope="col"> Type / Status </th>
+                            <th scope="col"> Type </th>
                             <th scope="col"> Default / Additional </th>
                             <th scope="col"> Prepared by </th>
-                            <th scope="col"> Scanned Copy </th>
+                            <th scope="col"> Status </th>
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
@@ -37,11 +37,9 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Approved </td>
                         <td>
                             <a href=""> View </a>
-                            <a href=""> Edit </a>
-                            <a href=""> Delete </a>
                         </td>
                     </tr>
                     <tr>
@@ -50,11 +48,9 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Approved </td>
                         <td>
                             <a href=""> View </a>
-                            <a href=""> Edit </a>
-                            <a href=""> Delete </a>
                         </td>
                     </tr>
                     <tr>
@@ -63,11 +59,9 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Approved </td>
                         <td>
                             <a href=""> View </a>
-                            <a href=""> Edit </a>
-                            <a href=""> Delete </a>
                         </td>
                     </tr>
                     <tr>
@@ -76,25 +70,25 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Draft </td>
                         <td>
-                            <a href=""> View </a>
-                            <a href=""> Edit </a>
+                            <a href=""> View </a> <br/> 
+                            <a href=""> Edit </a> <br/>
                             <a href=""> Delete </a>
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class="tab-pane fade" id="submitted">
+            <div class="tab-pane fade" id="status">
                 <table class="table table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col"> # </th>
                             <th scope="col"> Date / Department </th>
-                            <th scope="col"> Type / Status </th>
+                            <th scope="col"> Type</th>
                             <th scope="col"> Default / Additional </th>
                             <th scope="col"> Prepared by </th>
-                            <th scope="col"> Scanned Copy </th>
+                            <th scope="col"> Status </th>
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
@@ -104,7 +98,7 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Being Approved </td>
                         <td>
                             <a href=""> View </a>
                         </td>
@@ -115,23 +109,23 @@
                         <td> New Hire / Draft </td>
                         <td> Default: Email, Internet, Network </td>
                         <td> Self </td>
-                        <td> </td>
+                        <td> Being Processed </td>
                         <td>
                             <a href=""> View </a>
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class="tab-pane fade" id="completed">
+            <div class="tab-pane fade" id="allreg">
                 <table class="table table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col"> # </th>
                             <th scope="col"> Date / Department </th>
-                            <th scope="col"> Type / Status </th>
+                            <th scope="col"> Type </th>
                             <th scope="col"> Default / Additional </th>
                             <th scope="col"> Prepared by </th>
-                            <th scope="col"> Scanned Copy </th>
+                            <th scope="col"> Status </th>
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
@@ -151,6 +145,5 @@
                 </table>
             </div>
         </div>
-    </div>
 </body>
 
