@@ -11,25 +11,28 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly ILogger _logger;
+        private ViewResult view;
 
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
             _logger = logger;
+            view = View();
         }
 
         [HttpGet]
         public async Task<IActionResult> Login()
         {
+            view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return View();
+            return view;
         }
 
         [HttpPost]
@@ -38,7 +41,8 @@ namespace PAM.Controllers
             Employee employee = _adService.GetEmployee(username, password);
             if (employee == null)
             {
-                return View();
+                view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
+                return view;
             }
 
             Employee user = _userService.GetEmployeeByUsername(employee.Username);
@@ -58,7 +62,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
 
-            return Redirect("/");
+            return RedirectToAction("MyRegistrations", "Home");
         }
 
         [HttpPost]

@@ -113,6 +113,13 @@
     display: none;
 }
 
+.progress{
+    background-color:#ababab;
+    color:#fff;
+    border-radius: 3px;
+    font-size: 16px;
+    height: 25px;
+}
 /*----------------------------------------------------------
     [ Scroll Bar Styling ]
 */

@@ -11,6 +11,11 @@ namespace PAM.Controllers
     public class HomeController : Controller
     {
 
+        public IActionResult MyRegistrations()
+        {
+            return View("MyRegistrations");
+        }
+
         public IActionResult NewRegistrations()
         {
             return View("NewRegistrations");

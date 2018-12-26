@@ -7,9 +7,9 @@
 <body>
     <p style="font-size: 40px;">New Registrations</p>
     <hr>
-    <div class="progress" style="margin-bottom: 20px;">
+    <div class="progress" style="margin-bottom: 20px;"> 
         <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
-             style="width: 10%" aria-valuenow="50"
+             style="width:10%;" aria-valuenow="50"
              aria-valuemin="0" aria-valuemax="100">
         </div>
     </div>
@@ -376,6 +376,7 @@
         function progressBar(n) {
             var progressMeter = n * 25;
             document.getElementById("pBar").style.width = progressMeter + "%";
+            document.getElementById("pBar").innerHTML = progressMeter.toString() + "% Complete";
         }
 
     </script>
