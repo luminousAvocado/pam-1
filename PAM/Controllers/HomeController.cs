@@ -10,28 +10,10 @@ namespace PAM.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+
+        public IActionResult NewRegistrations()
         {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View("NewRegistrations");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

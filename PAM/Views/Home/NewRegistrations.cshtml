@@ -1,0 +1,382 @@
+﻿@model PAM.Models.Request
+
+@{
+    ViewData["Title"] = "New";
+}
+
+<body>
+    <p style="font-size: 40px;">New Registrations</p>
+    <hr>
+    <div class="progress" style="margin-bottom: 20px;">
+        <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
+             style="width: 10%" aria-valuenow="50"
+             aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <form asp-controller="Registrations" asp-action="Create" method="post">
+        <div class="step">
+            <p>Complete the registration process by following a few simple steps.</p>
+            <div class="shadow-container">
+                <div class="alert alert-info">
+                    Step 1 - Select Request Type
+                </div>
+                <div class="form-group">
+                    <div class="custom-control custom-radio">
+                        <input asp-for="RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg">
+                        <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
+                        <p> -Initiates first time registrations for new users and systems access. </p>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="RequestTypeId" value="2" type="radio" class="custom-control-input" id="addAccess">
+                        <label class="custom-control-label label-edit" for="addAccess">Add Access</label>
+                        <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
+
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="RequestTypeId" value="3" type="radio" class="custom-control-input" id="removeAccess">
+                        <label class="custom-control-label label-edit" for="removeAccess"> Remove Access </label>
+                        <p> -Initiates removal access for individual system(s). </p>
+
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="RequestTypeId" value="4" type="radio" class="custom-control-input" id="transfer">
+                        <label class="custom-control-label label-edit" for="transfer"> Transfer </label>
+                        <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
+
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="RequestTypeId" value="5" type="radio" class="custom-control-input" id="leaving">
+                        <label class="custom-control-label label-edit" for="leaving"> Leaving Probation </label>
+                        <p> -Initiates removal of ALL system(s) access. </p>
+                    </div>
+                </div>
+                <div class="alert alert-dismissible alert-success">
+                    <strong>Important: </strong> Please submit a seperate system registraction packet to remove your current
+                    systems access with the <strong>"Transfer"</strong> request.
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="shadow-container">
+                <div class="accordion" id="accordionExample">
+                    <div class="alert alert-info">
+                        Step 2 - Select Bureau and job function
+                    </div>
+                    <!--
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="1" class="btn btn-link panel" type="radio" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Executive Assistants (EXECUTIVE)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="2" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                Administrative Services Bureau (ASB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="3" class="btn btn-link collapsed" type="radio" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Adult Field Services Bureau (AFSB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="4" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                Detention Services Bureau (DSB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseFour" class="collapse hide" aria-labelledby="headingFour" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="5" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                Intake, Detention and Control (IDB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseFive" class="collapse hide" aria-labelledby="headingFive" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSix">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="6" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                Information Systems Bureau (ISB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseSix" class="collapse hide" aria-labelledby="headingSix" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSeven">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="7" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                                Juvenile Field / Special Services Bureau (JFSB / JSSB )
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseSeven" class="collapse hide" aria-labelledby="headingSeven" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingEight">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="8" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+                                Management Service Bureau (MSB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseEight" class="collapse hide" aria-labelledby="headingEight" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="9" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+                                Placement Service Bureau (PSB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseNine" class="collapse hide" aria-labelledby="headingNine" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTen">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="10" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
+                                Quality Assurance Service Bureau (QASB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseTen" class="collapse hide" aria-labelledby="headingTen" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingEleven">
+                            <h5 class="mb-0">
+                                <input asp-for="BureauUnitId" value="11" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
+                                Residential Treament Service Bureau (RTSB)
+                            </h5>
+                        </div>
+                    </div>
+                    <div id="collapseEleven" class="collapse hide" aria-labelledby="headingEleven" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="shadow-container">
+                <div class="alert alert-info">
+                    Step 3 - Complete your information
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="countyDeptName">County Dept. Name</label>
+                        <input type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="countyDeptNum">County Dept. #</label>
+                        <input type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="countyEmail">County Email Address</label>
+                        <input type="text" class="form-control" id="countyEmail" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" class="form-control" id="middleName" placeholder="Middle Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="employeeNum">Employee Number</label>
+                        <input type="text" class="form-control" id="telephone" placeholder="">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="locationPhoneNum">Employee Location Phone #</label>
+                        <input type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="employeeCellNum">Employee Cell Phone #</label>
+                        <input type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4 offset-1">
+                        <label for="payrollTitle">Payroll Title</label>
+                        <input type="text" class="form-control" id="payrollTitle" placeholder="" />
+                    </div>
+                    <div class="form-group col-md-4 offset-1">
+                        <label for="functionTitle">Function Title</label>
+                        <input type="text" class="form-control" id="functionTitle" placeholder="" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="caseloadNum">Caseload #</label>
+                        <input type="text" class="form-control" id="telephone" placeholder="">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                            <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                            <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="shadow-container">
+                <div class="alert alert-info">
+                    Step 4 - Add Additional Systems
+                </div>
+                <div class="shadow-container" style="width: 50%;">
+                    <h5> System Name </h5>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                        <label class="custom-control-label" for="customCheck1">Placeholder System Name -> (ABBREVIATION)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                        <label class="custom-control-label" for="customCheck1">Placeholder System Name -> (ABBREVIATION)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                        <label class="custom-control-label" for="customCheck1">Placeholder System Name -> (ABBREVIATION)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                        <label class="custom-control-label" for="customCheck1">Placeholder System Name -> (ABBREVIATION)</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                        <label class="custom-control-label" for="customCheck1">Placeholder System Name -> (ABBREVIATION)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="jumbotron" style="text-align:center">
+                <h1>Thank you for submitting your request.</h1> <br\>
+                    <h1> Your requests will be processed by the department.</h1>
+            </div>
+        </div>
+    </form>
+    <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
+    <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"> Next </button>
+    <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
+
+    <div class="text-center">
+        <a type="button" class="btn btn-info" id="view" style="display: none" href=""> Preview </a>
+        <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
+    </div>
+    <script>
+        /*----------------------------------------------------------
+            [ Script for proceeding to next step ]
+        */
+        var currentStep = 0;
+        showStep(currentStep);
+        function showStep(n) {
+            // This function will display the specified tab of the form...
+            var x = document.getElementsByClassName("step");
+            x[n].style.display = "block";
+            //... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prev").style.display = "none";
+            } else {
+                document.getElementById("prev").style.display = "inline";
+            }
+            if (n == (x.length - 2)) {
+                document.getElementById("next").type = "submit";
+                document.getElementById("next").innerHTML = "Submit";
+            } else {
+                document.getElementById("next").innerHTML = "Next";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("draft").style.display = "none";
+                document.getElementById("next").style.display = "none";
+                document.getElementById("prev").style.display = "none";
+                document.getElementById("view").style.display = "inline-block";
+                document.getElementById("submitAgain").style.display = "inline-block";
+            }
+            progressBar(currentStep);
+        }
+        function nextPrev(n) {
+            // This function will figure out which tab to display
+            var x = document.getElementsByClassName("step");
+            // Hide the current tab:
+            x[currentStep].style.display = "none";
+            // Increase or decrease the current tab by 1:
+            currentStep = currentStep + n;
+            showStep(currentStep);
+        }
+        function progressBar(n) {
+            var progressMeter = n * 25;
+            document.getElementById("pBar").style.width = progressMeter + "%";
+        }
+
+    </script>
+</body>
