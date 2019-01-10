@@ -35,15 +35,16 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            Employee employee = _adService.GetEmployee(username, password);
-            if (employee == null)
-            {
-                return View();
-            }
+            if (!_adService.Authenticate(username, password)) return View();
 
-            Employee user = _userService.GetEmployeeByUsername(employee.Username);
+            Employee employee = _adService.GetEmployee(username);
+            Employee user = _userService.GetEmployee(username);
             if (user != null)
             {
+                user.Name = employee.Name;
+                user.FirstName = employee.FirstName;
+                user.LastName = employee.LastName;
+                user.Email = employee.Email;
                 user.Title = employee.Title;
                 user.Department = employee.Department;
                 user.Phone = employee.Phone;

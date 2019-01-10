@@ -15,7 +15,7 @@ namespace PAM.Models
         public string Username { get; set; }
 
         [Required]
-        public string EmployeeNumber { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -41,7 +41,7 @@ namespace PAM.Models
             var claims = new List<Claim>
             {
                 new Claim("EmployeeId", EmployeeId.ToString()),
-                new Claim("EmployeeNumber", EmployeeNumber),
+                new Claim("Name", Name),
                 new Claim(ClaimTypes.NameIdentifier, Username),
                 new Claim(ClaimTypes.GivenName, FirstName),
                 new Claim(ClaimTypes.Surname, LastName),
