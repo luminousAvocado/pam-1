@@ -2,48 +2,60 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PAM.Models;
 using PAM.Data;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data;
+using PAM.Extensions;
+using PAM.Models;
+using PAM.Services;
+
 
 namespace PAM.Controllers
 {
     public class RequestController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly UserService _userService;
+        //private readonly SessionHelper _sessionHelp;
 
-        public RequestController(AppDbContext context)
+        private IHttpContextAccessor _httpContextAccessor;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+
+        public RequestController(IADService adService, UserService userService,
+            AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
+            _dbContext = context;
+            _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
+           //_sessionHelp = sessionHelp;
+        }
+
+        [HttpGet]
+        public IActionResult CreateRequester()
+        {
+            //var employee = _sessionHelp.GetSessionObj<Employee>("Employee");
+            var employee = _session.GetObject<Employee>("Employee");
+            Requester requester = new Requester();
+
+            requester.EmployeeNumber = employee.EmployeeNumber;
+            requester.Email = employee.Email;
+            requester.FirstName = employee.FirstName;
+            requester.LastName = employee.LastName;
+            requester.Username = employee.Username;
+
+            requester = _userService.SaveRequester(requester);
+
+            HttpContext.Session.SetObject("Requester", requester);
+            return View("NewRequest");
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestId", "RequestTypeId", "RequestById",
-            "RequestForId",  "RequestStatus", "SubmittedOn", "IsContractor", "IsHighProfileAccess", "IsGlobalAccess",
-            "CaseloadType", "CaseloadFunction", "CaseloadNumber", "OldCaseloadNumber", "TransferredFromUnitId",
-            "DepartureReason", "IpAddress", "Notes")] Request req)
+        public async Task<IActionResult> CreateRequest (Request request)
         {
-            try
-            {
-                Console.WriteLine("Request ID is " + req.RequestTypeId.ToString());
-                if (ModelState.IsValid)
-                {
-                    Console.WriteLine("ENTERED CREATE");
-                    _context.Add(req);
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine("Finished Adding object");
-                    return RedirectToAction("MyRegistrations", "Home");
-                }
-            }
-            catch (DataException reqExc)
-            {
-                ModelState.AddModelError("", "Unable to save change");
-            }
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeNumber", req.RequestId);
-            return View(req);
+            _dbContext.Add(request);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Registrations", "Home");
         }
     }
 }

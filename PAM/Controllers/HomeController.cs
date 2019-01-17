@@ -1,55 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using PAM.Extensions;
 using PAM.Models;
 using PAM.Data;
+using System.Threading.Tasks;
 
 namespace PAM.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        //private readonly SessionHelper _sessionHelper;
 
-        public HomeController(AppDbContext context)
+        private IHttpContextAccessor _httpContextAccessor;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+
+        public HomeController (AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
+            _dbContext = context;
+            _httpContextAccessor = httpContextAccessor;
+            //_sessionHelper = _sessionHelper;
         }
-        /*
+
         [HttpGet]
-        public IActionResult MyRegistrations()
+        public async Task<IActionResult> Registrations()
         {
-            return View("MyRegistrations");
+            Employee employee = _session.GetObject<Employee>("Employee");
+
+            var requests = await _dbContext.Requests
+                .FirstOrDefaultAsync(m => m.RequestId == employee.EmployeeId);
+            if (requests == null) return View("Registrations");
+            else return View(await _dbContext.Requests.ToListAsync());
         }
-        */
+
+        /*-------------------
+         * Delete Functions
+         * ---------------- */
         [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var requests = await _dbContext.Requests
+                .FirstOrDefaultAsync(m => m.RequestId == id);
+            if (requests == null) return View("Registrations");
+            else return View(await _dbContext.Requests.ToListAsync());
+        }
+
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> MyRegistrations([Bind("RequesterId", "Username", "EmployeeNumber", "FirstName",
-            "LastName", "Email", "BuearuId", "UnitId", "MiddleName", "PayrollTitle", "Department",
-            "DepartmentCode", "WorkAddress", "WorkCity", "WorkState", "WorkZip", "WorkPhone", "CellPhone")] Requester requester)
+        public async Task<IActionResult> DeleteConfirm (int id)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(requester);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("MyRegistrations", "Home");
-            }
-            return View("MyRegistrations");
-        }
-
-        /*
-        public async Task<IActionResult> MyRegistrations()
-        {
-            return View();
-        }
-        */
-
-        [HttpGet]
-        public IActionResult NewRegistrations()
-        {
-            return View("NewRegistrations");
+            var request = await _dbContext.Requests.FindAsync(id);
+            _dbContext.Requests.Remove(request);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToAction("Registrations");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

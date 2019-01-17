@@ -3,11 +3,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using PAM.Extensions;
 
 namespace PAM.Controllers
 {
@@ -17,6 +19,7 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly ILogger _logger;
+
         private ViewResult view;
 
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
@@ -24,6 +27,7 @@ namespace PAM.Controllers
             _adService = adService;
             _userService = userService;
             _logger = logger;
+
             view = View();
         }
 
@@ -38,7 +42,6 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            Console.WriteLine("Validating Employee...");
             Employee employee = _adService.GetEmployee(username, password);
             if (employee == null)
             {
@@ -47,6 +50,7 @@ namespace PAM.Controllers
             }
 
             Employee user = _userService.GetEmployeeByUsername(employee.Username);
+            HttpContext.Session.SetObject("Employee", user);
             if (user != null)
             {
                 user.Title = employee.Title;
@@ -63,7 +67,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
 
-            return RedirectToAction("MyRegistrations", "Home", employee);
+            return RedirectToAction("Registrations", "Home");
         }
 
         [HttpPost]

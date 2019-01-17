@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
@@ -59,7 +60,7 @@ namespace PAM.Models
     }
 
     [Table("Requesters")]
-    public class Requester
+    public class Requester 
     {
         public int RequesterId { get; set; }
 
@@ -100,5 +101,10 @@ namespace PAM.Models
         // derived properties
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
+
+        internal void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

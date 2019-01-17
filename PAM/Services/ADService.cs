@@ -20,7 +20,7 @@ namespace PAM.Services
         {
             new Employee()
             {
-                EmployeeNumber = "1234",
+                EmployeeNumber = "12345",
                 Username = "jdoe1",
                 FirstName = "John",
                 LastName = "Doe",

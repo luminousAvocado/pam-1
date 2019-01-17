@@ -55,7 +55,7 @@ namespace PAM.Data
                 Username = _configuration.GetSection("Presets")["AdminUser"],
                 EmployeeNumber = "1111",
                 Email = "admin@localhost.localdomain",
-                FirstName = "PAM",
+                FirstName = "BLAM",
                 LastName = "Admin",
                 IsAdmin = true
             });
@@ -66,5 +66,4 @@ namespace PAM.Data
                 v => (SystemAccessStatus)Enum.Parse(typeof(SystemAccessStatus), v));
         }
     }
-
 }

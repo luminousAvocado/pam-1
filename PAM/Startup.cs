@@ -35,6 +35,7 @@ namespace PAM
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession();
 
             services
                 .AddFluentEmail(_config.GetValue<string>("Application:Email"))
@@ -78,6 +79,7 @@ namespace PAM
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseMvc(routes =>

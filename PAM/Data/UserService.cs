@@ -29,5 +29,12 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return employee;
         }
+        
+        public Requester SaveRequester(Requester requester)
+        {
+            if (requester.RequesterId == 0) _dbContext.Add(requester);
+            _dbContext.SaveChanges();
+            return requester;
+        }
     }
 }
