@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -28,16 +29,20 @@ namespace PAM.Controllers
         public async Task<IActionResult> Registrations()
         {
             Employee employee = _session.GetObject<Employee>("Employee");
+            if(employee != null)
+            {
+                Console.WriteLine("Proper EMPLOYEE w/ ID: " + employee.EmployeeId);
+            }
 
             var requests = await _dbContext.Requests
-                .FirstOrDefaultAsync(m => m.RequestId == employee.EmployeeId);
+                .FirstOrDefaultAsync(m => m.RequestId > 0 );//m => m.RequestId == employee.EmployeeId);
             if (requests == null) return View("Registrations");
             else return View(await _dbContext.Requests.ToListAsync());
         }
 
         /*-------------------
          * Delete Functions
-         * ---------------- */
+         * ---------------- 
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -56,6 +61,7 @@ namespace PAM.Controllers
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Registrations");
         }
+        */
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

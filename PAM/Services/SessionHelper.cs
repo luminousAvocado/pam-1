@@ -19,9 +19,7 @@ namespace PAM.Services
 
         public T GetSessionObj<T> (string name)
         {
-            Console.WriteLine("ENTERS RIGHt?");
             var sessObj = _session.GetObject<T>(name);
-            Console.WriteLine("TYPEE?" + sessObj.GetType());
             return sessObj;
         }
     }

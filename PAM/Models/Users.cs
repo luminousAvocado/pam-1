@@ -101,10 +101,5 @@ namespace PAM.Models
         // derived properties
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
-
-        internal void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

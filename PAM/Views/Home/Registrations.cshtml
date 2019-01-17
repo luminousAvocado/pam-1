@@ -91,28 +91,49 @@
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
+               @foreach (var item in Model)
+               {
                     <tr>
-                        <th scope="row"> 1 </th>
-                        <td> Form Name</td>
-                        <td> New Hire / Draft </td>
-                        <td> Default: Email, Internet, Network </td>
-                        <td> Self </td>
-                        <td> Being Approved </td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
                         <td>
-                            <a href=""> View </a>
+                            @{
+                                switch (item.RequestTypeId)
+                                {
+                                    case 1:
+                                        <text> New Hire </text>
+                                        break;
+                                    case 2:
+                                        <text> Transfer </text>
+                                        break;
+                                    case 4:
+                                        <text> Portfolio Assignment </text>
+                                        break;
+                                    case 5:
+                                        <text> Leaving Probation </text>
+                                        break;
+                                    case 11:
+                                        <text> Add Access </text>
+                                        break;
+                                    case 12:
+                                        <text> Remove Access </text>
+                                        break;
+                                    default:
+                                        <text> Invalid Requests </text>
+                                        break;
+                                }
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
+                        <td>
+                            <a asp-action="Edit">Edit</a> |
+                            <a asp-action="View">View</a> |
+                            <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row"> 2 </th>
-                        <td> Form Name</td>
-                        <td> New Hire / Draft </td>
-                        <td> Default: Email, Internet, Network </td>
-                        <td> Self </td>
-                        <td> Being Processed </td>
-                        <td>
-                            <a href=""> View </a>
-                        </td>
-                    </tr>
+                }
                 </table>
             </div>
             <div class="tab-pane fade" id="allreg">
@@ -128,19 +149,50 @@
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
+               @foreach (var item in Model)
+               {
                     <tr>
-                        <th scope="row"> 1 </th>
-                        <td> Form Name</td>
-                        <td> New Hire / Draft </td>
-                        <td> Default: Email, Internet, Network </td>
-                        <td> Self </td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
                         <td>
-                            <a href=""> View </a>
+                            @{
+                                switch (item.RequestTypeId)
+                                {
+                                    case 1:
+                                        <text> New Hire </text>
+                                        break;
+                                    case 2:
+                                        <text> Transfer </text>
+                                        break;
+                                    case 4:
+                                        <text> Portfolio Assignment </text>
+                                        break;
+                                    case 5:
+                                        <text> Leaving Probation </text>
+                                        break;
+                                    case 11:
+                                        <text> Add Access </text>
+                                        break;
+                                    case 12:
+                                        <text> Remove Access </text>
+                                        break;
+                                    default:
+                                        <text> Invalid Requests </text>
+                                        break;
+                                }
+                            }
                         </td>
+                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
                         <td>
-                            <a href=""> View </a>
+                            <a asp-action="Edit">Edit</a> |
+                            <a asp-action="View">View</a> |
+                            <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
                         </td>
                     </tr>
+                }
+
                 </table>
             </div>
         </div>

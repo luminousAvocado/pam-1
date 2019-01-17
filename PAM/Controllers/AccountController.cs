@@ -53,6 +53,9 @@ namespace PAM.Controllers
             HttpContext.Session.SetObject("Employee", user);
             if (user != null)
             {
+                user.FirstName = employee.FirstName;
+                user.LastName = employee.LastName;
+                user.Email = employee.Email;
                 user.Title = employee.Title;
                 user.Department = employee.Department;
                 user.Phone = employee.Phone;
