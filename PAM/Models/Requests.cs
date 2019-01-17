@@ -72,9 +72,10 @@ namespace PAM.Models
 
         [NotMapped]
         public bool IsSelfRequest => RequestedById == RequestedForId;
-
+        /*
         [NotMapped]
         public List<Review> OrderedReviews => Reviews.OrderBy(r => r.ReviewOrder).ToList();
+        */
     }
 
     [Table("Reviews")]

@@ -38,6 +38,7 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
+            Console.WriteLine("Validating Employee...");
             Employee employee = _adService.GetEmployee(username, password);
             if (employee == null)
             {
@@ -62,7 +63,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
 
-            return RedirectToAction("MyRegistrations", "Home", user);
+            return RedirectToAction("MyRegistrations", "Home", employee);
         }
 
         [HttpPost]
