@@ -16,7 +16,7 @@ namespace PAM.Data
             _logger = logger;
         }
 
-        public Employee GetEmployeeByUsername(string username)
+        public Employee GetEmployee(string username)
         {
             return _dbContext.Employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))

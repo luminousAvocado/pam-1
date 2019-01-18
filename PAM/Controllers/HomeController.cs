@@ -40,9 +40,6 @@ namespace PAM.Controllers
             else return View(await _dbContext.Requests.ToListAsync());
         }
 
-        /*-------------------
-         * Delete Functions
-         * ---------------- 
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -61,7 +58,6 @@ namespace PAM.Controllers
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Registrations");
         }
-        */
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -13,7 +13,6 @@ using PAM.Extensions;
 
 namespace PAM.Controllers
 {
-    //[Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly IADService _adService;
@@ -42,17 +41,18 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            Employee employee = _adService.GetEmployee(username, password);
-            if (employee == null)
+            if (!_adService.Authenticate(username, password)) 
             {
                 view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
                 return view;
             }
 
-            Employee user = _userService.GetEmployeeByUsername(employee.Username);
+            Employee employee = _adService.GetEmployee(username);
+            Employee user = _userService.GetEmployee(username);
             HttpContext.Session.SetObject("Employee", user);
             if (user != null)
             {
+                user.Name = employee.Name;
                 user.FirstName = employee.FirstName;
                 user.LastName = employee.LastName;
                 user.Email = employee.Email;

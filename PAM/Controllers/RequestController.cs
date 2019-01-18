@@ -37,7 +37,7 @@ namespace PAM.Controllers
             var employee = _session.GetObject<Employee>("Employee");
             Requester requester = new Requester();
 
-            requester.EmployeeNumber = employee.EmployeeNumber;
+            requester.EmployeeNumber = "3";
             requester.Email = employee.Email;
             requester.FirstName = employee.FirstName;
             requester.LastName = employee.LastName;

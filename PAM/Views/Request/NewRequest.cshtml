@@ -1,5 +1,6 @@
 ﻿@using PAM.Models
 @using PAM.Extensions
+
 @model PAM.Models.Request
 
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
@@ -11,7 +12,7 @@
 <body>
     <p style="font-size: 40px;">New Registrations</p>
     <hr>
-    <div class="progress" style="margin-bottom: 20px;"> 
+    <div class="progress" style="margin-bottom: 20px;">
         <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
              style="width:10%;" aria-valuenow="50"
              aria-valuemin="0" aria-valuemax="100">
@@ -19,7 +20,7 @@
     </div>
     <form asp-controller="Request" asp-action="CreateRequest" method="post">
         <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
-        <input asp-for="RequestedForId" value=@requester.RequesterId type="hidden"/>
+        <input asp-for="RequestedForId" value=@requester.RequesterId type="hidden" />
         <div class="step">
             <p>Complete the registration process by following a few simple steps.</p>
             <div class="shadow-container">
@@ -64,165 +65,10 @@
                 </div>
             </div>
         </div>
-        <!--
-        <div class="step">
-            <div class="shadow-container">
-                <div class="accordion" id="accordionExample">
-                    <div class="alert alert-info">
-                        Step 2 - Select Bureau and job function
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="1" class="btn btn-link panel" type="radio" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Executive Assistants (EXECUTIVE)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header" id="headingTwo">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="2" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Administrative Services Bureau (ASB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="3" class="btn btn-link collapsed" type="radio" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Adult Field Services Bureau (AFSB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingFour">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="4" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                                Detention Services Bureau (DSB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseFour" class="collapse hide" aria-labelledby="headingFour" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingFive">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="5" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                                Intake, Detention and Control (IDB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseFive" class="collapse hide" aria-labelledby="headingFive" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingSix">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="6" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
-                                Information Systems Bureau (ISB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseSix" class="collapse hide" aria-labelledby="headingSix" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingSeven">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="7" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
-                                Juvenile Field / Special Services Bureau (JFSB / JSSB )
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseSeven" class="collapse hide" aria-labelledby="headingSeven" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingEight">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="8" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
-                                Management Service Bureau (MSB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseEight" class="collapse hide" aria-labelledby="headingEight" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingNine">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="9" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
-                                Placement Service Bureau (PSB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseNine" class="collapse hide" aria-labelledby="headingNine" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingTen">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="10" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
-                                Quality Assurance Service Bureau (QASB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseTen" class="collapse hide" aria-labelledby="headingTen" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingEleven">
-                            <h5 class="mb-0">
-                                <input asp-for="BureauUnitId" value="11" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
-                                Residential Treament Service Bureau (RTSB)
-                            </h5>
-                        </div>
-                    </div>
-                    <div id="collapseEleven" class="collapse hide" aria-labelledby="headingEleven" data-parent="#accordionExample">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="step">
             <div class="shadow-container">
                 <div class="alert alert-info">
-                    Step 3 - Complete your information
+                    Step 2 - Complete your information
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
@@ -276,6 +122,163 @@
                         <input type="text" class="form-control" id="functionTitle" placeholder="" />
                     </div>
                 </div>
+                <!--
+                <div class="step">
+                    <div class="shadow-container">
+                        <div class="accordion" id="accordionExample">
+                            <div class="alert alert-info">
+                                Step 2 - Select Bureau and job function
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="1" class="btn btn-link panel" type="radio" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Executive Assistants (EXECUTIVE)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="2" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        Administrative Services Bureau (ASB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header" id="headingThree">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="3" class="btn btn-link collapsed" type="radio" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Adult Field Services Bureau (AFSB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingFour">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="4" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                        Detention Services Bureau (DSB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseFour" class="collapse hide" aria-labelledby="headingFour" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingFive">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="5" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                        Intake, Detention and Control (IDB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseFive" class="collapse hide" aria-labelledby="headingFive" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingSix">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="6" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                        Information Systems Bureau (ISB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseSix" class="collapse hide" aria-labelledby="headingSix" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingSeven">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="7" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                                        Juvenile Field / Special Services Bureau (JFSB / JSSB )
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseSeven" class="collapse hide" aria-labelledby="headingSeven" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingEight">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="8" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+                                        Management Service Bureau (MSB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseEight" class="collapse hide" aria-labelledby="headingEight" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingNine">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="9" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+                                        Placement Service Bureau (PSB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseNine" class="collapse hide" aria-labelledby="headingNine" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingTen">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="10" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
+                                        Quality Assurance Service Bureau (QASB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseTen" class="collapse hide" aria-labelledby="headingTen" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingEleven">
+                                    <h5 class="mb-0">
+                                        <input asp-for="BureauUnitId" value="11" class="btn btn-link" type="radio" data-toggle="collapse" data-target="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
+                                        Residential Treament Service Bureau (RTSB)
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="collapseEleven" class="collapse hide" aria-labelledby="headingEleven" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <!--
                 <hr />
                 <div class="form-row">
                     <div class="form-group col-md-4">
@@ -292,6 +295,18 @@
                             <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
                         </div>
                     </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <div class="step">
+            <div class="shadow-container">
+                <div class="alert alert-info">
+                    Step 3 - Additional Information of your Request
+                </div>
+                <div class="custom-control custom-checkgox">
+                    <input type="checkbox" class="custom-control-input" checked="" />
+                    <label class="custom-control-label" for="customCheck1"> High Profile</label>
                 </div>
             </div>
         </div>
@@ -325,28 +340,36 @@
                 </div>
             </div>
         </div>
-        -->
         <div class="step">
             <div class="jumbotron" style="text-align:center">
                 <h1>Thank you for submitting your request.</h1> <br\>
                     <h1> Your requests will be processed by the department.</h1>
             </div>
         </div>
-    <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
-    <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"> Next </button>
-    <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
+        <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
+        <button type="button" class="btn btn-info float-right m-3" id="next"
+                data-toggle="modal" data-target="#exampleModal" onclick="nextPrev(1)" style="margin-left: 6px;">
+        Next
+        </button>
+        <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
 
-    <div class="text-center">
-        <a type="button" class="btn btn-info" id="view" style="display: none" href=""> Preview </a>
-        <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
-    </div>
-
+        <div class="text-center">
+            <a type="button" class="btn btn-info" id="view" style="display: none" href=""> Preview </a>
+            <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
+        </div>
     </form>
 
-    <div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content" style="width: 48px">
-                <span class="fade fa-spinner fa-spin fa-3x"></span>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="font-size: 20px; text-align:center;">
+                    Request for self? or another?                 
+                </div>
+                <div class="modal-footer" >
+                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">Another</button>
+                    <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Self</button>
+                </div>
             </div>
         </div>
     </div>
@@ -369,7 +392,6 @@
             }
             if (n == (x.length - 2)) {
                 document.getElementById("next").type = "submit";
-                document.getElementById("next").onclick = "modal();"
                 document.getElementById("next").innerHTML = "Submit";
             } else {
                 document.getElementById("next").innerHTML = "Next";
@@ -397,12 +419,6 @@
             var progressMeter = n * (100 / x.length);
             document.getElementById("pBar").style.width = progressMeter + "%";
             document.getElementById("pBar").innerHTML = progressMeter.toString() + "% Complete";
-        }
-        function modal() {
-            $('modal').modal('show');
-            setTimeout(function () {
-                $('.modal').modal('hide');
-            }, 2000);
         }
     </script>
 </body>

@@ -47,13 +47,12 @@ namespace PAM.Data
             modelBuilder.Entity<RequestedSystem>().HasKey(x => new { x.RequestId, x.SystemId });
 
             modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Username);
-            modelBuilder.Entity<Employee>().HasAlternateKey(e => e.EmployeeNumber);
             modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Email);
             modelBuilder.Entity<Employee>().HasData(new Employee()
             {
                 EmployeeId = 1,
                 Username = _configuration.GetSection("Presets")["AdminUser"],
-                EmployeeNumber = "1111",
+                Name = "PAM Admin",
                 Email = "admin@localhost.localdomain",
                 FirstName = "BLAM",
                 LastName = "Admin",
