@@ -1,8 +1,6 @@
-﻿@model IEnumerable<PAM.Models.Request>
+﻿@using PAM.Models
 
-@{
-    ViewData["Title"] = "Registrations";
-}
+@model IEnumerable<PAM.Models.Request>
 
 <body>
     <p style="font-size: 40px;">Registration Requests
@@ -33,14 +31,14 @@
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
-               @foreach (var item in Model)
+               @foreach (var item in ViewBag.request ?? Enumerable.Empty<Request>())
                {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
+                        <td>@item.RequestID</td>
+                        <td>@item.SumbittedOn</td>
                         <td>
                             @{
-                                switch (item.RequestTypeId)
+                                switch (@item.RequestTypeId)
                                 {
                                     case 1:
                                         <text> New Hire </text>
@@ -66,13 +64,13 @@
                                 }
                             }
                         </td>
-                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
-                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
-                        <td>@Html.DisplayFor(modelItem => item.RequestStatus)</td>
+                        <td>@item.SumbittedOn</td>
+                        <td>@item.RequestStatus</td>
+                        <td>@item.SumbittedOn</td>
                         <td>
                             <a asp-action="Edit">Edit</a> |
                             <a asp-action="View">View</a> |
-                            <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
+                            <a asp-action="Delete" asp-route-id="item.RequestId">Delete</a>
                         </td>
                     </tr>
                 }

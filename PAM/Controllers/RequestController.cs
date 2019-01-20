@@ -35,15 +35,14 @@ namespace PAM.Controllers
         {
             //var employee = _sessionHelp.GetSessionObj<Employee>("Employee");
             var employee = _session.GetObject<Employee>("Employee");
-            Requester requester = new Requester();
-
-            requester.EmployeeNumber = "3";
-            requester.Email = employee.Email;
-            requester.FirstName = employee.FirstName;
-            requester.LastName = employee.LastName;
-            requester.Username = employee.Username;
-
-            requester = _userService.SaveRequester(requester);
+            Requester requester = new Requester
+            {
+                EmployeeNumber = "3",
+                Email = employee.Email,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Username = employee.Username
+            };
 
             HttpContext.Session.SetObject("Requester", requester);
             return View("NewRequest");
@@ -52,6 +51,8 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest (Request request)
         {
+            Requester requester = _session.GetObject<Requester>("Requester");
+            requester = _userService.SaveRequester(requester);
             _dbContext.Add(request);
             await _dbContext.SaveChangesAsync();
 

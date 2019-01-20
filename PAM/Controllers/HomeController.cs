@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using PAM.Extensions;
 using PAM.Models;
 using PAM.Data;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace PAM.Controllers
 {
@@ -33,10 +35,11 @@ namespace PAM.Controllers
             {
                 Console.WriteLine("Proper EMPLOYEE w/ ID: " + employee.EmployeeId);
             }
+            var empty = Enumerable.Empty<Request>();
 
             var requests = await _dbContext.Requests
                 .FirstOrDefaultAsync(m => m.RequestId > 0 );//m => m.RequestId == employee.EmployeeId);
-            if (requests == null) return View("Registrations");
+            if (requests == null) return View("Registrations", empty);
             else return View(await _dbContext.Requests.ToListAsync());
         }
 
