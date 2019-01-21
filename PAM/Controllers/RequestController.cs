@@ -59,6 +59,10 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest (NewRegistrationViewModel reg)
         {
+            if(reg.RequestedFor != null)
+            {
+                _dbContext.Add(reg.RequestedFor);
+            }
             _dbContext.Add(reg.Request);
             await _dbContext.SaveChangesAsync();
 

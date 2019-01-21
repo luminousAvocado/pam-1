@@ -31,11 +31,11 @@
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
-               @foreach (var item in ViewBag.request ?? Enumerable.Empty<Request>())
+               @foreach (var item in Model ?? Enumerable.Empty<Request>())
                {
                     <tr>
-                        <td>@item.RequestID</td>
-                        <td>@item.SumbittedOn</td>
+                        <td>@Html.DisplayFor(modelItem => item.RequestedById)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SumbittedOn)</td>
                         <td>
                             @{
                                 switch (@item.RequestTypeId)

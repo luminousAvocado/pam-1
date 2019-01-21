@@ -25,7 +25,7 @@
             <p>Complete the registration process by following a few simple steps.</p>
             <div class="shadow-container">
                 <div class="alert alert-info">
-                    Step 1 - Select Request Type
+                    Please Select Request Type
                 </div>
                 <div class="form-group">
                     <div class="custom-control custom-radio">
@@ -65,61 +65,57 @@
                 </div>
             </div>
         </div>
-        <div class="step">
+        <div class="step" id="requestFor" style="display: none">
             <div class="shadow-container">
                 <div class="alert alert-info">
-                    Step 2 - Complete your information
+                    Please Complete their Information
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label for="countyDeptName">County Dept. Name</label>
-                        <input asp-for="Request" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+                        <input asp-for="RequestedFor.Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="countyDeptNum">County Dept. #</label>
-                        <input type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+                        <input asp-for="RequestedFor.DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
                     </div>
                     <div class="form-group col-md-5">
                         <label for="countyEmail">County Email Address</label>
-                        <input type="text" class="form-control" id="countyEmail" placeholder="Email">
+                        <input asp-for="RequestedFor.Email" type="text" class="form-control" id="countyEmail" placeholder="Email">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                        <input asp-for="RequestedFor.FirstName" type="text" class="form-control" id="firstName" placeholder="First Name">
                     </div>
                     <div class="form-group col-md-5">
                         <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                        <input asp-for="RequestedFor.LastName" type="text" class="form-control" id="lastName" placeholder="Last Name">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="middleName">Middle Name</label>
-                        <input type="text" class="form-control" id="middleName" placeholder="Middle Name">
+                        <input asp-for="RequestedFor.MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="employeeNum">Employee Number</label>
-                        <input type="text" class="form-control" id="telephone" placeholder="">
+                        <input asp-for="RequestedFor.EmployeeNumber" type="text" class="form-control" id="telephone" placeholder="">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="locationPhoneNum">Employee Location Phone #</label>
-                        <input type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                        <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="employeeCellNum">Employee Cell Phone #</label>
-                        <input type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                        <input asp-for="RequestedFor.CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-4 offset-1">
                         <label for="payrollTitle">Payroll Title</label>
-                        <input type="text" class="form-control" id="payrollTitle" placeholder="" />
-                    </div>
-                    <div class="form-group col-md-4 offset-1">
-                        <label for="functionTitle">Function Title</label>
-                        <input type="text" class="form-control" id="functionTitle" placeholder="" />
+                        <input asp-for="RequestedFor.PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
                     </div>
                 </div>
             </div>
@@ -127,11 +123,11 @@
         <div class="step">
             <div class="shadow-container">
                 <div class="alert alert-info">
-                    Step 3 - Additional Information of your Request
+                    Additional Information of your Request
                 </div>
                 <h3> Please select all that apply. </h3>
                 <div class="custom-control custom-checkbox">
-                    <input asp-for="Request.IsContractor" type="checkbox" class="custom-control-input" checked="" /> 
+                    <input asp-for="Request.IsContractor" type="checkbox" class="custom-control-input" id="contractor" checked="" /> 
                     <label class="custom-control-label" for="customCheck1"> Contractor </label>
                 </div>
                 <div class="custom-control custom-checkbox">
@@ -145,25 +141,25 @@
                 <div class="form-group">
                     <fieldset>
                         <label class="control-label" for="readOnlyInput">Caseload Type</label>
-                        <input class="form-control" id="readOnlyInput" type="text" placeholder="" readonly="">
+                        <input asp-for="Request.CaseloadType"class="form-control" id="readOnlyInput" type="text" placeholder=""/>
                     </fieldset>
                 </div>
                 <div class="form-group">
                     <fieldset>
                         <label class="control-label" for="readOnlyInput">Caseload Function</label>
-                        <input class="form-control" id="readOnlyInput" type="text" placeholder="" readonly="">
+                        <input asp-for="Request.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder=""/>
                     </fieldset>
                 </div>
                 <div class="form-group">
                     <fieldset>
                         <label class="control-label" for="readOnlyInput">Caseload Number</label>
-                        <input class="form-control" id="readOnlyInput" type="text" placeholder="" readonly="">
+                        <input asp-for="Request.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
                     </fieldset>
                 </div>
                 <div class="form-group">
                     <fieldset>
                         <label class="control-label" for="readOnlyInput">Departure Reason</label>
-                        <input class="form-control" id="readOnlyInput" type="text" placeholder="" readonly="">
+                        <input asp-for="Request.DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
                     </fieldset>
                 </div>
             </div>
@@ -194,7 +190,7 @@
                     Request for self? Or another?                 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">Another</button>
+                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" onclick="showForm()">Another</button>
                     <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Self</button>
                 </div>
             </div>
@@ -248,6 +244,9 @@
             var progressMeter = n * (100 / (x.length - 1));
             document.getElementById("pBar").style.width = progressMeter + "%";
             document.getElementById("pBar").innerHTML = progressMeter.toString() + "% Complete";
+        }
+        function showForm() {
+            document.getElementById("requestFor").style.display = "block";
         }
     </script>
 </body>
