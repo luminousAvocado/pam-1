@@ -44,16 +44,22 @@ namespace PAM.Controllers
                 Username = employee.Username
             };
 
+            requester = _userService.SaveRequester(requester);            
+
             HttpContext.Session.SetObject("Requester", requester);
             return View("NewRequest");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateRequest (Request request)
+        [HttpGet]
+        public IActionResult CreateRequest()
         {
-            Requester requester = _session.GetObject<Requester>("Requester");
-            requester = _userService.SaveRequester(requester);
-            _dbContext.Add(request);
+            return View("NewRequest");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRequest (NewRegistrationViewModel reg)
+        {
+            _dbContext.Add(reg.Request);
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Registrations", "Home");
