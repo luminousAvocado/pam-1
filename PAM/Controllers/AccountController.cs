@@ -49,7 +49,6 @@ namespace PAM.Controllers
 
             Employee employee = _adService.GetEmployee(username);
             Employee user = _userService.GetEmployee(username);
-            HttpContext.Session.SetObject("Employee", user);
             if (user != null)
             {
                 user.Name = employee.Name;
@@ -69,6 +68,7 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
+            HttpContext.Session.SetObject("Employee", employee);
 
             return RedirectToAction("Registrations", "Home");
         }

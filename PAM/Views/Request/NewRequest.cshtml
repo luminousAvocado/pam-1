@@ -10,7 +10,7 @@
 }
 
 <body>
-    <p style="font-size: 40px;">New Registrations</p>
+    <p style="font-size: 40px;" class="text-center">New Registration</p>
     <hr>
     <div class="progress" style="margin-bottom: 20px;">
         <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
@@ -18,14 +18,21 @@
              aria-valuemin="0" aria-valuemax="100">
         </div>
     </div>
-    <form asp-controller="Request" asp-action="CreateRequest" method="post">
+    <form asp-controller="Request" asp-action="CreateRequest" method="post" id="reqForm" class="needs-validation">
         <input asp-for="Request.RequestedById" value=@requester.RequesterId type="hidden" />
         <input asp-for="Request.RequestedForId" value=@requester.RequesterId type="hidden" />
+        <input asp-for="RequestedFor.Username" value="@requester.Username" type="hidden" />
+        <input asp-for="RequestedFor.Name" value="@requester.Username" type="hidden" />
+        <div class="step text-center" >
+            <h1> Is this request for yourself? </br> or for another individual? </h1>
+            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block">Self</button>
+            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block">Another</button>
+        </div>
         <div class="step">
             <p>Complete the registration process by following a few simple steps.</p>
             <div class="shadow-container">
                 <div class="alert alert-info">
-                    Please Select Request Type
+                    Please Select The Type of Request
                 </div>
                 <div class="form-group">
                     <div class="custom-control custom-radio">
@@ -65,11 +72,12 @@
                 </div>
             </div>
         </div>
-        <div class="step" id="requestFor" style="display: none">
+        <div class="step">
             <div class="shadow-container">
                 <div class="alert alert-info">
                     Please Complete their Information
                 </div>
+                <p class="text-danger"> *Required Fields </p>
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label for="countyDeptName">County Dept. Name</label>
@@ -86,12 +94,12 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label for="firstName">First Name</label>
-                        <input asp-for="RequestedFor.FirstName" type="text" class="form-control" id="firstName" placeholder="First Name">
+                        <label for="validateFirstName">First Name*</label>
+                        <input asp-for="RequestedFor.FirstName" type="text" required class="form-control" id="validateFirstName" placeholder="First Name">
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="lastName">Last Name</label>
-                        <input asp-for="RequestedFor.LastName" type="text" class="form-control" id="lastName" placeholder="Last Name">
+                        <label for="validateLastName">Last Name*</label>
+                        <input asp-for="RequestedFor.LastName" type="text" required class="form-control" id="validateLastName" placeholder="Last Name">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="middleName">Middle Name</label>
@@ -99,10 +107,6 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="employeeNum">Employee Number</label>
-                        <input asp-for="RequestedFor.EmployeeNumber" type="text" class="form-control" id="telephone" placeholder="">
-                    </div>
                     <div class="form-group col-md-4">
                         <label for="locationPhoneNum">Employee Location Phone #</label>
                         <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
@@ -171,9 +175,7 @@
             </div>
         </div>
         <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
-        <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"
-                data-toggle="modal" data-target="#selfConfirm"> Next </button>
-        <button type="submit" class="btn btn-info float-right m-3" id="submitForm" onclick="nextPrev(1)" style="display: none"> Submit </button>
+        <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"> Next </button>
         <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
 
         <div class="text-center">
@@ -187,7 +189,6 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body" style="font-size: 20px; text-align:center;">
-                    Request for self? Or another?                 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" onclick="showForm()">Another</button>
@@ -204,23 +205,31 @@
         var currentStep = 0;
         showStep(currentStep);
         function showStep(n) {
-            // This function will display the specified tab of the form...
             var x = document.getElementsByClassName("step");
+            // This function will display the specified tab of the form...
             x[n].style.display = "block";
-            //Show previous button only after next has been clicked 
+            //Show previous button only after next has been clicked
             if (n == 0) {
+                document.getElementById("draft").style.display = "none";
+                document.getElementById("next").style.display = "none";
                 document.getElementById("prev").style.display = "none";
             } else {
+                document.getElementById("draft").style.display = "inline";
+                document.getElementById("next").style.display = "inline";
                 document.getElementById("prev").style.display = "inline";
             }
+            /*
             //Changes modal ID to only apply after first step
             if (n == 2) {
                 document.getElementById("selfConfirm").id = "confirmed";
-            }
+            }*/
+            //Display the submit button for submission and hide the next button on 2nd to last step
             if (n == (x.length - 2)) {
-                document.getElementById("next").style.display = "none";
-                document.getElementById("submitForm").style.display = "inline";
+                document.getElementById("next").innerHTML = "Submit";
+            } else {
+                document.getElementById("next").innerHTML = "Next";
             }
+            //Hide all buttons except preview and another submission
             if (n == (x.length - 1)) {
                 document.getElementById("draft").style.display = "none";
                 document.getElementById("next").style.display = "none";
@@ -231,22 +240,22 @@
             progressBar(currentStep);
         }
         function nextPrev(n) {
-            // This function will figure out which tab to display
             var x = document.getElementsByClassName("step");
             // Hide the current tab:
             x[currentStep].style.display = "none";
             // Increase or decrease the current tab by 1:
             currentStep = currentStep + n;
+            if (currentStep >= x.length-1) {
+                document.getElementById("reqForm").submit();
+            }
             showStep(currentStep);
         }
         function progressBar(n) {
             var x = document.getElementsByClassName("step");
             var progressMeter = n * (100 / (x.length - 1));
+            var noZero = Math.round(progressMeter);
             document.getElementById("pBar").style.width = progressMeter + "%";
-            document.getElementById("pBar").innerHTML = progressMeter.toString() + "% Complete";
-        }
-        function showForm() {
-            document.getElementById("requestFor").style.display = "block";
+            document.getElementById("pBar").innerHTML = noZero.toString() + "% Complete";
         }
     </script>
 </body>

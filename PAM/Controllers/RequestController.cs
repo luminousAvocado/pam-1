@@ -37,22 +37,16 @@ namespace PAM.Controllers
             var employee = _session.GetObject<Employee>("Employee");
             Requester requester = new Requester
             {
-                EmployeeNumber = "3",
                 Email = employee.Email,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Username = employee.Username
+                Username = employee.Username,
+                Name = employee.FirstName + " " + employee.LastName + "(" + employee.Username + ")"
             };
 
             requester = _userService.SaveRequester(requester);            
 
             HttpContext.Session.SetObject("Requester", requester);
-            return View("NewRequest");
-        }
-
-        [HttpGet]
-        public IActionResult CreateRequest()
-        {
             return View("NewRequest");
         }
 

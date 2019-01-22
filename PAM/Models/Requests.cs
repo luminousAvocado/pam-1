@@ -46,7 +46,7 @@ namespace PAM.Models
 
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Draft;
 
-        public DateTime SumbittedOn { get; set; }
+        public DateTime SubmittedOn { get; set; }
 
         public bool IsContractor { get; set; } = false;
         public bool IsHighProfileAccess { get; set; } = false;

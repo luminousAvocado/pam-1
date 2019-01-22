@@ -46,6 +46,8 @@ namespace PAM.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (id == null) return NotFound();
+
             var requests = await _dbContext.Requests
                 .FirstOrDefaultAsync(m => m.RequestId == id);
             if (requests == null) return View("Registrations");
