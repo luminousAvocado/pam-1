@@ -36,6 +36,7 @@ namespace PAM.Controllers
             Requester requester = HttpContext.Session.GetObject<Requester>("Requester");
             requester = _userService.SaveRequester(requester);            
 
+            HttpContext.Session.SetObject("Requester", requester);
             return View("NewRequest");
         }
 

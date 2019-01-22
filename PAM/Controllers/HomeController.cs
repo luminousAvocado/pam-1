@@ -44,7 +44,7 @@ namespace PAM.Controllers
             var empty = Enumerable.Empty<Request>();
 
             var requests = await _dbContext.Requests
-                .FirstOrDefaultAsync(m => m.RequestId > 0 );//m => m.RequestId == employee.EmployeeId);
+                .FirstOrDefaultAsync(m => m.RequestId > 0 );
             if (requests == null) return View("Registrations", empty);
             else return View(await _dbContext.Requests.ToListAsync());
         }
