@@ -21,12 +21,64 @@
     <form asp-controller="Request" asp-action="CreateRequest" method="post" id="reqForm" class="needs-validation">
         <input asp-for="Request.RequestedById" value=@requester.RequesterId type="hidden" />
         <input asp-for="Request.RequestedForId" value=@requester.RequesterId type="hidden" />
-        <input asp-for="RequestedFor.Username" value="@requester.Username" type="hidden" />
-        <input asp-for="RequestedFor.Name" value="@requester.Username" type="hidden" />
-        <div class="step text-center" >
+        <div class="step text-center">
             <h1> Is this request for yourself? </br> or for another individual? </h1>
-            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block">Self</button>
-            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block">Another</button>
+            <button type="button" class="btn btn-info" onclick="nextPrev(2)" style="display:inline-block" >Self</button>
+            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block" >Another</button>
+        </div>
+        <div class="step">
+            <input asp-for="RequestedFor.Username" value="@requester.Username" type="hidden" />
+            <input asp-for="RequestedFor.Name" value="@requester.Username" type="hidden" />
+            <div class="shadow-container">
+                <div class="alert alert-info">
+                    Please Complete their Information
+                </div>
+                <p class="text-danger"> *Required Fields </p>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="countyDeptName">County Dept. Name</label>
+                        <input asp-for="RequestedFor.Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="countyDeptNum">County Dept. #</label>
+                        <input asp-for="RequestedFor.DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="countyEmail">County Email Address</label>
+                        <input asp-for="RequestedFor.Email" type="text" class="form-control" id="validate" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="validateFirstName">First Name*</label>
+                        <input asp-for="RequestedFor.FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="validateLastName">Last Name*</label>
+                        <input asp-for="RequestedFor.LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="middleName">Middle Name</label>
+                <input asp-for="RequestedFor.MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="locationPhoneNum">Employee Location Phone #</label>
+                        <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="employeeCellNum">Employee Cell Phone #</label>
+                        <input asp-for="RequestedFor.CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4 offset-1">
+                        <label for="payrollTitle">Payroll Title</label>
+                        <input asp-for="RequestedFor.PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="step">
             <p>Complete the registration process by following a few simple steps.</p>
@@ -69,58 +121,6 @@
                 <div class="alert alert-dismissible alert-success">
                     <strong>Important: </strong> Please submit a seperate system registration form to remove your current
                     systems access with the <strong>"Transfer"</strong> request.
-                </div>
-            </div>
-        </div>
-        <div class="step">
-            <div class="shadow-container">
-                <div class="alert alert-info">
-                    Please Complete their Information
-                </div>
-                <p class="text-danger"> *Required Fields </p>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="countyDeptName">County Dept. Name</label>
-                        <input asp-for="RequestedFor.Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="countyDeptNum">County Dept. #</label>
-                        <input asp-for="RequestedFor.DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="countyEmail">County Email Address</label>
-                        <input asp-for="RequestedFor.Email" type="text" class="form-control" id="countyEmail" placeholder="Email">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="validateFirstName">First Name*</label>
-                        <input asp-for="RequestedFor.FirstName" type="text" required class="form-control" id="validateFirstName" placeholder="First Name">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="validateLastName">Last Name*</label>
-                        <input asp-for="RequestedFor.LastName" type="text" required class="form-control" id="validateLastName" placeholder="Last Name">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="middleName">Middle Name</label>
-                        <input asp-for="RequestedFor.MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="locationPhoneNum">Employee Location Phone #</label>
-                        <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="employeeCellNum">Employee Cell Phone #</label>
-                        <input asp-for="RequestedFor.CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-4 offset-1">
-                        <label for="payrollTitle">Payroll Title</label>
-                        <input asp-for="RequestedFor.PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
-                    </div>
                 </div>
             </div>
         </div>
@@ -183,21 +183,6 @@
             <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
         </div>
     </form>
-
-    <!-- Modal -->
-    <div class="modal fade" id="selfConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body" style="font-size: 20px; text-align:center;">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" onclick="showForm()">Another</button>
-                    <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Self</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         /*----------------------------------------------------------
             [ Script for proceeding to next step ]
@@ -218,11 +203,6 @@
                 document.getElementById("next").style.display = "inline";
                 document.getElementById("prev").style.display = "inline";
             }
-            /*
-            //Changes modal ID to only apply after first step
-            if (n == 2) {
-                document.getElementById("selfConfirm").id = "confirmed";
-            }*/
             //Display the submit button for submission and hide the next button on 2nd to last step
             if (n == (x.length - 2)) {
                 document.getElementById("next").innerHTML = "Submit";
@@ -241,6 +221,7 @@
         }
         function nextPrev(n) {
             var x = document.getElementsByClassName("step");
+            if (n == 1 && !validateForm()) return false;
             // Hide the current tab:
             x[currentStep].style.display = "none";
             // Increase or decrease the current tab by 1:
@@ -249,6 +230,25 @@
                 document.getElementById("reqForm").submit();
             }
             showStep(currentStep);
+        }
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            x = document.getElementsByClassName("step");
+            y = x[currentStep].getElementsByTagName("input")
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].id == "validate") {
+                    if (y[i].value == "") {
+                        // add an "invalid" class to the field:
+                        y[i].className += " invalid";
+                        // and set the current valid status to false:
+                        valid = false;
+                    }
+                }
+            }
+            return valid;
         }
         function progressBar(n) {
             var x = document.getElementsByClassName("step");

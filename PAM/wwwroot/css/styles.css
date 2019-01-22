@@ -120,6 +120,10 @@
     font-size: 16px;
     height: 25px;
 }
+
+input.invalid {
+    background-color: #ffdddd;
+}
 /*----------------------------------------------------------
     [ Loading Modal ]
 */

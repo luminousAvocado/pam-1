@@ -31,10 +31,16 @@ namespace PAM.Controllers
         public async Task<IActionResult> Registrations()
         {
             Employee employee = _session.GetObject<Employee>("Employee");
-            if(employee != null)
+            Requester requester = new Requester
             {
-                Console.WriteLine("Proper EMPLOYEE w/ ID: " + employee.EmployeeId);
-            }
+                Email = employee.Email,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                Username = employee.Username,
+                Name = employee.FirstName + " " + employee.LastName + "(" + employee.Username + ")"
+            };
+
+            HttpContext.Session.SetObject("Requester", requester);
             var empty = Enumerable.Empty<Request>();
 
             var requests = await _dbContext.Requests

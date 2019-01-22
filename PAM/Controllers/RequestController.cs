@@ -33,29 +33,19 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult CreateRequester()
         {
-            //var employee = _sessionHelp.GetSessionObj<Employee>("Employee");
-            var employee = _session.GetObject<Employee>("Employee");
-            Requester requester = new Requester
-            {
-                Email = employee.Email,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Username = employee.Username,
-                Name = employee.FirstName + " " + employee.LastName + "(" + employee.Username + ")"
-            };
-
+            Requester requester = HttpContext.Session.GetObject<Requester>("Requester");
             requester = _userService.SaveRequester(requester);            
 
-            HttpContext.Session.SetObject("Requester", requester);
             return View("NewRequest");
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateRequest (NewRegistrationViewModel reg)
         {
-            if(reg.RequestedFor != null)
+            if(reg.RequestedFor.FirstName != null)
             {
                 _dbContext.Add(reg.RequestedFor);
+
             }
             _dbContext.Add(reg.Request);
             await _dbContext.SaveChangesAsync();
