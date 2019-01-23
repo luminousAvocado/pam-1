@@ -4,6 +4,8 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     var requester = HttpContextAccessor.HttpContext.Session.GetObject<Employee>("Employee");
+    var myReqCount = 0;
+    var allReqCount = 0;
     ViewData["Title"] = "Registrations";
 }
 @model IEnumerable<PAM.Models.Request>
@@ -38,11 +40,11 @@
                     </thead>
                     @foreach (var item in Model ?? Enumerable.Empty<Request>())
                     {
+                        myReqCount = myReqCount + 1;
                         if (item.Username == requester.Username)
                         {
-
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.RequestedById)</td>
+                                <td>@myReqCount</td>
                                 <td>@Html.DisplayFor(modelItem => item.SubmittedOn)</td>
                                 <td>
                                     @{
@@ -154,8 +156,9 @@
                     </thead>
                @foreach (var item in Model ?? Enumerable.Empty<Request>())
                {
+                   allReqCount = allReqCount + 1;
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestedById)</td>
+                        <td>@allReqCount</td>
                         <td>@Html.DisplayFor(modelItem => item.SubmittedOn)</td>
                         <td>
                             @{

@@ -38,7 +38,7 @@ namespace PAM.Controllers
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Username = employee.Username,
-                Name = employee.FirstName + " " + employee.LastName 
+                Name = employee.Name
             };
 
             requester = _userService.SaveRequester(requester);
