@@ -1,7 +1,7 @@
 ﻿@using PAM.Models
 @using PAM.Extensions
 
-@model PAM.Models.NewRegistrationViewModel
+@model PAM.Models.Request
 
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
@@ -10,179 +10,43 @@
 }
 
 <body>
-    <p style="font-size: 40px;" class="text-center">New Registration</p>
-    <hr>
-    <div class="progress" style="margin-bottom: 20px;">
-        <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
-             style="width:10%;" aria-valuenow="50"
-             aria-valuemin="0" aria-valuemax="100">
-        </div>
+    <partial name="_ProgressBar.cshtml" />
+    <div class="step text-center">
+        <h1> Is this request for yourself? </br> or for another individual? </h1>
     </div>
-    <form asp-controller="Request" asp-action="CreateRequest" method="post" id="reqForm" class="needs-validation">
-        <input asp-for="Request.RequestedById" value=@requester.RequesterId type="hidden" />
-        <input asp-for="Request.RequestedForId" value=@requester.RequesterId type="hidden" />
-        <div class="step text-center">
-            <h1> Is this request for yourself? </br> or for another individual? </h1>
-            <button type="button" class="btn btn-info" onclick="nextPrev(2)" style="display:inline-block" >Self</button>
-            <button type="button" class="btn btn-info" onclick="nextPrev(1)" style="display:inline-block" >Another</button>
-        </div>
-        <div class="step">
-            <input asp-for="RequestedFor.Username" value="@requester.Username" type="hidden" />
-            <input asp-for="RequestedFor.Name" value="@requester.Username" type="hidden" />
-            <div class="shadow-container">
-                <div class="alert alert-info">
-                    Please Complete their Information
-                </div>
-                <p class="text-danger"> *Required Fields </p>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="countyDeptName">County Dept. Name</label>
-                        <input asp-for="RequestedFor.Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="countyDeptNum">County Dept. #</label>
-                        <input asp-for="RequestedFor.DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="countyEmail">County Email Address</label>
-                        <input asp-for="RequestedFor.Email" type="text" class="form-control" id="validate" placeholder="Email">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="validateFirstName">First Name*</label>
-                        <input asp-for="RequestedFor.FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="validateLastName">Last Name*</label>
-                        <input asp-for="RequestedFor.LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="middleName">Middle Name</label>
-                <input asp-for="RequestedFor.MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="locationPhoneNum">Employee Location Phone #</label>
-                        <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="employeeCellNum">Employee Cell Phone #</label>
-                        <input asp-for="RequestedFor.CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-4 offset-1">
-                        <label for="payrollTitle">Payroll Title</label>
-                        <input asp-for="RequestedFor.PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="step">
-            <p>Complete the registration process by following a few simple steps.</p>
-            <div class="shadow-container">
-                <div class="alert alert-info">
-                    Please Select The Type of Request
-                </div>
-                <div class="form-group">
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg">
-                        <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
-                        <p> -Initiates first time registrations for new users and systems access. </p>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="2" type="radio" class="custom-control-input" id="transfer">
-                        <label class="custom-control-label label-edit" for="transfer"> Transfer </label>
-                        <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="4" type="radio" class="custom-control-input" id="portfolio">
-                        <label class="custom-control-label label-edit" for="portfolio"> Portfolio Assignment </label>
-                        <p> -Initiates the update of information for the portfolio. </p>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="5" type="radio" class="custom-control-input" id="leaving">
-                        <label class="custom-control-label label-edit" for="leaving"> Leaving Probation </label>
-                        <p> -Initiates removal of ALL system(s) access. </p>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="11" type="radio" class="custom-control-input" id="addAccess">
-                        <label class="custom-control-label label-edit" for="addAccess">Add Access</label>
-                        <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input asp-for="Request.RequestTypeId" value="12" type="radio" class="custom-control-input" id="removeAccess">
-                        <label class="custom-control-label label-edit" for="removeAccess"> Remove Access </label>
-                        <p> -Initiates removal access for individual system(s). </p>
-                    </div>
-                </div>
-                <div class="alert alert-dismissible alert-success">
-                    <strong>Important: </strong> Please submit a seperate system registration form to remove your current
-                    systems access with the <strong>"Transfer"</strong> request.
-                </div>
-            </div>
-        </div>
-        <div class="step">
-            <div class="shadow-container">
-                <div class="alert alert-info">
-                    Additional Information of your Request
-                </div>
-                <h3> Please select all that apply. </h3>
-                <div class="custom-control custom-checkbox">
-                    <input asp-for="Request.IsContractor" type="checkbox" class="custom-control-input" id="contractor" checked="" /> 
-                    <label class="custom-control-label" for="customCheck1"> Contractor </label>
-                </div>
-                <div class="custom-control custom-checkbox">
-                    <input asp-for="Request.IsHighProfileAccess" type="checkbox" class="custom-control-input" checked="" />
-                    <label class="custom-control-label" for="customCheck2"> High Profile</label>
-                </div>
-                <div class="custom-control custom-checkbox">
-                    <input asp-for="Request.IsGlobalAccess" type="checkbox" class="custom-control-input" checked="" />
-                    <label class="custom-control-label" for="customCheck3"> Global Access </label>
-                </div>
-                <div class="form-group">
-                    <fieldset>
-                        <label class="control-label" for="readOnlyInput">Caseload Type</label>
-                        <input asp-for="Request.CaseloadType"class="form-control" id="readOnlyInput" type="text" placeholder=""/>
-                    </fieldset>
-                </div>
-                <div class="form-group">
-                    <fieldset>
-                        <label class="control-label" for="readOnlyInput">Caseload Function</label>
-                        <input asp-for="Request.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder=""/>
-                    </fieldset>
-                </div>
-                <div class="form-group">
-                    <fieldset>
-                        <label class="control-label" for="readOnlyInput">Caseload Number</label>
-                        <input asp-for="Request.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-                    </fieldset>
-                </div>
-                <div class="form-group">
-                    <fieldset>
-                        <label class="control-label" for="readOnlyInput">Departure Reason</label>
-                        <input asp-for="Request.DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-                    </fieldset>
-                </div>
-            </div>
-        </div>
-        <div class="step">
-            <div class="jumbotron" style="text-align:center">
-                <h1>Thank you for submitting your request.</h1> <br\>
-                    <h1> Your requests will be processed by the department.</h1>
-            </div>
-        </div>
-        <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
-        <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"> Next </button>
-        <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
 
+    <form asp-controller="RequesterInfo" asp-action="RequestSelf" method="post">
         <div class="text-center">
-            <a type="button" class="btn btn-info" id="view" style="display: none" href=""> Preview </a>
-            <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
+            <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
+            <input asp-for="RequestedForId" value="@requester.RequesterId" type="hidden" />
+            <button type="submit" class="btn btn-info" onclick="progressBar(20)" style="display:inline-block">Self</button>
         </div>
     </form>
+    </br>
+    <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
+        <div class="text-center">
+            <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
+            <button type="submit" class="btn btn-info" onclick="progressBar(20)" style="display:inline-block">Another</button>
+        </div>
+    </form>
+    <!--
+          <div class="step">
+          </div>
+          <div class="step">
+              <div class="jumbotron" style="text-align:center">
+                  <h1>Thank you for submitting your request.</h1> <br\>
+                      <h1> Your requests will be processed by the department.</h1>
+              </div>
+          </div>
+          <button type="button" class="btn btn-info float-left m-3" id="draft"> Save Draft </button>
+          <button type="button" class="btn btn-info float-right m-3" id="next" onclick="nextPrev(1)" style="margin-left: 6px;"> Next </button>
+          <button type="button" class="btn btn-info float-right m-3" id="prev" onclick="nextPrev(-1)" style="margin-left: 6px;"> Previous </button>
+
+          <div class="text-center">
+              <a type="button" class="btn btn-info" id="view" style="display: none" href=""> Preview </a>
+              <a type="button" class="btn btn-info" id="submitAgain" style="display: none" href="/Home/NewRegistrations"> Submit Another </a>
+          </div>
+    -->
     <script>
         /*----------------------------------------------------------
             [ Script for proceeding to next step ]
@@ -226,7 +90,7 @@
             x[currentStep].style.display = "none";
             // Increase or decrease the current tab by 1:
             currentStep = currentStep + n;
-            if (currentStep >= x.length-1) {
+            if (currentStep >= x.length - 1) {
                 document.getElementById("reqForm").submit();
             }
             showStep(currentStep);
@@ -249,13 +113,6 @@
                 }
             }
             return valid;
-        }
-        function progressBar(n) {
-            var x = document.getElementsByClassName("step");
-            var progressMeter = n * (100 / (x.length - 1));
-            var noZero = Math.round(progressMeter);
-            document.getElementById("pBar").style.width = progressMeter + "%";
-            document.getElementById("pBar").innerHTML = noZero.toString() + "% Complete";
         }
     </script>
 </body>

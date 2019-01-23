@@ -3,14 +3,14 @@
 
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Employee>("Employee");
     ViewData["Title"] = "Registrations";
 }
 @model IEnumerable<PAM.Models.Request>
 
 <body>
     <p style="font-size: 40px;">Registration Requests
-        <a asp-controller="Request" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
+        <a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
     </p>
         <ul class="nav nav-tabs">
             <li class="nav-item">

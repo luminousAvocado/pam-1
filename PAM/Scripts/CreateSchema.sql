@@ -147,6 +147,7 @@ GO
 
 CREATE TABLE [Requests] (
     [RequestId] int NOT NULL IDENTITY,
+    [Username] nvarchar(max) NOT NULL,
     [RequestTypeId] int NOT NULL,
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,

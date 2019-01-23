@@ -70,7 +70,7 @@ namespace PAM.Controllers
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
             HttpContext.Session.SetObject("Employee", employee);
 
-            return RedirectToAction("Registrations", "Home");
+            return RedirectToAction("Registrations", "Registrations", employee);
         }
 
         [HttpPost]

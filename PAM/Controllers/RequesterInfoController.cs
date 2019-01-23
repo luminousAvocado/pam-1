@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using PAM.Models;
+using PAM.Extensions;
+
+namespace PAM.Controllers
+{
+    public class RequesterInfoController : Controller
+    {
+        [HttpPost]
+        public IActionResult RequestSelf(Request req)
+        {
+            return RedirectToAction("RequestType", "RequestType", req);
+        }
+
+        [HttpPost]
+        public IActionResult RequestOther(Request req)
+        {
+            return View("../Request/RequesterInfo", req);
+        }
+    }
+}

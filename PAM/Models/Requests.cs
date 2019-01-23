@@ -33,6 +33,8 @@ namespace PAM.Models
     {
         public int RequestId { get; set; }
 
+        public string Username { get; set; }
+
         public int RequestTypeId { get; set; }
         public RequestType RequestType { get; set; }
 

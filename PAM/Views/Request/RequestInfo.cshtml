@@ -1,0 +1,62 @@
+﻿@using PAM.Models
+@using PAM.Extensions
+
+@model PAM.Models.Request
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+    ViewData["Title"] = "Request Info";
+}
+
+<body>
+    @{
+        Console.WriteLine("LOST??" + Model.RequestedById);
+    }
+    <partial name="_ProgressBar.cshtml" />
+    <form asp-controller="NewRequest" asp-action="CreateRequest" method="post">
+        <div class="shadow-container">
+            <div class="alert alert-info">
+                Additional Information of your Request
+            </div>
+            <h3> Please select all that apply. </h3>
+            <div class="custom-control custom-checkbox">
+                <input asp-for="IsContractor" type="checkbox" class="custom-control-input" id="contractor" checked="" />
+                <label class="custom-control-label" for="customCheck1"> Contractor </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input asp-for="IsHighProfileAccess" type="checkbox" class="custom-control-input" checked="" />
+                <label class="custom-control-label" for="customCheck2"> High Profile</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input asp-for="IsGlobalAccess" type="checkbox" class="custom-control-input" checked="" />
+                <label class="custom-control-label" for="customCheck3"> Global Access </label>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <label class="control-label" for="readOnlyInput">Caseload Type</label>
+                    <input asp-for="CaseloadType" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <label class="control-label" for="readOnlyInput">Caseload Function</label>
+                    <input asp-for="CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <label class="control-label" for="readOnlyInput">Caseload Number</label>
+                    <input asp-for="CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <label class="control-label" for="readOnlyInput">Departure Reason</label>
+                    <input asp-for="DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+                </fieldset>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info float-right m-3" onclick="progressBar(20)"> Submit </button>
+    </form>
+</body>
