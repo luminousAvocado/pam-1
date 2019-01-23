@@ -3,14 +3,16 @@
 
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Employee>("Employee");
+    var myReqCount = 0;
+    var allReqCount = 0;
     ViewData["Title"] = "Registrations";
 }
 @model IEnumerable<PAM.Models.Request>
 
 <body>
     <p style="font-size: 40px;">Registration Requests
-        <a asp-controller="Request" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
+        <a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
     </p>
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -36,48 +38,52 @@
                             <th scope="col"> Action </th>
                         </tr>
                     </thead>
-               @foreach (var item in Model ?? Enumerable.Empty<Request>())
-               {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestedById)</td>
-                        <td>@Html.DisplayFor(modelItem => item.SubmittedOn)</td>
-                        <td>
-                            @{
-                                switch (@item.RequestTypeId)
-                                {
-                                    case 1:
-                                        <text> New Hire </text>
-                                        break;
-                                    case 2:
-                                        <text> Transfer </text>
-                                        break;
-                                    case 4:
-                                        <text> Portfolio Assignment </text>
-                                        break;
-                                    case 5:
-                                        <text> Leaving Probation </text>
-                                        break;
-                                    case 11:
-                                        <text> Add Access </text>
-                                        break;
-                                    case 12:
-                                        <text> Remove Access </text>
-                                        break;
-                                    default:
-                                        <text> Invalid Requests </text>
-                                        break;
-                                }
-                            }
-                        </td>
-                        <td>@requester.FirstName</td>
-                        <td>@item.RequestStatus</td>
-                        <td>
-                            <a asp-action="Edit">Edit</a> |
-                            <a asp-action="View">View</a> |
-                            <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
-                        </td>
-                    </tr>
-                }
+                    @foreach (var item in Model ?? Enumerable.Empty<Request>())
+                    {
+                        myReqCount = myReqCount + 1;
+                        if (item.Username == requester.Username)
+                        {
+                            <tr>
+                                <td>@myReqCount</td>
+                                <td>@Html.DisplayFor(modelItem => item.SubmittedOn)</td>
+                                <td>
+                                    @{
+                                        switch (@item.RequestTypeId)
+                                        {
+                                            case 1:
+                                                <text> New Hire </text>
+                                                break;
+                                            case 2:
+                                                <text> Transfer </text>
+                                                break;
+                                            case 4:
+                                                <text> Portfolio Assignment </text>
+                                                break;
+                                            case 5:
+                                                <text> Leaving Probation </text>
+                                                break;
+                                            case 11:
+                                                <text> Add Access </text>
+                                                break;
+                                            case 12:
+                                                <text> Remove Access </text>
+                                                break;
+                                            default:
+                                                <text> Invalid Requests </text>
+                                                break;
+                                        }
+                                    }
+                                </td>
+                                <td>@requester.FirstName</td>
+                                <td>@item.RequestStatus</td>
+                                <td>
+                                    <a asp-action="Edit">Edit</a> |
+                                    <a asp-action="View">View</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.RequestId">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
                 </table>
             </div>
             <div class="tab-pane fade" id="status">
@@ -150,8 +156,9 @@
                     </thead>
                @foreach (var item in Model ?? Enumerable.Empty<Request>())
                {
+                   allReqCount = allReqCount + 1;
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RequestedById)</td>
+                        <td>@allReqCount</td>
                         <td>@Html.DisplayFor(modelItem => item.SubmittedOn)</td>
                         <td>
                             @{
@@ -181,7 +188,7 @@
                                 }
                             }
                         </td>
-                        <td>@requester.FirstName</td>
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
                         <td>@item.RequestStatus</td>
                         <td>
                             <a asp-action="Edit">Edit</a> |

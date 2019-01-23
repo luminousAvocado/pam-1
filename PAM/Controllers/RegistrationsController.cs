@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace PAM.Controllers
 {
-    public class HomeController : Controller
+    public class RegistrationsController : Controller
     {
         private readonly AppDbContext _dbContext;
         //private readonly SessionHelper _sessionHelper;
@@ -20,7 +20,7 @@ namespace PAM.Controllers
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
-        public HomeController (AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        public RegistrationsController (AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = context;
             _httpContextAccessor = httpContextAccessor;
@@ -28,19 +28,8 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Registrations()
+        public async Task<IActionResult> Registrations(Employee employee)
         {
-            Employee employee = _session.GetObject<Employee>("Employee");
-            Requester requester = new Requester
-            {
-                Email = employee.Email,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Username = employee.Username,
-                Name = employee.FirstName + " " + employee.LastName + "(" + employee.Username + ")"
-            };
-
-            HttpContext.Session.SetObject("Requester", requester);
             var empty = Enumerable.Empty<Request>();
 
             var requests = await _dbContext.Requests
