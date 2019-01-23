@@ -17,6 +17,7 @@
 
     <form asp-controller="RequesterInfo" asp-action="RequestSelf" method="post">
         <div class="text-center">
+            <input asp-for="Name" value="@requester.Name" type="hidden" />
             <input asp-for="Username" value="@requester.Username" type="hidden" />
             <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
             <input asp-for="RequestedForId" value="@requester.RequesterId" type="hidden" />
@@ -26,6 +27,7 @@
     </br>
     <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
         <div class="text-center">
+            <input asp-for="Name" value="@requester.Name" type="hidden" />
             <input asp-for="Username" value="@requester.Username" type="hidden" />
             <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
             <!--TODO: Fix to Proper RequestedForId-->

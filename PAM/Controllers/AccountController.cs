@@ -80,7 +80,7 @@ namespace PAM.Controllers
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return Redirect("/");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
