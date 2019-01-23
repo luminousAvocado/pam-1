@@ -50,10 +50,16 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest (Request req)
         {
-            Console.WriteLine("UHH" + req.RequestTypeId);
-            Console.WriteLine("UHH1" + req.RequestedById);
-            Console.WriteLine("UHH2" + req.RequestedForId);
-            _dbContext.Add(req);
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            update.IsContractor = req.IsContractor;
+            update.IsHighProfileAccess = req.IsHighProfileAccess;
+            update.IsGlobalAccess = req.IsGlobalAccess;
+            update.CaseloadType = req.CaseloadType;
+            update.CaseloadFunction = req.CaseloadFunction;
+            update.CaseloadNumber = req.CaseloadNumber;
+            update.DepartureReason = req.DepartureReason;
+
+            _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Registrations", "Registrations");

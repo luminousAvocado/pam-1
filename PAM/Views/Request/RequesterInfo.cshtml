@@ -1,7 +1,7 @@
 ﻿@using PAM.Models
 @using PAM.Extensions
 
-@model PAM.Models.Request
+@model PAM.Models.Requester
 
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
@@ -11,9 +11,9 @@
 
 <body>
     <partial name="_ProgressBar.cshtml" />
-    <form asp-controller="RequesterInfo">
-        <input asp-for="RequestedFor.Username" value="@requester.Username" type="hidden" />
-        <input asp-for="RequestedFor.Name" value="@requester.Username" type="hidden" />
+    <form asp-controller="RequestType" asp-action="NewRequester" id="requesterInfo" method="get">
+        <input asp-for="Username" value="@requester.Username" type="hidden" />
+        <input asp-for="Name" value="@requester.Username" type="hidden" />
         <div class="shadow-container">
             <div class="alert alert-info">
                 Please Complete their Information
@@ -22,48 +22,72 @@
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label for="countyDeptName">County Dept. Name</label>
-                    <input asp-for="RequestedFor.Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+                    <input asp-for="Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
                 </div>
                 <div class="form-group col-md-2">
                     <label for="countyDeptNum">County Dept. #</label>
-                    <input asp-for="RequestedFor.DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+                    <input asp-for="DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
                 </div>
                 <div class="form-group col-md-5">
                     <label for="countyEmail">County Email Address</label>
-                    <input asp-for="RequestedFor.Email" type="text" class="form-control" id="validate" placeholder="Email">
+                    <input asp-for="Email" type="text" class="form-control" id="validate" placeholder="Email">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label for="validateFirstName">First Name*</label>
-                    <input asp-for="RequestedFor.FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
+                    <input asp-for="FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
                 </div>
                 <div class="form-group col-md-5">
                     <label for="validateLastName">Last Name*</label>
-                    <input asp-for="RequestedFor.LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
+                    <input asp-for="LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
                 </div>
                 <div class="form-group col-md-2">
                     <label for="middleName">Middle Name</label>
-                    <input asp-for="RequestedFor.MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
+                    <input asp-for="MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="locationPhoneNum">Employee Location Phone #</label>
-                    <input asp-for="RequestedFor.WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    <input asp-for="WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="employeeCellNum">Employee Cell Phone #</label>
-                    <input asp-for="RequestedFor.CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                    <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4 offset-1">
                     <label for="payrollTitle">Payroll Title</label>
-                    <input asp-for="RequestedFor.PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
+                    <input asp-for="PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-info float-right m-3" onclick="progressBar(20)"> Next </button>
+        <button type="button" class="btn btn-info float-right m-3" onclick="validateForm()"> Next </button>
     </form>
 </body>
+<script>
+    function validateForm() {
+        if (!validateInput()) return false;
+        else document.getElementById("requesterInfo").submit();
+    }
+    function validateInput() {
+        // This function deals with validation of the form fields
+        var x, y, i, valid = true;
+        y = document.getElementsByTagName("input")
+        // A loop that checks every input field in the current tab:
+        for (i = 0; i < y.length; i++) {
+            // If a field is empty...
+            if (y[i].id == "validate") {
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+        }
+        return valid;
+    }
+</script>

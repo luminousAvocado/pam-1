@@ -13,13 +13,16 @@ namespace PAM.Controllers
         [HttpPost]
         public IActionResult RequestSelf(Request req)
         {
+            HttpContext.Session.SetObject("Request", req);
             return RedirectToAction("RequestType", "RequestType", req);
         }
 
         [HttpPost]
         public IActionResult RequestOther(Request req)
         {
-            return View("../Request/RequesterInfo", req);
+            HttpContext.Session.SetObject("Request", req);
+            Requester newRequester = new Requester();
+            return View("../Request/RequesterInfo", newRequester);
         }
     }
 }
