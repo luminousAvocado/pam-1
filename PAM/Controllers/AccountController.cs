@@ -3,39 +3,49 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using PAM.Extensions;
 
 namespace PAM.Controllers
 {
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly ILogger _logger;
 
+        private ViewResult view;
+
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
             _logger = logger;
+
+            view = View();
         }
 
         [HttpGet]
         public async Task<IActionResult> Login()
         {
+            view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return View();
+            return view;
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            if (!_adService.Authenticate(username, password)) return View();
+            if (!_adService.Authenticate(username, password)) 
+            {
+                view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
+                return view;
+            }
 
             Employee employee = _adService.GetEmployee(username);
             Employee user = _userService.GetEmployee(username);
@@ -58,8 +68,9 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
+            HttpContext.Session.SetObject("Employee", employee);
 
-            return Redirect("/");
+            return RedirectToAction("Registrations", "Registrations", employee);
         }
 
         [HttpPost]
@@ -69,7 +80,7 @@ namespace PAM.Controllers
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return Redirect("/");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

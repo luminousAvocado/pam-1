@@ -33,6 +33,10 @@ namespace PAM.Models
     {
         public int RequestId { get; set; }
 
+        public string Username { get; set; }
+
+        public string Name { get; set; }
+
         public int RequestTypeId { get; set; }
         public RequestType RequestType { get; set; }
 
@@ -46,7 +50,7 @@ namespace PAM.Models
 
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Draft;
 
-        public DateTime SumbittedOn { get; set; }
+        public DateTime SubmittedOn { get; set; }
 
         public bool IsContractor { get; set; } = false;
         public bool IsHighProfileAccess { get; set; } = false;
@@ -72,9 +76,10 @@ namespace PAM.Models
 
         [NotMapped]
         public bool IsSelfRequest => RequestedById == RequestedForId;
-
+        /*
         [NotMapped]
         public List<Review> OrderedReviews => Reviews.OrderBy(r => r.ReviewOrder).ToList();
+        */
     }
 
     [Table("Reviews")]

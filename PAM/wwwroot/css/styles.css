@@ -1,0 +1,168 @@
+﻿body {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+    background: linear-gradient(to top, #3D7EAA 0%, #E4E5E6 100%);
+    background: -webkit-linear-gradient(to bottom, #00416A 0%, #E4E5E6 100%);
+}
+/*----------------------------------------------------------
+    [ Background for Login ]
+*/
+.bg-display {
+    background-image: url("../Images/la.jpg");
+    width: 100%;
+    min-height: 100vh;
+    justify-content: flex-end;
+    display:flex;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
+
+.bg-display::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.35);
+    position: absolute;
+    z-index: -1;
+}
+
+/*----------------------------------------------------------
+    [ Login Container & Contents ]
+*/
+.login-container {
+    color: black;
+    width: 470px;
+    height: 100vh;
+    box-shadow: rgb(128, 128, 128) 2px 2px 2px 2px;
+    overflow: hidden;
+    padding: 10px 55px 37px 55px;
+    background: linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
+    background: -webkit-linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
+}
+
+.logo img {
+    display: block;
+    margin: 0 auto;
+    padding: 5%;
+}
+
+.login-title {
+    font-size: 28px;
+    text-align: center;
+    display: block;
+    padding-bottom: 5%;
+}
+.login-container p {
+    box-shadow: rgb(128, 128, 128) 1px 1px 1px;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 3%;
+    margin-top: 5%
+}
+/*----------------------------------------------------------
+    [ Main Content Styling ]
+*/
+.navbar{
+    padding: 0 0 0 1.5rem;
+}
+.content-container {
+    margin: 25px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    border-radius: 7px;
+}
+
+.card-header {
+    font-size: 20px;
+}
+
+.form-container {
+    width: 100%;
+    height: 100%;
+    color: black;
+    background: #FFF;
+    font-size: 16px;
+    border-radius: 7px;
+    padding: 20px 30px 30px 30px;
+}
+.alert {
+    border-radius: 7px;
+}
+.shadow-container {
+    height: 80%;
+    width: 100%;
+    box-shadow: rgb(128, 128, 128) 1px 1px 1px 1px;
+    border-radius: 7px;
+    padding: 25px 15px 35px 15px;
+}
+
+.label-edit {
+    font-weight:900;
+    font-size: 18px;
+}
+
+.step {
+    display: none;
+}
+
+.progress{
+    background-color:#ababab;
+    color:#fff;
+    border-radius: 3px;
+    font-size: 16px;
+    height: 25px;
+}
+
+input.invalid {
+    background-color: #ffdddd;
+}
+/*----------------------------------------------------------
+    [ Loading Modal ]
+*/
+.bd-example-modal-lg .modal-dialog{
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    top: calc(50% - 24px);
+  }
+  
+  .bd-example-modal-lg .modal-dialog .modal-content{
+    background-color: transparent;
+    border: none;
+  }
+/*----------------------------------------------------------
+    [ Scroll Bar Styling ]
+*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+.select-container {
+    display: block;
+    width: 25%;
+    height: 400px;
+}

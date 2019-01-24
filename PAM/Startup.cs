@@ -37,6 +37,7 @@ namespace PAM
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession();
 
             services
                 .AddFluentEmail(Configuration.GetValue<string>("Application:Email"))
@@ -80,13 +81,14 @@ namespace PAM
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

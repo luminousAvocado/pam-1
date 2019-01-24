@@ -112,7 +112,7 @@ GO
 CREATE TABLE [Requesters] (
     [RequesterId] int NOT NULL IDENTITY,
     [Username] nvarchar(max) NOT NULL,
-    [EmployeeNumber] nvarchar(max) NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(max) NOT NULL,
@@ -147,11 +147,13 @@ GO
 
 CREATE TABLE [Requests] (
     [RequestId] int NOT NULL IDENTITY,
+    [Name] nvarchar(max) NOT NULL,
+    [Username] nvarchar(max) NOT NULL,
     [RequestTypeId] int NOT NULL,
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
     [RequestStatus] nvarchar(max) NOT NULL,
-    [SumbittedOn] datetime2 NOT NULL,
+    [SubmittedOn] datetime2 NOT NULL,
     [IsContractor] bit NOT NULL,
     [IsHighProfileAccess] bit NOT NULL,
     [IsGlobalAccess] bit NOT NULL,

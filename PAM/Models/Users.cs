@@ -67,7 +67,7 @@ namespace PAM.Models
         public string Username { get; set; }
 
         [Required]
-        public string EmployeeNumber { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -97,8 +97,9 @@ namespace PAM.Models
         public string WorkPhone { get; set; }
         public string CellPhone { get; set; }
 
-        // derived properties
+        /* derived properties
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
+        */
     }
 }
