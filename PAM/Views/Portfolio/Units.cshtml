@@ -8,7 +8,7 @@
 
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateUnit">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -73,9 +73,9 @@
 
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.UnitId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.UnitId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UnitId">Delete</a>
+                    <a asp-action="EditUnit" asp-route-id="@item.UnitId">Edit</a> |
+                    <a asp-action="DetailsUnit" asp-route-id="@item.UnitId">Details</a> |
+                    <a asp-action="DeleteUnit" asp-route-id="@item.UnitId">Delete</a>
                 </td>
             </tr>
 

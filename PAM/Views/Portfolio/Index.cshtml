@@ -7,7 +7,7 @@
 <h2>Bureaus</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateBureau">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -28,9 +28,9 @@
                 </td>
                 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BureauId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BureauId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BureauId">Delete</a>
+                    <a asp-action="EditBureau" asp-route-id="@item.BureauId">Edit</a> |
+                    <a asp-action="DetailsBureau" asp-route-id="@item.BureauId">Details</a> |
+                    <a asp-action="DeleteBureau" asp-route-id="@item.BureauId">Delete</a>
                 </td>
             </tr>
         }
