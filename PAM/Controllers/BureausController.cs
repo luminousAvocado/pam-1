@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,14 +18,14 @@ namespace PAM.Controllers
         {
             _context = context;
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // GET: Bureaus
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Bureaus.Include(b => b.BureauType);
             return View(await appDbContext.ToListAsync());
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // GET: Bureaus/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,14 +44,14 @@ namespace PAM.Controllers
 
             return View(bureau);
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // GET: Bureaus/Create
         public IActionResult Create()
         {
             ViewData["BureauTypeId"] = new SelectList(_context.Set<BureauType>(), "BureauTypeId", "Code");
             return View();
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // POST: Bureaus/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -68,7 +68,7 @@ namespace PAM.Controllers
             ViewData["BureauTypeId"] = new SelectList(_context.Set<BureauType>(), "BureauTypeId", "Code", bureau.BureauTypeId);
             return View(bureau);
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // GET: Bureaus/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -85,7 +85,7 @@ namespace PAM.Controllers
             ViewData["BureauTypeId"] = new SelectList(_context.Set<BureauType>(), "BureauTypeId", "Code", bureau.BureauTypeId);
             return View(bureau);
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // POST: Bureaus/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -121,7 +121,7 @@ namespace PAM.Controllers
             ViewData["BureauTypeId"] = new SelectList(_context.Set<BureauType>(), "BureauTypeId", "Code", bureau.BureauTypeId);
             return View(bureau);
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // GET: Bureaus/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -140,7 +140,7 @@ namespace PAM.Controllers
 
             return View(bureau);
         }
-
+        //-----------------------------------------------------------------------------------------------------------
         // POST: Bureaus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
