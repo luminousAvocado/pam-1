@@ -64,6 +64,7 @@ namespace PAM
             services.AddSingleton<IADService, MockADService>();
             services.AddScoped<OrganizationService>();
             services.AddScoped<UserService>();
+            services.AddScoped<RequestService>();
         }
 
         public void Configure(IApplicationBuilder app)
