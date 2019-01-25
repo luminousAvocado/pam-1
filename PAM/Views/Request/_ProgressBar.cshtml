@@ -1,19 +1,25 @@
-﻿<p style="font-size: 40px;" class="text-center">New Registration</p>
+﻿
+<p style="font-size: 40px;" class="text-center">New Registration</p>
 <hr>
-<div class="progress" style="margin-bottom: 20px;">
-    <div class="progress-bar progress-bar-striped bg-info" id="pBar" role="progressbar"
-         aria-valuenow="50"
-         aria-valuemin="0" aria-valuemax="100">
-    </div>
+<div class="progressbar-container">
+    <ul class="progressbar">
+        <li class="step active">Self or For</li>
+        <li class="step">Requester(s) Information</li>
+        <li class="step">Request Type</li>
+        <li class="step">Unit Selection</li>
+        <li class="step">System Selection</li>
+        <li class="step">Request Information</li>
+        <li class="step">Supervisors</li>
+    </ul>
 </div>
+<hr>
+
 <script>
-    function progressBar(n) {
-        /*
-        var x = document.getElementsByClassName("step");
-        var progressMeter = n * (100 / (x.length - 1));
-        var noZero = Math.round(progressMeter);
-        */
-        document.getElementById("pBar").style.width = n + "%";
-        document.getElementById("pBar").innerHTML = noZero.toString() + "% Complete";
+    function stepIndicate(n) {
+        var i, x = document.getElementByClassName("step");
+        for (i = 0; i < x.length; i++) {
+            x[i].className = x[i].className.replace(" active", "");
+        }
+        x[n].className += " active";
     }
 </script>

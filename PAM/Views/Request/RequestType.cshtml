@@ -12,7 +12,6 @@
 <body>
     <partial name="_ProgressBar.cshtml" />
     <form asp-controller="RequestInfo" asp-action="RequestInfo" method="get">
-        <p>Complete the registration process by following a few simple steps.</p>
         <div class="shadow-container">
             <div class="alert alert-info">
                 Please Select The Type of Request
@@ -56,8 +55,8 @@
         </div>
         <button type="submit" class="btn btn-info float-right m-3" onclick="progressBar(80)"> Next </button>
     </form>
-    <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
-        <button type="button" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+    <form asp-controller="RequesterInfo" asp-action="RequesterInfo" method="get">
+        <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
     </form>
     <form asp-controller="Draft">
         <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>

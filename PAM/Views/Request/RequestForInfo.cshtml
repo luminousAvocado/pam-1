@@ -11,12 +11,12 @@
 
 <body>
     <partial name="_ProgressBar.cshtml" />
-    <form asp-controller="RequestType" asp-action="RequestType" id="requesterInfo" method="get">
+    <form asp-controller="RequesterInfo" asp-action="RequesterInfo" id="requestForInfo" method="get">
         <input asp-for="Username" value="@requester.Username" type="hidden" />
         <input asp-for="Name" value="@requester.Username" type="hidden" />
         <div class="shadow-container">
-            <div class="alert alert-info" style="font-size: 20px;">
-                Please Fill In Your Information
+            <div class="alert alert-info">
+                Please Fill In Their Information
             </div>
             <p class="text-danger"> *Required Fields </p>
             <div class="form-row">
@@ -49,13 +49,19 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="locationPhoneNum">Employee Location Phone #</label>
                     <input asp-for="WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="employeeCellNum">Employee Cell Phone #</label>
                     <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4 offset-1">
+                    <label for="payrollTitle">Payroll Title</label>
+                    <input asp-for="PayrollTitle" type="text" class="form-control" id="payrollTitle" placeholder="" />
                 </div>
             </div>
         </div>
@@ -65,11 +71,10 @@
         <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
     </form>
 </body>
-
 <script>
     function validateForm() {
         if (!validateInput()) return false;
-        else document.getElementById("requesterInfo").submit();
+        else document.getElementById("requestForInfo").submit();
     }
     function validateInput() {
         // This function deals with validation of the form fields
