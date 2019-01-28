@@ -1,0 +1,48 @@
+﻿@{
+  ViewData["Title"] = "Requests";
+}
+<body>
+  <p style="font-size: 40px;">
+    Registration Requests
+    <a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
+  </p>
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#all">Requests</a>
+    </li>
+  </ul>
+
+  <div id="myTabContent" class="tab-content">
+    <div id="all" class="tab-pane fade show active">
+      <table class="table table-hover table-responsive-xl">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Type</th>
+            <th scope="col">Submitted On</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var request in (List<Request>)ViewData["requests"])
+          {
+            <tr>
+              <td>@request.RequestId</td>
+              <td>@request.RequestType.DisplayCode</td>
+              <td>@request.SubmittedOn</td>
+              <td>@request.RequestStatus</td>
+              <td>
+                <a asp-action="View">View</a> |
+                <a asp-action="Edit">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+
