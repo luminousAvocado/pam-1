@@ -47,6 +47,43 @@ namespace PAM.Controllers
             return View("NewRequest");
         }
 
+        [HttpGet]
+        public IActionResult SelfInfo(Request req)
+        {
+            HttpContext.Session.SetObject("Request", req);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SelfInfo(Requester requester)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult OtherInfo(Request req)
+        {
+            HttpContext.Session.SetObject("Request", req);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult RequestType(Requester requester)
+        {
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult RequestInfo(Request req)
+        {
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            update.RequestTypeId = req.RequestTypeId;
+            HttpContext.Session.SetObject("Request", update);
+            return View(req);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateRequest (Request req)
         {

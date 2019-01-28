@@ -15,7 +15,7 @@
         <p style="font-size: 30px;"> Is this request for yourself? </br> or for another individual? </p>
     </div>
 
-    <form asp-controller="RequesterInfo" asp-action="SelfInfo" method="get">
+    <form asp-controller="NewRequest" asp-action="SelfInfo" method="get">
         <div class="text-center">
             <input asp-for="Name" value="@requester.Name" type="hidden" />
             <input asp-for="Username" value="@requester.Username" type="hidden" />
@@ -25,7 +25,7 @@
         </div>
     </form>
     </br>
-    <form asp-controller="RequesterInfo" asp-action="OtherInfo" method="get">
+    <form asp-controller="NewRequest" asp-action="OtherInfo" method="get">
         <div class="text-center">
             <input asp-for="Name" value="@requester.Name" type="hidden" />
             <input asp-for="Username" value="@requester.Username" type="hidden" />
