@@ -24,5 +24,11 @@ namespace PAM.Data
                 .Where(r => r.RequestedBy.Username == username || r.RequestedFor.Username == username)
                 .ToList();
         }
+
+        public void RemoveRequest(Request request)
+        {
+            _dbContext.Remove(request);
+            _dbContext.SaveChanges();
+        }
     }
 }

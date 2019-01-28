@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
 using PAM.Extensions;
+using PAM.Models;
 
 namespace PAM.Controllers
 {
@@ -24,32 +26,36 @@ namespace PAM.Controllers
             ViewData["Requests"] = _requestService.GetRequests(username);
             return View();
         }
-        /*
+
         [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var requests = await _dbContext.Requests
-                .FirstOrDefaultAsync(m => m.RequestId == id);
-            if (requests == null) return View("Registrations");
-            else return View(await _dbContext.Requests.ToListAsync());
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var requests = _requestService.GetRequests(username);
+            if (requests == null) return RedirectToAction("Self");
+            else return View();
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirm(int id)
+        public IActionResult DeleteConfirm(int id)
         {
-            var request = await _dbContext.Requests.FindAsync(id);
-            _dbContext.Requests.Remove(request);
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Registrations");
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var requests = _requestService.GetRequests(username);
+
+            foreach(var request in requests)
+            {
+                if (request.RequestId == id) _requestService.RemoveRequest(request);
+            }
+            return RedirectToAction("Self");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        } */
+        } 
     }
 }
