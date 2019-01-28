@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,20 +32,56 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult CreateRequester()
         {
-            var employee = HttpContext.Session.GetObject<Employee>("Employee");
             Requester requester = new Requester
             {
-                Email = employee.Email,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Username = employee.Username,
-                Name = employee.Name
+                Email = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Email),
+                FirstName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.GivenName),
+                LastName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Surname),
+                Username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier),
+                Name = ((ClaimsIdentity)User.Identity).GetClaim("Name"),
             };
 
             requester = _userService.SaveRequester(requester);
             HttpContext.Session.SetObject("Requester", requester);
 
-            return View("../Request/NewRequest");
+            return View("NewRequest");
+        }
+
+        [HttpGet]
+        public IActionResult SelfInfo(Request req)
+        {
+            HttpContext.Session.SetObject("Request", req);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SelfInfo(Requester requester)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult OtherInfo(Request req)
+        {
+            HttpContext.Session.SetObject("Request", req);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult RequestType(Requester requester)
+        {
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult RequestInfo(Request req)
+        {
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            update.RequestTypeId = req.RequestTypeId;
+            HttpContext.Session.SetObject("Request", update);
+            return View(req);
         }
 
         [HttpPost]
@@ -62,7 +99,7 @@ namespace PAM.Controllers
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Registrations", "Registrations");
+            return RedirectToAction("Self", "Request");
         }
     }
 }

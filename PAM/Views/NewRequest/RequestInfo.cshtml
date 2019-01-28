@@ -10,7 +10,7 @@
 }
 
 <body>
-    <partial name="_ProgressBar.cshtml" />
+    <partial name="../Shared/_ProgressBar.cshtml" />
     <form asp-controller="NewRequest" asp-action="CreateRequest" method="post">
         <div class="shadow-container">
             <div class="alert alert-info">
@@ -61,8 +61,8 @@
         </div>
         <button type="submit" class="btn btn-info float-right m-3" onclick="progressBar(20)"> Submit </button>
     </form>
-    <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
-        <button type="button" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+    <form asp-controller="RequestType" asp-action="RequestType" method="get">
+        <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
     </form>
     <form asp-controller="Draft">
         <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>

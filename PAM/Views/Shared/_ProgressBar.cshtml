@@ -1,0 +1,25 @@
+﻿<p style="font-size: 40px;" class="text-center">New Registration</p>
+<hr>
+<div class="progressbar-container">
+    <ul class="progressbar">
+        <li class="step active">Self or For</li>
+        <li class="step">Requester(s) Information</li>
+        <li class="step">Request Type</li>
+        <li class="step">Unit Selection</li>
+        <li class="step">System Selection</li>
+        <li class="step">Request Information</li>
+        <li class="step">Supervisors</li>
+        <li class="step">Review</li>
+    </ul>
+</div>
+<hr>
+
+<script>
+    function stepIndicate(n) {
+        var i, x = document.getElementByClassName("step");
+        for (i = 0; i < x.length; i++) {
+            x[i].className = x[i].className.replace(" active", "");
+        }
+        x[n].className += " active";
+    }
+</script>
