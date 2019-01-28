@@ -10,8 +10,8 @@
 }
 
 <body>
-    <partial name="_ProgressBar.cshtml" />
-    <form asp-controller="RequesterInfo" asp-action="RequesterInfo" id="requestForInfo" method="get">
+    <partial name="../Shared/_ProgressBar.cshtml" />
+    <form asp-controller="RequesterInfo" asp-action="SelfInfo" id="requestForInfo" method="post">
         <input asp-for="Username" value="@requester.Username" type="hidden" />
         <input asp-for="Name" value="@requester.Username" type="hidden" />
         <div class="shadow-container">

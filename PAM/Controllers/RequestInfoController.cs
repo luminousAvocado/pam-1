@@ -16,10 +16,7 @@ namespace PAM.Controllers
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestTypeId = req.RequestTypeId;
             HttpContext.Session.SetObject("Request", update);
-            Console.WriteLine("ZZZ " + req.RequestTypeId);
-            Console.WriteLine("ZZZZ " + req.RequestedById);
-            Console.WriteLine("ZZZZZ " + req.RequestedForId);
-            return View("../Request/RequestInfo", req);
+            return View("../NewRequest/RequestInfo", req);
         }
     }
 }

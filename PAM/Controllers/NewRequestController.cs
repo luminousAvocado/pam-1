@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,20 +32,19 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult CreateRequester()
         {
-            var employee = HttpContext.Session.GetObject<Employee>("Employee");
             Requester requester = new Requester
             {
-                Email = employee.Email,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Username = employee.Username,
-                Name = employee.Name
+                Email = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Email),
+                FirstName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.GivenName),
+                LastName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Surname),
+                Username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier),
+                Name = ((ClaimsIdentity)User.Identity).GetClaim("Name"),
             };
 
             requester = _userService.SaveRequester(requester);
             HttpContext.Session.SetObject("Requester", requester);
 
-            return View("../Request/NewRequest");
+            return View("NewRequest");
         }
 
         [HttpPost]
@@ -62,7 +62,7 @@ namespace PAM.Controllers
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Registrations", "Registrations");
+            return RedirectToAction("Self", "Request");
         }
     }
 }

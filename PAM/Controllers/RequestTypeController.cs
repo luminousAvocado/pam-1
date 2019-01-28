@@ -23,7 +23,7 @@ namespace PAM.Controllers
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             
-            return View("../Request/RequestType");
+            return View("../NewRequest/RequestType");
         }
 
     }
