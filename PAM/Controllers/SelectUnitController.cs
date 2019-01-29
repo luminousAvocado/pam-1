@@ -62,10 +62,10 @@ namespace PAM.Controllers
                     // Was UnitId, now ParentId, compare results
                     string pid = dr["UnitId"].ToString();
                     string unitName = dr["Name"].ToString();
-                    sb.Append(String.Format(@" ""text"": ""{0}"",", unitName));
+                    sb.Append(String.Format(@" ""text"": ""{0}""", unitName));
                     // TEST
-                    string unitid = dr["UnitId"].ToString();
-                    sb.Append(String.Format(@" ""unitid"": ""{0}"",", unitid));
+                    //string unitid = dr["UnitId"].ToString();
+                    //sb.Append(String.Format(@" ""unitid"": ""{0}"",", unitid));
                     //string url = dr["BureauId"].ToString();
                     //sb.Append(String.Format(@" ""href"": ""{1}""", url));
                     string parentId = dr["ParentId"].ToString();
