@@ -15,15 +15,17 @@ namespace PAM.Services
         public TreeViewService(OrganizationService orgService)
         {
             _orgService = orgService;
-            // TEST
-            // Use OrganizationService
-            Debug.WriteLine("*** TREE ***");
-            var temp = _orgService.GetBureaus();
-            foreach (Bureau item in temp)
-            {
-                Debug.WriteLine(item.BureauId);
-            }
+
+            var bureauList = _orgService.GetBureaus();
+            var unitList = _orgService.GetUnits();
+
+            //foreach (Bureau item in bureauList)
+            //{
+            //    Debug.WriteLine(item.BureauId);
+            //}
         }
+
+        
     }
 
     public class TreeViewNode

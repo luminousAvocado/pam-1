@@ -51,8 +51,6 @@ namespace PAM.Controllers
             var sb = new StringBuilder();
             sb.Append("[");
             string unorderedList = GenerateUL(parentMenus, table, sb);
-            Debug.WriteLine("***");
-            Debug.WriteLine(unorderedList);
             return unorderedList + "]";
         }
 
