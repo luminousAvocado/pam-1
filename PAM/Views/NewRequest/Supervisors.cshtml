@@ -1,0 +1,20 @@
+﻿@{
+  ViewData["Title"] = "Supervisors";
+}
+
+@model List<String> 
+
+<body>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="Review" method="post">
+    <div class="autocomplete" style="width:300px;">
+      <input id="myInput" type="text" name="myCountry" placeholder="Country" autocomplete="off">
+    </div>
+    <input type="submit">
+  </form>
+</body>
+
+<script>
+  var countries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(this.Model));
+</script>
+

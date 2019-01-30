@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
@@ -15,8 +17,9 @@ namespace PAM.Controllers
 {
     public class NewRequestController : Controller
     {
-        private readonly AppDbContext _dbContext;
+        private readonly IADService _adService;
         private readonly UserService _userService;
+        private readonly AppDbContext _dbContext;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
@@ -24,9 +27,10 @@ namespace PAM.Controllers
         public NewRequestController(IADService adService, UserService userService,
             AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
+            _adService = adService;
             _dbContext = context;
-            _httpContextAccessor = httpContextAccessor;
             _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -82,6 +86,24 @@ namespace PAM.Controllers
             update.RequestTypeId = req.RequestTypeId;
             HttpContext.Session.SetObject("Request", update);
             return View(req);
+        }
+
+        [HttpGet]
+        public IActionResult Supervisors()
+        {
+            var employees = _adService.GetAllEmployees();
+            List<String> employeeName = new List<string>();
+            foreach(var employee in employees)
+            {
+                employeeName.Add(employee.Name);
+            }
+            return View(employeeName);
+        }
+
+        [HttpPost]
+        public IActionResult Review()
+        {
+            return View();
         }
 
         [HttpPost]
