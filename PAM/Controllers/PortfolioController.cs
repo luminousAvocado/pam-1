@@ -334,7 +334,7 @@ namespace PAM.Controllers
         }
 
         // POST: Units/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteUnit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedUnit(int id)
         {

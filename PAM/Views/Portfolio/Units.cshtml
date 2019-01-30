@@ -4,7 +4,7 @@
     ViewData["Title"] = "Units";
 }
 
-<h2>model. Units</h2>
+<h2>Somthing  / Units</h2>
 
 
 <p>
@@ -60,14 +60,11 @@
                         @if (item.Children.Count != 0)
                         {
                             <a asp-action="DefaultPortfolio" asp-route-id="@item.UnitId">More</a>
-                            @for (var i = 0; i< item.Children.Count; i++)
-                            {
-                                <b>i</b>
-                            }
+                           
                         }
                         else
                         {
-                            <a asp-action="Add" asp-route-id="@item.UnitId">Empty</a>
+                            <a asp-action="DefaultPortfolio" asp-route-id="@item.UnitId">Empty</a>
                         }
                     </div>
 
