@@ -47,7 +47,6 @@ namespace PAM.Controllers
 
             requester = _userService.SaveRequester(requester);
             HttpContext.Session.SetObject("Requester", requester);
-            ViewData["stepIndicator"] = 1;
             return View("NewRequest");
         }
 

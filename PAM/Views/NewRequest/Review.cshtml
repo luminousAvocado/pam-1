@@ -5,6 +5,9 @@
 <body>
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="CreateRequest">
+      <div class="alert alert-info">
+        Please confirm that all information is correct.
+      </div>
       <div class="alert alert-success">
         Step 1 - Self or For 
       </div>
@@ -26,7 +29,7 @@
       <div class="alert alert-success">
         Step 7 - Supervisor's Review
       </div>
-    <input type="submit" class="btn btn-primary" />
+    <button type="submit" class="btn btn-primary">Confirm Submit</button>" 
     <!-- TODO -->
   </form>
 </body>

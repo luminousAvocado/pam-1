@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-info float-right m-3" onclick="validateForm(); stepIndicate(2)"> Next </button>
+    <button type="button" class="btn btn-info float-right m-3" onclick="validateForm(); stepIndicate(2)"> Next </button>
   </form>
   <form asp-controller="RequestFor" asp-action="RequestFor" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
@@ -95,16 +95,17 @@
   function validateInput() {
     // This function deals with validation of the form fields
     let valid = true;
-    alert(5);
-    let y = document.getElementByTagName("input");
+    let y = document.getElementsByTagName("input");
     // A loop that checks every input field in the current tab:
     for (let i = 0; i < y.length; i++) {
-      // If a field is empty...
-      if (y[i].value == "") {
-        // add an "invalid" class to the field:
-        y[i].className += " invalid";
-        // and set the current valid status to false:
-        valid = false;
+      if (y[i].id == "validate") {
+        // If a field is empty...
+        if (y[i].value == "") {
+          // add an "invalid" class to the field:
+          y[i].className += " invalid";
+          // and set the current valid status to false:
+          valid = false;
+        }
       }
     }
     return valid;
