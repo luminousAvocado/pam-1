@@ -18,40 +18,7 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
     <script>
-        //var mytree = [
-        //    {
-        //        text: "Parent 1",
-        //        nodes: [
-        //            {
-        //                text: "Child 1",
-        //                nodes: [
-        //                    {
-        //                        text: "Grandchild 1"
-        //                    },
-        //                    {
-        //                        text: "Grandchild 2"
-        //                    }
-        //                ]
-        //            },
-        //            {
-        //                text: "Child 2"
-        //            }
-        //        ]
-        //    },
-        //    {
-        //        text: "Parent 2"
-        //    },
-        //    {
-        //        text: "Parent 3"
-        //    },
-        //    {
-        //        text: "Parent 4"
-        //    },
-        //    {
-        //        text: "Parent 5"
-        //    }
-        //];
-        var mytree = (@ViewData["UnitList"];
+        var mytree = @Html.Raw(@ViewData["UnitList"]);
         $('#tree').treeview({ data: mytree });
     </script>
 </body>

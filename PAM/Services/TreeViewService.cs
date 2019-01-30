@@ -10,13 +10,16 @@ namespace PAM.Services
 {
     public class TreeViewService
     {
+        private readonly OrganizationService _orgService;
 
-        public TreeViewService()
+        public TreeViewService(OrganizationService orgService)
         {
+            _orgService = orgService;
             // TEST
             // Use OrganizationService
             Debug.WriteLine("*** TEST ***");
-            
+            var temp = _orgService.GetBureaus();
+            Debug.WriteLine(temp);
         }
     }
 
