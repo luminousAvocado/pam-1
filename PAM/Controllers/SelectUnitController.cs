@@ -11,16 +11,19 @@ using Microsoft.EntityFrameworkCore;
 using PAM.Data;
 using PAM.Models;
 using Newtonsoft.Json;
+using PAM.Services;
 
 namespace PAM.Controllers
 {
     public class SelectUnitController : Controller
     {
         AppDbContext _dbContext;
+        TreeViewService _treeService;
 
-        public SelectUnitController(AppDbContext dbContext)
+        public SelectUnitController(AppDbContext dbContext, TreeViewService treeService)
         {
             _dbContext = dbContext;
+            _treeService = treeService;
         }
 
         // Make db query to get list of units

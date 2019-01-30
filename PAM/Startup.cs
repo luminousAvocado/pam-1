@@ -37,6 +37,9 @@ namespace PAM
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
 
+            // TEST
+            services.AddScoped<TreeViewService>();
+
             services
                 .AddFluentEmail(_config.GetValue<string>("Application:Email"))
                 .AddRazorRenderer()
