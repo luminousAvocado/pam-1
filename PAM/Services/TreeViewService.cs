@@ -17,9 +17,12 @@ namespace PAM.Services
             _orgService = orgService;
             // TEST
             // Use OrganizationService
-            Debug.WriteLine("*** TEST ***");
+            Debug.WriteLine("*** TREE ***");
             var temp = _orgService.GetBureaus();
-            Debug.WriteLine(temp);
+            foreach (Bureau item in temp)
+            {
+                Debug.WriteLine(item.BureauId);
+            }
         }
     }
 
