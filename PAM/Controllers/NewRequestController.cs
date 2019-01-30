@@ -47,7 +47,7 @@ namespace PAM.Controllers
 
             requester = _userService.SaveRequester(requester);
             HttpContext.Session.SetObject("Requester", requester);
-
+            ViewData["stepIndicator"] = 1;
             return View("NewRequest");
         }
 
@@ -97,10 +97,11 @@ namespace PAM.Controllers
             {
                 employeeName.Add(employee.Name);
             }
+            ViewData["adEmployees"] = employeeName;
             return View(employeeName);
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Review()
         {
             return View();

@@ -94,4 +94,4 @@
       closeAllLists(e.target);
     });
   }
-autocomplete(document.getElementById("myInput"), countries);
+autocomplete(document.getElementById("adEmployees"), supervisors);

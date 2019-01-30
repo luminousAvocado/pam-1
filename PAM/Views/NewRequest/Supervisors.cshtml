@@ -2,19 +2,20 @@
   ViewData["Title"] = "Supervisors";
 }
 
-@model List<String> 
-
 <body>
   <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="NewRequest" asp-action="Review" method="post">
-    <div class="autocomplete" style="width:300px;">
-      <input id="myInput" type="text" name="myCountry" placeholder="Country" autocomplete="off">
+  <form asp-controller="NewRequest" asp-action="Review" method="get">
+    <div class="alert alert-info">
+      Select the supervisor to review this request.
     </div>
-    <input type="submit">
+    <div class="autocomplete" style="width:400px;">
+      <input id="adEmployees" type="text" placeholder="Supervisor" autocomplete="off">
+    </div>
+    <input type="submit" class="btn btn-primary">
   </form>
 </body>
 
 <script>
-  var countries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(this.Model));
+  var supervisors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["adEmployees"]));
 </script>
 

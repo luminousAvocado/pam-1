@@ -128,7 +128,7 @@ input.invalid {
     counter-reset: step;
 }
 
-    .progressbar li {
+    .progressbar a{
         list-style-type: none;
         width: 25%;
         float: left;
@@ -139,8 +139,7 @@ input.invalid {
         color: #000;
     }
 
-    
-        .progressbar li:before {
+        .progressbar a:before {
             width: 30px;
             height: 30px;
             content: counter(step);
@@ -154,7 +153,7 @@ input.invalid {
             background-color: white;
         }
 
-        .progressbar li:after {
+        .progressbar a:after {
             width: 100%;
             height: 2px;
             content: '';
@@ -165,36 +164,21 @@ input.invalid {
             z-index: -1;
         }
 
-        .progressbar li:first-child:after {
+        .progressbar a:first-child:after {
             content: none;
         }
 
-        .progressbar li.active {
+        .progressbar a.active {
             color: green;
         }
 
-            .progressbar li.active:before {
+            .progressbar a.active:before {
                 border-color: #55b776;
             }
 
-            .progressbar li.active + li:after {
+            .progressbar a.active + a:after {
                 background-color: #55b776;
             }
-
-/*----------------------------------------------------------
-    [ Loading Modal ]
-*/
-.bd-example-modal-lg .modal-dialog{
-    display: table;
-    position: relative;
-    margin: 0 auto;
-    top: calc(50% - 24px);
-  }
-  
-  .bd-example-modal-lg .modal-dialog .modal-content{
-    background-color: transparent;
-    border: none;
-  }
 /*----------------------------------------------------------
     [ Scroll Bar Styling ]
 */

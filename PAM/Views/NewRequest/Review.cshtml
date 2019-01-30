@@ -3,8 +3,30 @@
 }
 
 <body>
+  <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="CreateRequest">
-<input type="submit" class="btn btn-primary" />
+      <div class="alert alert-success">
+        Step 1 - Self or For 
+      </div>
+      <div class="alert alert-success">
+        Step 2 - Requester Information
+      </div>
+      <div class="alert alert-success">
+        Step 3 - Request Type
+      </div>
+      <div class="alert alert-success">
+        Step 4 - Unit Selection
+      </div>
+      <div class="alert alert-success">
+        Step 5 - System Selection
+      </div>
+      <div class="alert alert-success">
+        Step 6 - Additional Request Information
+      </div>
+      <div class="alert alert-success">
+        Step 7 - Supervisor's Review
+      </div>
+    <input type="submit" class="btn btn-primary" />
     <!-- TODO -->
-</form>
+  </form>
 </body>

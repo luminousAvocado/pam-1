@@ -1,12 +1,4 @@
-﻿* {
-  box-sizing: border-box;
-}
-
-body {
-  font: 16px Arial;
-}
-
-.autocomplete {
+﻿.autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
   display: inline-block;
@@ -22,11 +14,6 @@ input {
   input[type=text] {
     background-color: #f1f1f1;
     width: 100%;
-  }
-
-  input[type=submit] {
-    background-color: DodgerBlue;
-    color: #fff;
   }
 
 .autocomplete-items {
