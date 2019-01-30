@@ -20,5 +20,10 @@ namespace PAM.Data
         {
             return _dbContext.Bureaus.ToList();
         }
+
+        public ICollection<Unit> GetUnits()
+        {
+            return _dbContext.Units.ToList();
+        }
     }
 }

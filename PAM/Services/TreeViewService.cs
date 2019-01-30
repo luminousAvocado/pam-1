@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using PAM.Data;
+using PAM.Models;
 
 namespace PAM.Services
 {
     public class TreeViewService
     {
-        private readonly AppDbContext _dbContext;
 
-        public TreeViewService(AppDbContext dbContext)
+        public TreeViewService()
         {
-            _dbContext = dbContext;
+            // TEST
+            // Use OrganizationService
+            Debug.WriteLine("*** TEST ***");
+            
         }
     }
 

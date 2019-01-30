@@ -33,6 +33,11 @@ namespace PAM.Controllers
         [HttpGet]
         public async Task<IActionResult> Login()
         {
+            // DELETE ME
+            TreeViewService test = new TreeViewService();
+            test.GetBureaus();
+            // END
+
             view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return view;
