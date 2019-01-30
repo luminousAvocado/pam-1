@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PAM.Data;
 using PAM.Models;
+using Newtonsoft.Json;
 
 namespace PAM.Controllers
 {
@@ -30,8 +31,10 @@ namespace PAM.Controllers
         {
             var test = _TreeView();
             Debug.WriteLine("*** TEST ***");
-            Debug.WriteLine(test);
-            ViewBag.UnitList = test;
+            // Debug.WriteLine(JsonConvert.SerializeObject(test));
+            //ViewBag.UnitList = test;
+            //var test2 = 
+            //ViewBag.UnitList = test2;
 
             return View("../Request/SelectUnit");
         }

@@ -1,10 +1,14 @@
 ﻿@model PAM.Models.Unit
 
 <body>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-treeview/dist/css/bootstrap-treeview.min.css" rel="stylesheet" />
     <partial name="_ProgressBar.cshtml" />
     <form asp-controller="SelectUnit" asp-action="">
         <h2>Unit Select Test</h2>
-        <div id="tree"></div>
+        <div class="container">
+            <div id="tree"></div>
+        </div>
         <button type="submit" class="btn btn-info float-right m-3" onclick="progressBar(80)"> Next </button>
     </form>
     <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
@@ -14,10 +18,42 @@
         <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
     </form>
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
-    <script type="text/javascript">
-        $('#tree').treeview({ data: @ViewBag.UnitList});
-        console.log(@ViewBag.UnitList);
+    <script>
+        var mytree = [
+            {
+                text: "Parent 1",
+                nodes: [
+                    {
+                        text: "Child 1",
+                        nodes: [
+                            {
+                                text: "Grandchild 1"
+                            },
+                            {
+                                text: "Grandchild 2"
+                            }
+                        ]
+                    },
+                    {
+                        text: "Child 2"
+                    }
+                ]
+            },
+            {
+                text: "Parent 2"
+            },
+            {
+                text: "Parent 3"
+            },
+            {
+                text: "Parent 4"
+            },
+            {
+                text: "Parent 5"
+            }
+        ];
+
+        $('#tree').treeview({ data: mytree });
     </script>
 </body>
