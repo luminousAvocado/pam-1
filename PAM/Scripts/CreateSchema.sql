@@ -21,7 +21,7 @@ GO
 CREATE TABLE [Employees] (
     [EmployeeId] int NOT NULL IDENTITY,
     [Username] nvarchar(450) NOT NULL,
-    [EmployeeNumber] nvarchar(450) NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(450) NOT NULL,
@@ -33,7 +33,6 @@ CREATE TABLE [Employees] (
     [IsProcessor] bit NOT NULL,
     CONSTRAINT [PK_Employees] PRIMARY KEY ([EmployeeId]),
     CONSTRAINT [AK_Employees_Email] UNIQUE ([Email]),
-    CONSTRAINT [AK_Employees_EmployeeNumber] UNIQUE ([EmployeeNumber]),
     CONSTRAINT [AK_Employees_Username] UNIQUE ([Username])
 );
 
@@ -113,7 +112,7 @@ GO
 CREATE TABLE [Requesters] (
     [RequesterId] int NOT NULL IDENTITY,
     [Username] nvarchar(max) NOT NULL,
-    [EmployeeNumber] nvarchar(max) NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(max) NOT NULL,
@@ -148,11 +147,13 @@ GO
 
 CREATE TABLE [Requests] (
     [RequestId] int NOT NULL IDENTITY,
+    [Name] nvarchar(max) NOT NULL,
+    [Username] nvarchar(max) NOT NULL,
     [RequestTypeId] int NOT NULL,
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
     [RequestStatus] nvarchar(max) NOT NULL,
-    [SumbittedOn] datetime2 NOT NULL,
+    [SubmittedOn] datetime2 NOT NULL,
     [IsContractor] bit NOT NULL,
     [IsHighProfileAccess] bit NOT NULL,
     [IsGlobalAccess] bit NOT NULL,
@@ -221,11 +222,11 @@ CREATE TABLE [SystemAccesses] (
 
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'EmployeeNumber', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Name', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] ON;
-INSERT INTO [Employees] ([EmployeeId], [Department], [Email], [EmployeeNumber], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [Phone], [Title], [Username])
-VALUES (1, NULL, N'admin@localhost.localdomain', N'1234', N'PAM', 1, 0, 0, N'Admin', NULL, NULL, N'csun');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'EmployeeNumber', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
+INSERT INTO [Employees] ([EmployeeId], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [Name], [Phone], [Title], [Username])
+VALUES (1, NULL, N'admin@localhost.localdomain', N'PAM', 1, 0, 0, N'Admin', N'PAM Admin', NULL, NULL, N'e111111');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Name', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] OFF;
 
 GO
@@ -303,7 +304,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20181212234006_InitialSchema', N'2.2.0-rtm-35687');
+VALUES (N'20190110000125_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

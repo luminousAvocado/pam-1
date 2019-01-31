@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
@@ -11,7 +12,6 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly IADService _adService;
@@ -26,24 +26,30 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (User.Identity.IsAuthenticated) RedirectToAction("Self", "Request");
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            Employee employee = _adService.GetEmployee(username, password);
-            if (employee == null)
-            {
-                return View();
-            }
+            if (!_adService.Authenticate(username, password))
+                return View(new ErrorViewModel
+                {
+                    Message = "Authentication Failed"
+                });
 
-            Employee user = _userService.GetEmployeeByUsername(employee.Username);
+            Employee employee = _adService.GetEmployee(username);
+            Employee user = _userService.GetEmployee(username);
             if (user != null)
             {
+                user.Name = employee.Name;
+                user.FirstName = employee.FirstName;
+                user.LastName = employee.LastName;
+                user.Email = employee.Email;
                 user.Title = employee.Title;
                 user.Department = employee.Department;
                 user.Phone = employee.Phone;
@@ -58,7 +64,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
 
-            return Redirect("/");
+            return RedirectToAction("Self", "Request");
         }
 
         [HttpPost]

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PAM.Models;
 
@@ -16,7 +18,7 @@ namespace PAM.Data
             _logger = logger;
         }
 
-        public Employee GetEmployeeByUsername(string username)
+        public Employee GetEmployee(string username)
         {
             return _dbContext.Employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
@@ -28,6 +30,13 @@ namespace PAM.Data
             if (employee.EmployeeId == 0) _dbContext.Add(employee);
             _dbContext.SaveChanges();
             return employee;
+        }
+        
+        public Requester SaveRequester(Requester requester)
+        {
+            if (requester.RequesterId == 0) _dbContext.Add(requester);
+            _dbContext.SaveChanges();
+            return requester;
         }
     }
 }

@@ -1,0 +1,64 @@
+﻿@using PAM.Models
+@using PAM.Extensions
+
+@model PAM.Models.Request
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+  var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+  ViewData["Title"] = "Request Type Information";
+}
+
+<body>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="RequestInfo" method="get">
+    <div class="shadow-container">
+      <div class="alert alert-info">
+        Step 3 = Select The Type of Request
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg">
+          <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
+          <p> -Initiates first time registrations for new users and systems access. </p>
+        </div>
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="2" type="radio" class="custom-control-input" id="transfer">
+          <label class="custom-control-label label-edit" for="transfer"> Transfer </label>
+          <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
+        </div>
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="4" type="radio" class="custom-control-input" id="portfolio">
+          <label class="custom-control-label label-edit" for="portfolio"> Portfolio Assignment </label>
+          <p> -Initiates the update of information for the portfolio. </p>
+        </div>
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="5" type="radio" class="custom-control-input" id="leaving">
+          <label class="custom-control-label label-edit" for="leaving"> Leaving Probation </label>
+          <p> -Initiates removal of ALL system(s) access. </p>
+        </div>
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="11" type="radio" class="custom-control-input" id="addAccess">
+          <label class="custom-control-label label-edit" for="addAccess">Add Access</label>
+          <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
+        </div>
+        <div class="custom-control custom-radio">
+          <input asp-for="RequestTypeId" value="12" type="radio" class="custom-control-input" id="removeAccess">
+          <label class="custom-control-label label-edit" for="removeAccess"> Remove Access </label>
+          <p> -Initiates removal access for individual system(s). </p>
+        </div>
+      </div>
+      <div class="alert alert-dismissible alert-success">
+        <strong>Important: </strong> Please submit a seperate system registration form to remove your current
+        systems access with the <strong>"Transfer"</strong> request.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-info float-right m-3" onclick="stepIndicate(3)"> Next </button>
+  </form>
+  <form asp-controller="RequesterInfo" asp-action="RequesterInfo" method="get">
+    <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
+  </form>
+</body>

@@ -1,22 +1,33 @@
 ﻿@{
     ViewData["Title"] = "Login";
+    Layout = "_LoginLayout";
 }
-<h2>@ViewData["Title"]</h2>
-<div class="row">
-    <div class="col-md-3">
-        <form method="post">
-            <hr>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" name="username" required class="form-control">
+<body>
+    <div class="bg-display">
+        <div class="login-container">
+            <div class="logo">
+                <img src="~/Images/ProbBadge.png" alt="LA COUNTY PROBATION LOGO" />
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" required class="form-control">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">Login</button>
-            </div>
-        </form>
+            <span class="login-title"> Probation Access Manager </span>
+
+            <form asp-controller="Account" asp-action="Login" method="post" >
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input name="username" class="form-control" placeholder="Username" data-val-required="Username is required." />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input name="password" class="form-control" type="password" data-val-required="Password is required." placeholder="Password" />
+                </div>
+                <button type="submit" class="btn btn-info btn-block" value="submit" style="margin-top:40px;"> Login </button>
+            </form>
+            @if(Model != null)
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
+        </div>
     </div>
-</div>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+</body>

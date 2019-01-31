@@ -17,50 +17,54 @@ namespace PAM
     public class Startup
     {
         private readonly IHostingEnvironment _env;
-        private readonly IConfiguration _config;
         private readonly ILogger _logger;
 
         public Startup(IHostingEnvironment env, IConfiguration config, ILoggerFactory loggerFactory)
         {
             _env = env;
-            _config = config;
             _logger = loggerFactory.CreateLogger<Startup>();
+            Configuration = config;
         }
+
+        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connString = _config.GetConnectionString("DefaultConnection");
+            var connString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSession();
 
             services
-                .AddFluentEmail(_config.GetValue<string>("Application:Email"))
+                .AddFluentEmail(Configuration.GetValue<string>("Application:Email"))
                 .AddRazorRenderer()
                 .AddSmtpSender(() =>
                     new SmtpClient()
                     {
-                        Host = _config.GetValue<string>("SMTP:Host"),
-                        Port = _config.GetValue<int>("SMTP:Port"),
+                        Host = Configuration.GetValue<string>("SMTP:Host"),
+                        Port = Configuration.GetValue<int>("SMTP:Port"),
                         Credentials = new NetworkCredential(
-                            _config.GetValue<string>("SMTP:Username"),
-                            _config.GetValue<string>("SMTP:Password"))
+                            Configuration.GetValue<string>("SMTP:Username"),
+                            Configuration.GetValue<string>("SMTP:Password"))
                     }
                 );
 
             services.AddSingleton(
                 new EmailHelper()
                 {
-                    AppUrl = _config.GetValue<string>("Application:Url"),
-                    AppEmail = _config.GetValue<string>("Application:Email"),
+                    AppUrl = Configuration.GetValue<string>("Application:Url"),
+                    AppEmail = Configuration.GetValue<string>("Application:Email"),
                     TemplateFolder = _env.ContentRootPath + "/Emails"
                 }
             );
             services.AddSingleton<IADService, MockADService>();
             services.AddScoped<OrganizationService>();
             services.AddScoped<UserService>();
+            services.AddScoped<RequestService>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -78,13 +82,14 @@ namespace PAM
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }
