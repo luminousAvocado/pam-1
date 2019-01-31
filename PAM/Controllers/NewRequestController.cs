@@ -75,13 +75,17 @@ namespace PAM.Controllers
         public IActionResult RequestType(){
             return View();
         }
+
         [HttpPost]
         public IActionResult RequestType(Request req)
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestTypeId = req.RequestTypeId;
             HttpContext.Session.SetObject("Request", update);
-            return RedirectToAction("RequestInfo");
+
+            // Routing from RequestType to SelectUnit
+            //return RedirectToAction("RequestInfo");
+            return RedirectToAction("Index", "SelectUnit");
         }
 
         [HttpGet]

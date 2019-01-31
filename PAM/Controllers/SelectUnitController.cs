@@ -37,7 +37,7 @@ namespace PAM.Controllers
             //Debug.WriteLine(test);
             //ViewData["UnitList"] = test;
 
-            return View("../Request/SelectUnit");
+            return View("../NewRequest/SelectUnit");
         }
 
         //public string _TreeView()

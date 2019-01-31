@@ -17,10 +17,9 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly ILogger _logger;
-<<<<<<< HEAD
-        private ViewResult view;
-=======
->>>>>>> cddde641547688e3ed2f65f8d24892a587922629
+
+        //private ViewResult view;
+
 
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
