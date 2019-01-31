@@ -11,7 +11,7 @@
 
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="NewRequest" asp-action="RequestType" id="selfInfo" method="get">
+  <form asp-controller="NewRequest" asp-action="RequesterInfo" id="selfInfo" method="post">
     <div class="formInformation">
       <input asp-for="Username" value="@requester.Username" type="hidden" />
       <input asp-for="Name" value="@requester.Username" type="hidden" />
@@ -81,6 +81,7 @@
         </div>
       </div>
     </div>
+    <!--
     <div class="formInformation">
       <div class="shadow-container">
         <div class="alert alert-info">
@@ -148,7 +149,8 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-info float-right m-3" onclick="validateForm(); stepIndicate(2)"> Next </button>
+    -->
+    <button type="button" class="btn btn-info float-right m-3" onclick="validateForm();"> Next </button>
   </form>
   <form asp-controller="RequestFor" asp-action="RequestFor" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>

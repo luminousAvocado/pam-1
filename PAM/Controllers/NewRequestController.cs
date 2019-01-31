@@ -47,67 +47,51 @@ namespace PAM.Controllers
 
             requester = _userService.SaveRequester(requester);
             HttpContext.Session.SetObject("Requester", requester);
-            return View("NewRequest");
+            return RedirectToAction("NewRequest");
         }
 
         [HttpGet]
-        public IActionResult SelfInfo(Request req)
-        {
-            HttpContext.Session.SetObject("Request", req);
+        public IActionResult NewRequest(){
             return View();
         }
 
         [HttpPost]
-        public IActionResult SelfInfo(Requester requester)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult OtherInfo(Request req)
-        {
+        public IActionResult NewRequest(Request req){
             HttpContext.Session.SetObject("Request", req);
-            return View();
+            return RedirectToAction("RequesterInfo");
         }
 
         [HttpGet]
-        public IActionResult RequestType(Requester requester)
-        {
-            var update = HttpContext.Session.GetObject<Request>("Request");
-            
+        public IActionResult RequesterInfo(){
             return View();
         }
 
+        [HttpPost]
+        public IActionResult RequesterInfo(Requester req){
+            return RedirectToAction("RequestType");
+        }
+
         [HttpGet]
-        public IActionResult RequestInfo(Request req)
+        public IActionResult RequestType(){
+            return View();
+        }
+        [HttpPost]
+        public IActionResult RequestType(Request req)
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestTypeId = req.RequestTypeId;
             HttpContext.Session.SetObject("Request", update);
-            return View(req);
+            return RedirectToAction("RequestInfo");
         }
 
         [HttpGet]
-        public IActionResult Supervisors()
-        {
-            var employees = _adService.GetAllEmployees();
-            List<String> employeeName = new List<string>();
-            foreach(var employee in employees)
-            {
-                employeeName.Add(employee.Name);
-            }
-            ViewData["adEmployees"] = employeeName;
-            return View(employeeName);
-        }
-
-        [HttpGet]
-        public IActionResult Review()
-        {
+        public IActionResult RequestInfo(){
+            var update = HttpContext.Session.GetObject<Request>("Request");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRequest (Request req)
+        public IActionResult RequestInfo(Request req)
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.IsContractor = req.IsContractor;
@@ -117,7 +101,43 @@ namespace PAM.Controllers
             update.CaseloadFunction = req.CaseloadFunction;
             update.CaseloadNumber = req.CaseloadNumber;
             update.DepartureReason = req.DepartureReason;
+            HttpContext.Session.SetObject("Request", update);
+            return RedirectToAction("Supervisors");
+        }
 
+        [HttpGet]
+        public IActionResult Supervisors(){
+            var employees = _adService.GetAllEmployees();
+            List<String> employeeName = new List<string>();
+            foreach(var employee in employees)
+            {
+                employeeName.Add(employee.Name);
+            }
+            ViewData["adEmployees"] = employeeName;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Supervisors(string nothing = "")
+        {
+            return RedirectToAction("Review");
+        }
+
+        [HttpGet]
+        public IActionResult Review()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Review(string nothing = ""){
+            return RedirectToAction("CreateRequest"); 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateRequest ()
+        {
+            var update = HttpContext.Session.GetObject<Request>("Request");
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 

@@ -11,7 +11,7 @@
 
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="NewRequest" asp-action="RequestInfo" method="get">
+  <form asp-controller="NewRequest" asp-action="RequestType" method="post">
     <div class="shadow-container">
       <div class="alert alert-info">
         Step 3 - Select The Type of Request
@@ -53,7 +53,7 @@
         systems access with the <strong>"Transfer"</strong> request.
       </div>
     </div>
-    <button type="submit" class="btn btn-info float-right m-3" onclick="stepIndicate(3)"> Next </button>
+    <button type="submit" class="btn btn-info float-right m-3"> Next </button>
   </form>
   <form asp-controller="RequesterInfo" asp-action="RequesterInfo" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>

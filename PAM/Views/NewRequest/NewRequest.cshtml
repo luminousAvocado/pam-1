@@ -15,24 +15,25 @@
     <p style="font-size: 30px;"> Is this request for yourself? </br> or for another individual? </p>
   </div>
 
-  <form asp-controller="NewRequest" asp-action="SelfInfo" method="get">
+  <form asp-controller="NewRequest" asp-action="NewRequest" method="post">
     <div class="text-center">
       <input asp-for="Name" value="@requester.Name" type="hidden" />
       <input asp-for="Username" value="@requester.Username" type="hidden" />
       <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
       <input asp-for="RequestedForId" value="@requester.RequesterId" type="hidden" />
-      <button type="submit" class="btn btn-info" onclick="stepIndicate(1)" style="display:inline-block">Self</button>
+      <button type="submit" class="btn btn-info" style="display:inline-block">Self</button>
     </div>
   </form>
+  <!--
   </br>
   <form asp-controller="NewRequest" asp-action="OtherInfo" method="get">
     <div class="text-center">
-      <input asp-for="Name" value="@requester.Name" type="hidden" />
-      <input asp-for="Username" value="@requester.Username" type="hidden" />
-      <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
-      <!--TODO: Fix to Proper RequestedForId-->
-      <input asp-for="RequestedForId" value="@requester.RequesterId" type="hidden" />
+      <input asp-for="Name" value="requester.Name" type="hidden" />
+      <input asp-for="Username" value="requester.Username" type="hidden" />
+      <input asp-for="RequestedById" value=requester.RequesterId type="hidden" />
+      <input asp-for="RequestedForId" value="requester.RequesterId" type="hidden" />
       <button type="submit" class="btn btn-info" onclick="stepIndicate(1)" style="display:inline-block">Another</button>
     </div>
   </form>
+  -->
 </body>
