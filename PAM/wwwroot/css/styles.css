@@ -14,6 +14,7 @@ label {
 .navbar a{
   font-size: 14px;
 }
+
 /*----------------------------------------------------------
     [ Background for Login ]
 */
@@ -91,6 +92,7 @@ label {
     font-size: 16px;
     border-radius: 7px;
     padding: 20px 30px 30px 30px;
+    z-index: -1;
 }
 .alert {
     border-radius: 7px;
@@ -118,19 +120,24 @@ input.invalid {
 
 .progressbar-container{
     width: 800px;
-    margin: 25px auto;
+    margin: auto;
 }
 
 .progressbar {
     display:flex;
+    position: relative;
     margin: 0;
-    padding: 0;
     counter-reset: step;
+    z-index: 1;
 }
 
-    .progressbar a{
+.progressbar a.disabledStep{
+pointer-events: none;
+cursor: default;
+}
+    .progressbar li{
         list-style-type: none;
-        width: 25%;
+        width: 12.5%;
         float: left;
         font-size: 12px;
         position: relative;
@@ -138,30 +145,33 @@ input.invalid {
         text-transform: uppercase;
         color: #000;
     }
-
+        /*CSS for Progress Bar Circles*/
         .progressbar li:before {
-            width: 30px;
-            height: 30px;
+            position:relative;
+            width: 25px;
+            height: 25px;
             content: counter(step);
             counter-increment: step;
-            line-height: 30px;
+            line-height: 25px;
             border: 2px solid #7d7d7d;
             display: block;
             text-align: center;
             margin: 0 auto 10px auto;
             border-radius: 50%;
             background-color: white;
+            z-index: 1;
         }
-
+        /*CSS for Progress Bar Lines*/
         .progressbar li:after {
             width: 100%;
-            height: 2px;
+            height: 3px;
             content: '';
             position: absolute;
             background-color: #7d7d7d;
-            top: 15px;
-            left: -41%;
-            z-index: -1;
+            transition: width 1s ease-in;
+            top: 12px;
+            left: -50%;
+            z-index: 0;
         }
 
         .progressbar li:first-child:after {
