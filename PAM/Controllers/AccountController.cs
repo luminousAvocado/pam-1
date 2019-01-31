@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
-using PAM.Extensions;
 
 namespace PAM.Controllers
 {
@@ -18,33 +17,34 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly ILogger _logger;
+<<<<<<< HEAD
         private ViewResult view;
+=======
+>>>>>>> cddde641547688e3ed2f65f8d24892a587922629
 
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
             _logger = logger;
-
-            view = View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
-            view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return view;
+            if (User.Identity.IsAuthenticated) RedirectToAction("Self", "Request");
+
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            if (!_adService.Authenticate(username, password)) 
-            {
-                view.ViewData["Login"] = "~/Views/Shared/_LoginLayout.cshtml";
-                return view;
-            }
+            if (!_adService.Authenticate(username, password))
+                return View(new ErrorViewModel
+                {
+                    Message = "Authentication Failed"
+                });
 
             Employee employee = _adService.GetEmployee(username);
             Employee user = _userService.GetEmployee(username);
@@ -67,9 +67,8 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
-            HttpContext.Session.SetObject("Employee", employee);
 
-            return RedirectToAction("Registrations", "Registrations", employee);
+            return RedirectToAction("Self", "Request");
         }
 
         [HttpPost]

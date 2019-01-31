@@ -1,17 +1,16 @@
-﻿@{
+﻿@model PAM.Models.Request
+@{
     ViewData["Title"] = "Delete";
 }
-
-@model IEnumerable<PAM.Models.Request>
 
 <body>
     <div class="text-center">
         <h1>Confirm Delete?</h1>
-    <form asp-controller="Home" asp-action="Delete" method="post">
+    <form asp-controller="Request" asp-action="Delete" method="post">
         <button type="submit" class="btn btn-info"> Yes </button>
     </form>
      </br>
-    <form asp-controller="Home" asp-action="Registrations" method="get">
+    <form asp-controller="Request" asp-action="Self" method="get">
         <button type="submit" class="btn btn-info"> No </button>
     </form>
     </div>

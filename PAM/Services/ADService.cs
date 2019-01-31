@@ -16,6 +16,8 @@ namespace PAM.Services
         Employee GetEmployee(string username);
 
         ICollection<Employee> GetEmployees(string firstName, string lastName);
+
+        ICollection<Employee> GetAllEmployees();
     }
 
     public class ADService : IADService
@@ -110,6 +112,23 @@ namespace PAM.Services
             }
             return employees;
         }
+
+        public ICollection<Employee> GetAllEmployees()
+        {
+            ICollection<Employee> employees = new List<Employee>();
+            using (DirectoryEntry entry = new DirectoryEntry(_url, _username, _password))
+            {
+                using (DirectorySearcher searcher = new DirectorySearcher(entry))
+                {
+                    searcher.CacheResults = true;
+                    setSearchProperties(searcher);
+                    var results = searcher.FindAll();
+                    foreach (SearchResult result in results)
+                        employees.Add(getEmployee(result));
+                }
+            }
+            return employees;
+        }
     }
 
     public class MockADService : IADService
@@ -148,6 +167,94 @@ namespace PAM.Services
                 Title = "Director",
                 Department = "IT Systems",
                 Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e456789",
+                Name = "Brandon Lam (e456789)",
+                FirstName = "Brandon",
+                LastName = "Lam",
+                Email = "blam@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e567891",
+                Name = "Jaime Borunda (e567891)",
+                FirstName = "Jaime",
+                LastName = "Borunda",
+                Email = "jborunda@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e678912",
+                Name = "James Kang (e678912)",
+                FirstName = "James",
+                LastName = "Kang",
+                Email = "jkang@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e789123",
+                Name = "Kevork Gib (e789123)",
+                FirstName = "Kevork",
+                LastName = "Gilabouchian",
+                Email = "kgilabouchian@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e891234",
+                Name = "Chengyu Sun (e891234)",
+                FirstName = "Chengyu",
+                LastName = "Sun",
+                Email = "csun@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e912345",
+                Name = "Zilong Yi (e912345)",
+                FirstName = "Zilong",
+                LastName = "Yi",
+                Email = "zyi@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e987654",
+                Name = "Diana Salazar (e987654)",
+                FirstName = "Diana",
+                LastName = "Salazar",
+                Email = "dsalazar@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
+            },
+            new Employee()
+            {
+                Username = "e876543",
+                Name = "Benjamin Morales (e876543)",
+                FirstName = "Benjamin",
+                LastName = "Morales",
+                Email = "bmorales@localhost.localdomain",
+                Title = "Director",
+                Department = "IT Systems",
+                Phone = "345-678-9012"
             }
         };
 
@@ -169,6 +276,11 @@ namespace PAM.Services
                 .Where(e => e.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
                     e.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(e => e.FirstName).ToList();
+        }
+
+        public ICollection<Employee> GetAllEmployees()
+        {
+            return employees.ToList();
         }
     }
 

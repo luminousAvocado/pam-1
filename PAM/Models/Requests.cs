@@ -35,6 +35,8 @@ namespace PAM.Models
 
         public string Username { get; set; }
 
+        public string Name { get; set; }
+
         public int RequestTypeId { get; set; }
         public RequestType RequestType { get; set; }
 
