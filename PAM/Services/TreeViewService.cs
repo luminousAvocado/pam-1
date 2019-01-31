@@ -24,6 +24,7 @@ namespace PAM.Services
             //var bureauTree = CreateBureaus(bureauList);
             var unitTree = CreateUnits(unitList);
             Debug.WriteLine("*** START ***");
+
             foreach(TreeViewNode item in unitTree)
             {
                 Debug.WriteLine("*** NEW ***");
