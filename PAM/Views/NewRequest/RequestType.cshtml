@@ -9,7 +9,7 @@
   ViewData["Title"] = "Request Type Information";
 }
 
-<body>
+<body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="RequestInfo" method="get">
     <div class="shadow-container">

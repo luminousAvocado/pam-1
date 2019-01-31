@@ -2,7 +2,7 @@
   ViewData["Title"] = "Review";
 }
 
-<body>
+<body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="CreateRequest">
       <div class="alert alert-info">

@@ -17,9 +17,34 @@
 <script>
   function stepIndicate(n) {
     let x = document.getElementsByClassName("step");
-    for (let i = 0; i < x.length; i++) {
-      x[i].className = x[i].className.replace(" active", "");
+    let stepTitle = '@ViewData["Title"]';
+    switch (stepTitle) {
+      case "New Request":
+        x[0].className += " active";
+        break;
+      case "Requester Information":
+        x[1].className += " active";
+        break;
+      case "Request Type":
+        x[2].className += " active";
+        break;
+      case "Unit Selection":
+        x[3].className += " active";
+        break;
+      case "System Selection":
+        x[4].className += " active";
+        break;
+      case "Request Information":
+        x[5].className += " active";
+        break;
+      case "Supervisors":
+        x[6].className += " active";
+        break;
+      case "Review":
+        x[7].className += " active";
+        break;
+      default:
+        break;
     }
-    x[n].className += " active";
   }
 </script>

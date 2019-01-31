@@ -6,10 +6,10 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
   var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
-  ViewData["Title"] = "Request Info";
+  ViewData["Title"] = "Request Information";
 }
 
-<body>
+<body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="Supervisors" method="get">
     <div class="shadow-container">

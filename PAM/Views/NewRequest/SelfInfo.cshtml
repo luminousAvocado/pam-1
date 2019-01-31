@@ -9,7 +9,7 @@
   ViewData["Title"] = "Requester Information";
 }
 
-<body>
+<body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="RequestType" id="selfInfo" method="get">
     <input asp-for="Username" value="@requester.Username" type="hidden" />
