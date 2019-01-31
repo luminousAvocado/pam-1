@@ -12,7 +12,9 @@ namespace PAM.Services
     public class TreeViewService
     {
         private readonly OrganizationService _orgService;
-        private List<TreeViewNode> unitList = new List<TreeViewNode>();
+        private List<TreeViewNode> MyTree = new List<TreeViewNode>();
+        private Dictionary<int, TreeViewNode> bureauDictionary = new Dictionary<int, TreeViewNode>();
+        private Dictionary<int, TreeViewNode> unitDictionary = new Dictionary<int, TreeViewNode>();
 
         public TreeViewService(OrganizationService orgService)
         {
@@ -21,16 +23,22 @@ namespace PAM.Services
             var bureauList = _orgService.GetBureaus();
             var unitList = _orgService.GetUnits();
 
-            //var bureauTree = CreateBureaus(bureauList);
-            var unitTree = CreateUnits(unitList);
-            Debug.WriteLine("*** START ***");
+            // Create toplevel tree with bureaus
+            MyTree = CreateBureaus(bureauList);
+            CreateUnits(unitList);
 
-            foreach(TreeViewNode item in unitTree)
+
+            foreach(TreeViewNode temp in MyTree)
             {
                 Debug.WriteLine("*** NEW ***");
-                Debug.WriteLine(item.Text);
-                Debug.WriteLine(item.Children);
+                Debug.WriteLine(temp.Children.Count);
             }
+            //foreach(TreeViewNode item in unitTree)
+            //{
+            //    Debug.WriteLine("*** NEW ***");
+            //    Debug.WriteLine(item.Text);
+            //    Debug.WriteLine(item.Children);
+            //}
         }
 
         public List<TreeViewNode> CreateBureaus(ICollection<Bureau> list)
@@ -43,41 +51,24 @@ namespace PAM.Services
                 {
                     Id = bureau.BureauId,
                     Type = "Bureau",
-                    Text = bureau.Description
+                    Text = bureau.Description,
+                    Children = new List<TreeViewNode>()
                 };
                 bureauList.Add(temp);
+                bureauDictionary.Add(temp.Id, temp);
             }
+            
             return bureauList;
         }
 
         // Create Unit with hieararchy and then later another method to add the parent unit as children to bureau
-        public List<TreeViewNode> CreateUnits(ICollection<Unit> list)
+        public void CreateUnits(ICollection<Unit> unitList)
         {
-            Debug.WriteLine(list.Count);
-            if(list.Count == 0)
+            foreach(Unit unit in unitList)
             {
-                return unitList;
-            }
-            foreach(Unit unit in list.ToList())
-            {
-                if(unit.ParentId != null)
+                if(unit.ParentId == null)
                 {
-                    TreeViewNode parent = unitList.Find(x => x.Id == unit.ParentId);
-                    if(parent != null)
-                    {
-                        TreeViewNode temp = new TreeViewNode
-                        {
-                            Id = unit.UnitId,
-                            Type = "Unit",
-                            Text = unit.Name,
-                            Children = new List<TreeViewNode>()
-                        };
-                        parent.Children.Add(temp);
-                        list.Remove(unit);
-                    }
-                }
-                else
-                {
+                    TreeViewNode parent = bureauDictionary[unit.BureauId];
                     TreeViewNode temp = new TreeViewNode
                     {
                         Id = unit.UnitId,
@@ -85,12 +76,10 @@ namespace PAM.Services
                         Text = unit.Name,
                         Children = new List<TreeViewNode>()
                     };
-                    unitList.Add(temp);
-                    list.Remove(unit);
+                    parent.Children.Add(temp);
+                    unitDictionary.Add(temp.Id, temp);
                 }
             }
-
-            return CreateUnits(list);
         }
     }
 
