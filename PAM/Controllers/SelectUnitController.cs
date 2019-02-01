@@ -37,6 +37,9 @@ namespace PAM.Controllers
             //Debug.WriteLine(test);
             //ViewData["UnitList"] = test;
 
+            var myTree = _treeService.GenerateTree();
+            ViewData["MyTree"] = myTree;
+
             return View("../NewRequest/SelectUnit");
         }
 

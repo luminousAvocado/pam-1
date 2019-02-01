@@ -19,26 +19,17 @@ namespace PAM.Services
         public TreeViewService(OrganizationService orgService)
         {
             _orgService = orgService;
+        }
 
+        public List<TreeViewNode> GenerateTree()
+        {
             var bureauList = _orgService.GetBureaus();
             var unitList = _orgService.GetUnits();
 
-            // Create toplevel tree with bureaus
             MyTree = CreateBureaus(bureauList);
             CreateUnits(unitList);
 
-
-            foreach(TreeViewNode temp in MyTree)
-            {
-                Debug.WriteLine("*** NEW ***");
-                Debug.WriteLine(temp.Children.Count);
-            }
-            //foreach(TreeViewNode item in unitTree)
-            //{
-            //    Debug.WriteLine("*** NEW ***");
-            //    Debug.WriteLine(item.Text);
-            //    Debug.WriteLine(item.Children);
-            //}
+            return MyTree;
         }
 
         public List<TreeViewNode> CreateBureaus(ICollection<Bureau> list)
@@ -49,47 +40,73 @@ namespace PAM.Services
             {
                 TreeViewNode temp = new TreeViewNode
                 {
-                    Id = bureau.BureauId,
-                    Type = "Bureau",
-                    Text = bureau.Description,
-                    Children = new List<TreeViewNode>()
+                    id = bureau.BureauId,
+                    type = "Bureau",
+                    text = bureau.Description,
+                    nodes = new List<TreeViewNode>()
                 };
                 bureauList.Add(temp);
-                bureauDictionary.Add(temp.Id, temp);
-            }
-            
+                bureauDictionary.Add(temp.id, temp);
+            }            
             return bureauList;
         }
 
-        // Create Unit with hieararchy and then later another method to add the parent unit as children to bureau
-        public void CreateUnits(ICollection<Unit> unitList)
+        public int CreateUnits(ICollection<Unit> unitList)
         {
-            foreach(Unit unit in unitList)
+            if(unitList.Count == 0)
             {
-                if(unit.ParentId == null)
+                return 1;
+            }
+            else
+            {
+                foreach (Unit unit in unitList.ToList())
                 {
-                    TreeViewNode parent = bureauDictionary[unit.BureauId];
-                    TreeViewNode temp = new TreeViewNode
+                    if (unit.ParentId == null)
                     {
-                        Id = unit.UnitId,
-                        Type = "Unit",
-                        Text = unit.Name,
-                        Children = new List<TreeViewNode>()
-                    };
-                    parent.Children.Add(temp);
-                    unitDictionary.Add(temp.Id, temp);
+                        TreeViewNode parent = bureauDictionary[unit.BureauId];
+                        TreeViewNode temp = new TreeViewNode
+                        {
+                            id = unit.UnitId,
+                            type = "Unit",
+                            text = unit.Name
+                        };
+                        parent.nodes.Add(temp);
+                        unitDictionary.Add(temp.id, temp);
+                        unitList.Remove(unit);
+                    }
+                    else if (unitDictionary.ContainsKey((int)unit.ParentId))
+                    {
+                        TreeViewNode parent = unitDictionary[(int)unit.ParentId];
+                        TreeViewNode temp = new TreeViewNode
+                        {
+                            id = unit.UnitId,
+                            type = "Unit",
+                            text = unit.Name,
+                        };
+                        if(parent.nodes != null)
+                        {
+                            parent.nodes.Add(temp);
+                        }
+                        else
+                        {
+                            parent.nodes = new List<TreeViewNode>();
+                            parent.nodes.Add(temp);
+                        }
+                        unitDictionary.Add(temp.id, temp);
+                        unitList.Remove(unit);
+                    }
                 }
+                return CreateUnits(unitList);
             }
         }
     }
 
     public class TreeViewNode
     {
-        public int Id { get; set; }
-        public string Type { get; set; } // Signifies Unit or Bureau
-        public string Text { get; set; }
-        public List<TreeViewNode> Children { get; set; }
-        // Additional treeview properties
+        public int id { get; set; }
+        public string type { get; set; }
+        public string text { get; set; }
+        public List<TreeViewNode> nodes { get; set; }
     }
 
 

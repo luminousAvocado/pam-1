@@ -18,7 +18,10 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
     <script>
-        var mytree = @Html.Raw(@ViewData["UnitList"]);
-        $('#tree').treeview({ data: mytree });
+      var mytree = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MyTree"]));
+      $('#tree').treeview({
+        data: mytree,
+        levels: 1
+      });
     </script>
 </body>
