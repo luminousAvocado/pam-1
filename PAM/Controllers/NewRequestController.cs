@@ -85,7 +85,7 @@ namespace PAM.Controllers
 
             // Routing from RequestType to SelectUnit
             //return RedirectToAction("RequestInfo");
-            return RedirectToAction("Index", "SelectUnit");
+            return RedirectToAction("PickUnit", "SelectUnit");
         }
 
         [HttpGet]

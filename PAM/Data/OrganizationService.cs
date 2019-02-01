@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PAM.Models;
@@ -26,9 +27,9 @@ namespace PAM.Data
             return _dbContext.Units.ToList();
         }
 
-        public ICollection<UnitSystem> GetUnitSystems()
+        public ICollection<UnitSystem> GetRelatedUnitSystems(int unitId)
         {
-            return _dbContext.UnitSystems.ToList();
+            return _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
         }
     }
 }
