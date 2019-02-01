@@ -32,9 +32,24 @@ namespace PAM.Data
             return _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
         }
 
-        //public ICollection<System> GetSystem(int systemId)
-        //{
+        public List<Models.System> GetSystem(int systemId)
+        {
+            return _dbContext.Systems.Where(x => x.SystemId == systemId).ToList();
+        }
 
-        //}
+        public ICollection<Models.System> GetRelatedSystems(int unitId)
+        {
+            ICollection<UnitSystem> unitSystemList;
+            List<Models.System> systemsList = new List<Models.System>();
+
+            unitSystemList = GetRelatedUnitSystems(unitId);
+            foreach(UnitSystem unitSystem in unitSystemList)
+            {
+                List<Models.System> temp = GetSystem(unitSystem.SystemId).ToList();
+                systemsList.Add(temp.First());
+            }
+            
+            return systemsList;
+        }
     }
 }

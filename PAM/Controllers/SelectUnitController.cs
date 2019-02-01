@@ -24,7 +24,7 @@ namespace PAM.Controllers
             var myTree = _treeService.GenerateTree();
             ViewData["MyTree"] = myTree;
 
-            return View("../NewRequest/SelectUnit");
+            return View("../SelectUnit/SelectUnit");
         }
 
         [HttpPost]
@@ -38,10 +38,9 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult SelectSystems()
         {
-            var unitSystemsList = _orgService.GetRelatedUnitSystems((int)TempData["selectedUnit"]);
-            
+            var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
 
-            return View("../NewRequest/SelectSystems");
+            return View(systemsList);
         }
     }
 }
