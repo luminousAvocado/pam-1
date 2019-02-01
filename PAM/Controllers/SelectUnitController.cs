@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PAM.Data;
-using PAM.Models;
-using Newtonsoft.Json;
 using PAM.Services;
 
 namespace PAM.Controllers
@@ -31,6 +21,14 @@ namespace PAM.Controllers
             ViewData["MyTree"] = myTree;
 
             return View("../NewRequest/SelectUnit");
+        }
+
+        [HttpPost]
+        public IActionResult Index(int selectedUnit)
+        {
+            Debug.WriteLine("***" + selectedUnit);
+
+            return RedirectToAction("ShowSystems");
         }
     }
 }
