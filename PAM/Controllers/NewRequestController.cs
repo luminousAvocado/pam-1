@@ -72,13 +72,6 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult RequesterInfo(Requester formData){
-            /*
-            if(requestFor != null){
-                requestFor = _userService.SaveRequester(requestFor);
-                ViewBag.Requester = requestFor;
-                Console.WriteLine(ViewBag.Requester.RequesterId);
-            }
-            */
             var currRequester = HttpContext.Session.GetObject<Requester>("Requester");
             currRequester = updateInfo(currRequester, formData);
             _userService.UpdateRequester(currRequester);
