@@ -26,9 +26,9 @@ namespace PAM.Controllers
         [HttpPost]
         public IActionResult Index(int selectedUnit)
         {
-            Debug.WriteLine("***" + selectedUnit);
+            TempData["selectedUnit"] = selectedUnit;
 
-            return RedirectToAction("ShowSystems");
+            return RedirectToAction("SelectSystems");
         }
     }
 }

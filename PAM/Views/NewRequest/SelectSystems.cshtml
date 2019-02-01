@@ -1,7 +1,17 @@
-﻿
-@{
-    ViewData["Title"] = "SelectSystems";
-}
-
-<h2>SelectSystems</h2>
-
+﻿<body onload="javascript: stepIndicate()">
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="" asp-action="" method="">
+    <div class="shadow-container">
+      <div class="alert alert-info">
+        Step 5 - Default Systems Associated with Unit
+      </div>
+    </div>
+    <button type="submit" class="btn btn-info float-right m-3"> Next </button>
+  </form>
+  <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
+    <button type="button" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
+  </form>
+</body>
