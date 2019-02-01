@@ -71,21 +71,30 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequesterInfo(Requester req){
+        public IActionResult RequesterInfo(Requester formData){
             /*
-            var requestFor = HttpContext.Session.GetObject<Requester>("RequestFor");
             if(requestFor != null){
                 requestFor = _userService.SaveRequester(requestFor);
                 ViewBag.Requester = requestFor;
                 Console.WriteLine(ViewBag.Requester.RequesterId);
             }
             */
-            var original = HttpContext.Session.GetObject<Requester>("Requester");
-            original = updateInfo(original, req);
+            var currRequester = HttpContext.Session.GetObject<Requester>("Requester");
+            currRequester = updateInfo(currRequester, formData);
+            _userService.UpdateRequester(currRequester);
             var request = HttpContext.Session.GetObject<Request>("Request");
-            request.RequestedForId = original.RequesterId;
+            
+            var requestFor = HttpContext.Session.GetObject<Requester>("RequestFor");
+            if(requestFor != null){
+                requestFor.Name = "placeholder";
+                requestFor.Username = "placeholder";
+                requestFor = updateInfo(requestFor, formData);
+                requestFor = _userService.SaveRequester(requestFor);
+                request.RequestedForId = requestFor.RequesterId;
+            }
+            else request.RequestedForId = currRequester.RequesterId;
+
             HttpContext.Session.SetObject("Request", request);
-            Console.WriteLine("UHHH" + request.RequestedForId);
             return RedirectToAction("RequestType");
         }
 
@@ -162,18 +171,18 @@ namespace PAM.Controllers
             return RedirectToAction("Self", "Request");
         }
 
-        public Requester updateInfo(Requester original, Requester req){
-            original.FirstName = req.FirstName;
-            original.LastName = req.LastName;
-            original.WorkAddress = req.WorkAddress;
-            original.WorkCity = req.WorkCity;
-            original.WorkState = req.WorkState;
-            original.WorkZip = req.WorkZip;
-            original.Email = req.Email;
-            original.WorkPhone = req.WorkPhone;
-            original.CellPhone = req.CellPhone;
+        public Requester updateInfo(Requester current, Requester req){
+            current.FirstName = req.FirstName;
+            current.LastName = req.LastName;
+            current.WorkAddress = req.WorkAddress;
+            current.WorkCity = req.WorkCity;
+            current.WorkState = req.WorkState;
+            current.WorkZip = req.WorkZip;
+            current.Email = req.Email;
+            current.WorkPhone = req.WorkPhone;
+            current.CellPhone = req.CellPhone;
 
-            return original;
+            return current;
         }
     }
 }
