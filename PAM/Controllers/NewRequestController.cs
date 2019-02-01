@@ -56,7 +56,11 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewRequest(Request req){
+        public IActionResult NewRequest(Request req, string selfOrFor){
+            if(selfOrFor == "for"){
+                Requester requestFor = new Requester();
+                HttpContext.Session.SetObject("RequestFor", requestFor);
+            }
             HttpContext.Session.SetObject("Request", req);
             return RedirectToAction("RequesterInfo");
         }
@@ -68,6 +72,15 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult RequesterInfo(Requester req){
+            var update = HttpContext.Session.GetObject<Requester>("Requester");
+            update.FirstName = req.FirstName;
+            update.LastName = req.LastName;
+            update.WorkAddress = req.WorkAddress;
+            update.WorkCity = req.WorkCity;
+            update.WorkState = req.WorkState;
+            update.WorkZip = req.WorkZip;
+            update.Email = req.Email;
+            _userService.UpdateRequester(update);
             return RedirectToAction("RequestType");
         }
 

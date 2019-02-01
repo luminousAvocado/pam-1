@@ -6,13 +6,16 @@
     background: linear-gradient(to top, #3D7EAA 0%, #E4E5E6 100%);
     background: -webkit-linear-gradient(to bottom, #00416A 0%, #E4E5E6 100%);
 }
+input[type=radio] + label:before{
+    border: 1px solid #777;
+}
 
 label {
     font-style:italic;
 }
 
 .navbar a{
-  font-size: 14px;
+    font-size: 14px;
 }
 
 /*----------------------------------------------------------
@@ -78,6 +81,7 @@ label {
 .navbar{
     padding: 0 0 0 1.5rem;
 }
+
 .content-container {
     margin: 25px;
     display: flex;
@@ -119,8 +123,8 @@ input.invalid {
 */
 
 .progressbar-container{
-    width: 800px;
-    margin: auto;
+    width: 100%;
+    margin:auto;
 }
 
 .progressbar {
@@ -129,11 +133,6 @@ input.invalid {
     margin: 0;
     counter-reset: step;
     z-index: 1;
-}
-
-.progressbar a.disabledStep{
-pointer-events: none;
-cursor: default;
 }
     .progressbar li{
         list-style-type: none;
@@ -182,7 +181,7 @@ cursor: default;
             color: green;
         }
 
-            .progressbar li.active:before {
+            .progressbar li.active:before, .progressbar li.active:after {
                 border-color: #55b776;
             }
 
