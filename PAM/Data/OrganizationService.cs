@@ -31,5 +31,10 @@ namespace PAM.Data
         {
             return _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
         }
+
+        //public ICollection<System> GetSystem(int systemId)
+        //{
+
+        //}
     }
 }
