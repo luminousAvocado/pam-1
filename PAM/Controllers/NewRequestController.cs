@@ -72,15 +72,20 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult RequesterInfo(Requester req){
-            var update = HttpContext.Session.GetObject<Requester>("Requester");
-            update.FirstName = req.FirstName;
-            update.LastName = req.LastName;
-            update.WorkAddress = req.WorkAddress;
-            update.WorkCity = req.WorkCity;
-            update.WorkState = req.WorkState;
-            update.WorkZip = req.WorkZip;
-            update.Email = req.Email;
-            _userService.UpdateRequester(update);
+            /*
+            var requestFor = HttpContext.Session.GetObject<Requester>("RequestFor");
+            if(requestFor != null){
+                requestFor = _userService.SaveRequester(requestFor);
+                ViewBag.Requester = requestFor;
+                Console.WriteLine(ViewBag.Requester.RequesterId);
+            }
+            */
+            var original = HttpContext.Session.GetObject<Requester>("Requester");
+            original = updateInfo(original, req);
+            var request = HttpContext.Session.GetObject<Request>("Request");
+            request.RequestedForId = original.RequesterId;
+            HttpContext.Session.SetObject("Request", request);
+            Console.WriteLine("UHHH" + request.RequestedForId);
             return RedirectToAction("RequestType");
         }
 
@@ -155,6 +160,20 @@ namespace PAM.Controllers
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Self", "Request");
+        }
+
+        public Requester updateInfo(Requester original, Requester req){
+            original.FirstName = req.FirstName;
+            original.LastName = req.LastName;
+            original.WorkAddress = req.WorkAddress;
+            original.WorkCity = req.WorkCity;
+            original.WorkState = req.WorkState;
+            original.WorkZip = req.WorkZip;
+            original.Email = req.Email;
+            original.WorkPhone = req.WorkPhone;
+            original.CellPhone = req.CellPhone;
+
+            return original;
         }
     }
 }
