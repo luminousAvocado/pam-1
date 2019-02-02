@@ -16,7 +16,6 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
@@ -29,7 +28,7 @@
           <a class="nav-link" href="">Reports</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Organization</a>
+          <a class="nav-link" href="/Management/WelcomePage">Managment</a>
         </li>
       </ul>
     </div>
@@ -62,7 +61,33 @@
             </li>
           </ul>
         </nav>
-        <button class="btn btn-secondary" data-toggle="modal" data-target=".logoutModal" style="border-radius: 7px; margin-top: 20px; width: 100%;">Logout</button>
+        <br />
+        <!-- this is where I should show my Location/Bureau/Uints/Systems Navigation-->
+        <nav class="navbar navbar-dark bg-dark" style="border-radius:7px;">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Locations">Locations Manager</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Bureaus">Bureaus Manager</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Units">Units Manager</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Systems">Systems Manager</a>
+            </li>
+          </ul>
+        </nav>
+        <form asp-controller="Account" asp-action="Logout" method="post">
+          <button type="submit" class="btn btn-secondary" style="border-radius: 7px; margin-top: 20px; width: 100%;">Logout</button>
+        </form>
       </div>
       <div class="col-xl-10">
         <div class="form-container shadow-lg">
@@ -73,19 +98,10 @@
   </div>
   <p style="text-align:center; color:white;">&copy; Copyright 2018-2019. Los Angeles County. </p>
 
-  <form asp-controller="Account" asp-action="Logout" method="post">
-    <div class="modal logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-body text-center" style="font-size:18px;"> Are you sure you want to log-off?</div>
-          <div class="modal-footer"><button type="submit" class="btn btn-primary btn-block">Logout</button></div>
-        </div>
-      </div>
-    </div>
-  </form>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="~/js/w3autocomplete.js"></script>
+  <script src="~/js/scripts.js"></script>
 </body>
 </html>
