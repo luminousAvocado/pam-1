@@ -32,7 +32,7 @@ namespace PAM.Data
             return _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
         }
 
-        public List<Models.System> GetSystem(int systemId)
+        public ICollection<Models.System> GetSystem(int systemId)
         {
             return _dbContext.Systems.Where(x => x.SystemId == systemId).ToList();
         }
@@ -43,8 +43,13 @@ namespace PAM.Data
             List<Models.System> systemsList = new List<Models.System>();
 
             unitSystemList = GetRelatedUnitSystems(unitId);
+            
             foreach(UnitSystem unitSystem in unitSystemList)
             {
+                // THERE IS A BUG HERE WHERE IT DOESNT GET ALL SYSTEMS
+                // TEST WITH 'JUVENILE BUREAU STAFF' unit, it wont get the last system (systemid 64)
+                // Implement Sun's method with eagerly
+
                 List<Models.System> temp = GetSystem(unitSystem.SystemId).ToList();
                 systemsList.Add(temp.First());
             }

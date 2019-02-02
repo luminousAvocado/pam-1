@@ -40,7 +40,18 @@ namespace PAM.Controllers
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
 
+            // Line below breaks
+            //TempData["SystemsList"] = systemsList;
+
             return View(systemsList);
+        }
+
+        [HttpPost]
+        public IActionResult SystemSelected()
+        {
+            // Need to create a RequestedSystem object, save in session, get requestId and create entry at end
+
+            return RedirectToAction("RequestInfo", "NewRequest");
         }
     }
 }
