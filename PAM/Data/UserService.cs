@@ -38,5 +38,10 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return requester;
         }
+
+        public void UpdateRequester(Requester requester){
+            _dbContext.Update(requester);
+            _dbContext.SaveChanges();
+        }
     }
 }

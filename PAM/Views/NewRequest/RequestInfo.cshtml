@@ -12,7 +12,6 @@
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="RequestInfo" method="post">
-    <div class="shadow-container">
       <div class="alert alert-info">
         Step 6 - Additional Request Information
       </div>
@@ -58,7 +57,6 @@
           <input asp-for="DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
         </fieldset>
       </div>
-    </div>
     <button type="submit" class="btn btn-info float-right m-3"> Next </button>
   </form>
   <form asp-controller="RequestType" asp-action="RequestType" method="get">

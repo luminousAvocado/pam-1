@@ -56,7 +56,11 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewRequest(Request req){
+        public IActionResult NewRequest(Request req, string selfOrFor){
+            if(selfOrFor == "for"){
+                Requester requestFor = new Requester();
+                HttpContext.Session.SetObject("RequestFor", requestFor);
+            }
             HttpContext.Session.SetObject("Request", req);
             return RedirectToAction("RequesterInfo");
         }
@@ -67,7 +71,23 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequesterInfo(Requester req){
+        public IActionResult RequesterInfo(Requester formData){
+            var currRequester = HttpContext.Session.GetObject<Requester>("Requester");
+            currRequester = updateInfo(currRequester, formData);
+            _userService.UpdateRequester(currRequester);
+            var request = HttpContext.Session.GetObject<Request>("Request");
+            
+            var requestFor = HttpContext.Session.GetObject<Requester>("RequestFor");
+            if(requestFor != null){
+                requestFor.Name = "placeholder";
+                requestFor.Username = "placeholder";
+                requestFor = updateInfo(requestFor, formData);
+                requestFor = _userService.SaveRequester(requestFor);
+                request.RequestedForId = requestFor.RequesterId;
+            }
+            else request.RequestedForId = currRequester.RequesterId;
+
+            HttpContext.Session.SetObject("Request", request);
             return RedirectToAction("RequestType");
         }
 
@@ -146,6 +166,20 @@ namespace PAM.Controllers
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Self", "Request");
+        }
+
+        public Requester updateInfo(Requester current, Requester req){
+            current.FirstName = req.FirstName;
+            current.LastName = req.LastName;
+            current.WorkAddress = req.WorkAddress;
+            current.WorkCity = req.WorkCity;
+            current.WorkState = req.WorkState;
+            current.WorkZip = req.WorkZip;
+            current.Email = req.Email;
+            current.WorkPhone = req.WorkPhone;
+            current.CellPhone = req.CellPhone;
+
+            return current;
         }
     }
 }

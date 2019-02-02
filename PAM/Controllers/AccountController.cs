@@ -18,9 +18,6 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly ILogger _logger;
 
-        //private ViewResult view;
-
-
         public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
             _adService = adService;
