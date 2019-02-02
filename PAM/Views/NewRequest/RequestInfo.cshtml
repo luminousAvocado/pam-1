@@ -1,0 +1,68 @@
+﻿@using PAM.Models
+@using PAM.Extensions
+
+@model PAM.Models.Request
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+  var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+  ViewData["Title"] = "Request Information";
+}
+
+<body onload="javascript: stepIndicate()">
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="RequestInfo" method="post">
+      <div class="alert alert-info">
+        Step 6 - Additional Request Information
+      </div>
+      <h3> Please select all that apply. </h3>
+      <div class="row shadow-container form-group text-center" style="margin-left: 3px;">
+        <div class="col-4">
+          <p>Is this Request for a Contractor?</p>
+          <input asp-for="IsContractor" type="checkbox" class="custom-control-input" style="display:inline-block" id="contractor" />
+          <label class="custom-control-label" for="contractor"> Contractor </label>
+        </div>
+        <div class="col-4">
+          <p>Does this request require high profile access?</p>
+          <input asp-for="IsHighProfileAccess" type="checkbox" class="custom-control-input" style="display:inline-block" id="highProfile" />
+          <label class="custom-control-label" for="highProfile"> High Profile</label>
+        </div>
+        <div class="col-4">
+          <p>Does this request require global access?</p>
+          <input asp-for="IsGlobalAccess" type="checkbox" class="custom-control-input" style="display:inline-block" id="globalAccess" />
+          <label class="custom-control-label" for="globalAccess"> Global Access </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="readOnlyInput">Caseload Type</label>
+          <input asp-for="CaseloadType" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="readOnlyInput">Caseload Function</label>
+          <input asp-for="CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="readOnlyInput">Caseload Number</label>
+          <input asp-for="CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label" for="readOnlyInput">Departure Reason</label>
+          <input asp-for="DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+        </fieldset>
+      </div>
+    <button type="submit" class="btn btn-info float-right m-3"> Next </button>
+  </form>
+  <form asp-controller="RequestType" asp-action="RequestType" method="get">
+    <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
+  </form>
+</body>

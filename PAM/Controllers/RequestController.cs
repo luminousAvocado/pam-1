@@ -1,57 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
-using PAM.Services;
-
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class RequestController : Controller
     {
-        private readonly AppDbContext _dbContext;
-        private readonly UserService _userService;
-        //private readonly SessionHelper _sessionHelp;
+        private readonly RequestService _requestService;
 
-        private IHttpContextAccessor _httpContextAccessor;
-        private ISession _session => _httpContextAccessor.HttpContext.Session;
-
-        public RequestController(IADService adService, UserService userService,
-            AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        public RequestController(RequestService requestService)
         {
-            _dbContext = context;
-            _httpContextAccessor = httpContextAccessor;
-            _userService = userService;
-           //_sessionHelp = sessionHelp;
+            _requestService = requestService;
         }
 
         [HttpGet]
-        public IActionResult CreateRequester()
+        public IActionResult Self()
         {
-            Requester requester = HttpContext.Session.GetObject<Requester>("Requester");
-            requester = _userService.SaveRequester(requester);            
-
-            HttpContext.Session.SetObject("Requester", requester);
-            return View("NewRequest");
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            ViewData["Requests"] = _requestService.GetRequests(username);
+            return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateRequest (NewRegistrationViewModel reg)
+        [HttpGet]
+        public IActionResult Delete(int? id)
         {
-            if(reg.RequestedFor.FirstName != null)
+            if (id == null) return NotFound();
+
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var requests = _requestService.GetRequests(username);
+            if (requests == null) return RedirectToAction("Self");
+            else return View();
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirm(int id)
+        {
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var requests = _requestService.GetRequests(username);
+
+            foreach(var request in requests)
             {
-                _dbContext.Add(reg.RequestedFor);
-
+                if (request.RequestId == id) _requestService.RemoveRequest(request);
             }
-            _dbContext.Add(reg.Request);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction("Registrations", "Home");
+            return RedirectToAction("Self");
         }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        } 
     }
 }

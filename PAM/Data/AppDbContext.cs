@@ -21,6 +21,7 @@ namespace PAM.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
+        public DbSet<UnitSystem> UnitSystems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

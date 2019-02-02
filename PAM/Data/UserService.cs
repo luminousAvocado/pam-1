@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PAM.Models;
 
@@ -35,6 +37,11 @@ namespace PAM.Data
             if (requester.RequesterId == 0) _dbContext.Add(requester);
             _dbContext.SaveChanges();
             return requester;
+        }
+
+        public void UpdateRequester(Requester requester){
+            _dbContext.Update(requester);
+            _dbContext.SaveChanges();
         }
     }
 }

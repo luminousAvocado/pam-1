@@ -16,4 +16,8 @@
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap-treeview\dist\css\" />
+  </ItemGroup>
+
 </Project>
