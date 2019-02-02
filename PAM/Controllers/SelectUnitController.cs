@@ -38,10 +38,8 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult SelectSystems()
         {
+            // List of UnitSystem with related Systems
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
-
-            // Line below breaks
-            //TempData["SystemsList"] = systemsList;
 
             return View(systemsList);
         }
