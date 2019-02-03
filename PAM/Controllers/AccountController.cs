@@ -63,8 +63,13 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
+            return View("Welcome");
+            //return RedirectToAction("Self", "Request");
+        }
 
-            return RedirectToAction("Self", "Request");
+        [HttpGet]
+        public IActionResult Welcome(){
+            return View();
         }
 
         [HttpPost]
