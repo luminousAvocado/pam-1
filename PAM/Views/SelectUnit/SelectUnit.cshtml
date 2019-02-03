@@ -1,15 +1,16 @@
 ﻿@{
-     ViewData["Title"] = "Unit Selection";
+  ViewData["Title"] = "Unit Selection";
 }
+<head>
+  <link red="stylesheet" href="~/lib/bootstrap-treeview/dist/css/bootstrap-treeview.min.css" />
+</head>
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="SelectUnit" asp-action="PickUnit" method="post">
-    <div class="shadow-container">
-      <div class="alert alert-info">
-        Step 4 - Select The Type of Job
-      </div>
-      <div id="tree"></div>
+    <div class="alert alert-info">
+      Step 4 - Select The Type of Job
     </div>
+    <div id="tree"></div>
     <input id="selectedUnit" name="selectedUnit" type="hidden" value="" />
     <button type="submit" class="btn btn-info float-right m-3"> Next </button>
   </form>
