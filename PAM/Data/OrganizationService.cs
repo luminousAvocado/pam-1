@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PAM.Models;
 
@@ -27,34 +28,26 @@ namespace PAM.Data
             return _dbContext.Units.ToList();
         }
 
-        public ICollection<UnitSystem> GetRelatedUnitSystems(int unitId)
+        public ICollection<UnitSystem> GetRelatedSystems(int unitId)
         {
-            return _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
-        }
+            // Returns UnitSystem JOIN System. Systems related to the specific unitId
+            var unitAndRelatedSystems = _dbContext.UnitSystems.Include(unitSystem => unitSystem.System).Where(x => x.UnitId == unitId).ToList();
 
-        public ICollection<Models.System> GetSystem(int systemId)
-        {
-            return _dbContext.Systems.Where(x => x.SystemId == systemId).ToList();
-        }
-
-        public ICollection<Models.System> GetRelatedSystems(int unitId)
-        {
-            ICollection<UnitSystem> unitSystemList;
-            List<Models.System> systemsList = new List<Models.System>();
-
-            unitSystemList = GetRelatedUnitSystems(unitId);
-            
-            foreach(UnitSystem unitSystem in unitSystemList)
+            // Block below is for debugging
+            var unitSys = _dbContext.UnitSystems.Where(x => x.UnitId == unitId).ToList();
+            Debug.WriteLine("*** UnitSystem");
+            foreach(var item in unitSys)
             {
-                // THERE IS A BUG HERE WHERE IT DOESNT GET ALL SYSTEMS
-                // TEST WITH 'JUVENILE BUREAU STAFF' unit, it wont get the last system (systemid 64)
-                // Implement Sun's method with eagerly
-
-                List<Models.System> temp = GetSystem(unitSystem.SystemId).ToList();
-                systemsList.Add(temp.First());
+                Debug.WriteLine("UnitId: {0}, SystemId: {1}", item.UnitId, item.SystemId);
+            }          
+            Debug.WriteLine("*** COUNT UnitSystems WITH Systems: {0}", unitAndRelatedSystems.Count);
+            foreach(var item in unitAndRelatedSystems)
+            {
+                Debug.WriteLine("*** UnitId: {0}, *** SystemId/Name: {1}, {2}", item.UnitId, item.System.SystemId, item.System.Name);
             }
-            
-            return systemsList;
+            // End debug
+
+            return unitAndRelatedSystems;
         }
     }
 }
