@@ -158,7 +158,7 @@ namespace PAM.Controllers
             return RedirectToAction("CreateRequest"); 
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CreateRequest ()
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
