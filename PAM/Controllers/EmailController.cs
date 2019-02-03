@@ -15,6 +15,11 @@ namespace PAM.Controllers
             _emailHelper = emailHelper;
         }
 
+        public IActionResult EmailApprover()
+        {
+            return View();
+        }
+
         public IActionResult Test()
         {
             string receipient = "cysun@localhost.localdomain";
