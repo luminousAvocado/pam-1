@@ -27,7 +27,7 @@ namespace PAM.Test.Services
         [Fact]
         public void GetEmployeeTest()
         {
-            Employee employee = _adService.GetEmployee(_username);
+            Employee employee = _adService.GetEmployeeByUsername(_username);
             Assert.NotNull(employee);
             Assert.Equal("Sun", employee.LastName);
         }

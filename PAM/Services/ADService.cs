@@ -14,7 +14,9 @@ namespace PAM.Services
     {
         bool Authenticate(string username, string password);
 
-        Employee GetEmployee(string username);
+        Employee GetEmployeeByUsername(string username);
+
+        Employee GetEmployeeByName(string name);
 
         ICollection<Employee> GetEmployees(string firstName, string lastName);
 
@@ -105,7 +107,7 @@ namespace PAM.Services
             return authenticated;
         }
 
-        public Employee GetEmployee(string username)
+        public Employee GetEmployeeByUsername(string username)
         {
             Employee employee = null;
             using (DirectoryEntry entry = new DirectoryEntry(_url, _username, _password))
@@ -113,6 +115,21 @@ namespace PAM.Services
                 using (DirectorySearcher searcher = new DirectorySearcher(entry))
                 {
                     searcher.Filter = $"(&(SAMAccountName={username}))";
+                    setSearchProperties(searcher);
+                    employee = getEmployee(searcher.FindOne());
+                }
+            }
+            return employee;
+        }
+
+        public Employee GetEmployeeByName(string name)
+        {
+            Employee employee = null;
+            using (DirectoryEntry entry = new DirectoryEntry(_url, _username, _password))
+            {
+                using (DirectorySearcher searcher = new DirectorySearcher(entry))
+                {
+                    searcher.Filter = $"(&(cn={name}))";
                     setSearchProperties(searcher);
                     employee = getEmployee(searcher.FindOne());
                 }
@@ -163,6 +180,17 @@ namespace PAM.Services
         {
             new Employee()
             {
+                Username = "e111111",
+                Name = "Pam Admin (e111111)",
+                FirstName = "Pam",
+                LastName = "Admin",
+                Email = "pam@localhost.localdomain",
+                Title = "Administrator",
+                Department = "IT Systems",
+                Phone = "111-222-3333"
+            },
+            new Employee()
+            {
                 Username = "e123456",
                 Name = "John Doe (e123456)",
                 FirstName = "John",
@@ -170,7 +198,12 @@ namespace PAM.Services
                 Email = "jdoe1@localhost.localdomain",
                 Title = "Developer",
                 Department = "IT Systems",
-                Phone = "123-456-7890"
+                Phone = "123-456-7890",
+                Address = "123 Main St.",
+                City = "Los Angeles",
+                State = "CA",
+                Zip = "90032",
+                SupervisorName = "Jane Doe (e234567)"
             },
             new Employee()
             {
@@ -181,7 +214,8 @@ namespace PAM.Services
                 Email = "jdoe2@localhost.localdomain",
                 Title = "Supervisor",
                 Department = "IT Systems",
-                Phone = "234-567-8901"
+                Phone = "234-567-8901",
+                SupervisorName = "Tom Smith (e345678)"
             },
             new Employee()
             {
@@ -194,94 +228,6 @@ namespace PAM.Services
                 Department = "IT Systems",
                 Phone = "345-678-9012"
             },
-            new Employee()
-            {
-                Username = "e456789",
-                Name = "Brandon Lam (e456789)",
-                FirstName = "Brandon",
-                LastName = "Lam",
-                Email = "blam@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e567891",
-                Name = "Jaime Borunda (e567891)",
-                FirstName = "Jaime",
-                LastName = "Borunda",
-                Email = "jborunda@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e678912",
-                Name = "James Kang (e678912)",
-                FirstName = "James",
-                LastName = "Kang",
-                Email = "jkang@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e789123",
-                Name = "Kevork Gib (e789123)",
-                FirstName = "Kevork",
-                LastName = "Gilabouchian",
-                Email = "kgilabouchian@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e891234",
-                Name = "Chengyu Sun (e891234)",
-                FirstName = "Chengyu",
-                LastName = "Sun",
-                Email = "csun@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e912345",
-                Name = "Zilong Yi (e912345)",
-                FirstName = "Zilong",
-                LastName = "Yi",
-                Email = "zyi@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e987654",
-                Name = "Diana Salazar (e987654)",
-                FirstName = "Diana",
-                LastName = "Salazar",
-                Email = "dsalazar@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e876543",
-                Name = "Benjamin Morales (e876543)",
-                FirstName = "Benjamin",
-                LastName = "Morales",
-                Email = "bmorales@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            }
         };
 
         public bool Authenticate(string username, string password)
@@ -289,10 +235,17 @@ namespace PAM.Services
             return employees.Any(employee => employee.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
 
-        public Employee GetEmployee(string username)
+        public Employee GetEmployeeByUsername(string username)
         {
             return employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+        }
+
+        public Employee GetEmployeeByName(string name)
+        {
+            return employees
+                .Where(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
         }
 

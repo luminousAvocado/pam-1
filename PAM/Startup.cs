@@ -54,7 +54,6 @@ namespace PAM
                             Configuration.GetValue<string>("SMTP:Password"))
                     }
                 );
-
             services.AddSingleton(
                 new EmailHelper()
                 {
@@ -63,7 +62,15 @@ namespace PAM
                     TemplateFolder = _env.ContentRootPath + "/Emails"
                 }
             );
-            services.AddSingleton<IADService, MockADService>();
+
+            if (Configuration.GetValue<bool>("ActiveDirectory:UseMockAD"))
+            {
+                services.AddSingleton<IADService, MockADService>();
+                _logger.LogWarning("Using Mock ADService");
+            }
+            else
+                services.AddSingleton<IADService, ADService>();
+
             services.AddScoped<OrganizationService>();
             services.AddScoped<UserService>();
             services.AddScoped<RequestService>();
