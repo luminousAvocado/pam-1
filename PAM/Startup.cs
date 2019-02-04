@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,7 @@ namespace PAM
             var connString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();

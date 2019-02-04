@@ -5,6 +5,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PAM.Extensions;
 using PAM.Models;
 
 namespace PAM.Services
@@ -35,35 +36,60 @@ namespace PAM.Services
             _logger = logger;
         }
 
+        public static readonly string[] Properties =
+        {
+            "sAMAccountName", // Username, a.k.a. Employee Number
+            "cn", // Name (Full Name + Employee Number)
+            "givenName", // First Name
+            "middleName", // Middle Name
+            "sn", // Last Name
+            "mail", "userPrincipalName", // Email
+            "title", // Title
+            "department", // Department
+            "section", // Section
+            "service", // Service
+            "streetAddress", // Address
+            "l", // City
+            "st", // State
+            "postalCode", // Zip
+            "telephoneNumber", // Phone
+            "mobile", // CellPhone
+            "supervisor", "manager" // Supervisor
+        };
+
         private void setSearchProperties(DirectorySearcher searcher)
         {
-            searcher.PropertiesToLoad.Add("sAMAccountName"); // aka Employee Number, Username
-            searcher.PropertiesToLoad.Add("cn"); // Full Name + Employee Number
-            searcher.PropertiesToLoad.Add("givenName"); // First Name
-            searcher.PropertiesToLoad.Add("sn"); // Last Name
-            searcher.PropertiesToLoad.Add("mail"); // Email (could be empty)
-            searcher.PropertiesToLoad.Add("userPrincipalName"); // Email
-            searcher.PropertiesToLoad.Add("title"); // Title (could be empty)
-            searcher.PropertiesToLoad.Add("department"); // Department
-            searcher.PropertiesToLoad.Add("telephoneNumber"); // Phone (could be empty)
+            foreach (var property in Properties)
+                searcher.PropertiesToLoad.Add(property);
         }
 
         private Employee getEmployee(SearchResult result)
         {
             Employee employee = new Employee();
-            employee.Username = result.Properties["sAMAccountName"][0].ToString();
-            employee.Name = result.Properties["cn"][0].ToString();
-            employee.FirstName = result.Properties["givenName"][0].ToString();
-            employee.LastName = result.Properties["sn"][0].ToString();
-            employee.Email = result.Properties["userPrincipalName"][0].ToString();
-            employee.Department = result.Properties["department"][0].ToString();
+            employee.Username = result.GetProperty("sAMAccountName");
+            employee.Name = result.GetProperty("cn");
+            employee.FirstName = result.GetProperty("givenName");
+            employee.MiddleName = result.GetProperty("middleName");
+            employee.LastName = result.GetProperty("sn");
+            employee.Email = result.GetProperty("mail") ?? result.GetProperty("userPrincipalName");
 
-            if (result.Properties.Contains("mail"))
-                employee.Email = result.Properties["userPrincipalName"][0].ToString();
-            if (result.Properties.Contains("title"))
-                employee.Title = result.Properties["title"][0].ToString();
-            if (result.Properties.Contains("telephoneNumber"))
-                employee.Phone = result.Properties["telephoneNumber"][0].ToString();
+            employee.Title = result.GetProperty("title");
+            employee.Department = result.GetProperty("department");
+            employee.Section = result.GetProperty("section");
+            employee.Service = result.GetProperty("service");
+
+            employee.Address = result.GetProperty("streetAddress");
+            employee.City = result.GetProperty("l");
+            employee.State = result.GetProperty("st");
+            employee.Zip = result.GetProperty("postalCode");
+
+            employee.Phone = result.GetProperty("telephoneNumber");
+            employee.CellPhone = result.GetProperty("mobile");
+
+            string supervisor = result.GetProperty("supervisor") ?? result.GetProperty("manager");
+            int startIndex = supervisor.IndexOf("CN=") + 3;
+            int endIndex = supervisor.IndexOf(',', startIndex);
+            employee.SupervisorName = supervisor.Substring(startIndex, (endIndex - startIndex));
 
             return employee;
         }

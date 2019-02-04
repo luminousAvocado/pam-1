@@ -23,11 +23,20 @@ CREATE TABLE [Employees] (
     [Username] nvarchar(450) NOT NULL,
     [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
+    [MiddleName] nvarchar(max) NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(450) NOT NULL,
     [Title] nvarchar(max) NULL,
     [Department] nvarchar(max) NULL,
+    [Section] nvarchar(max) NULL,
+    [Service] nvarchar(max) NULL,
+    [Address] nvarchar(max) NULL,
+    [City] nvarchar(max) NULL,
+    [State] nvarchar(max) NULL,
+    [Zip] nvarchar(max) NULL,
     [Phone] nvarchar(max) NULL,
+    [CellPhone] nvarchar(max) NULL,
+    [SupervisorName] nvarchar(max) NULL,
     [IsAdmin] bit NOT NULL,
     [IsApprover] bit NOT NULL,
     [IsProcessor] bit NOT NULL,
@@ -114,20 +123,22 @@ CREATE TABLE [Requesters] (
     [Username] nvarchar(max) NOT NULL,
     [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
+    [MiddleName] nvarchar(max) NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(max) NOT NULL,
     [BureauId] int NULL,
     [UnitId] int NULL,
-    [MiddleName] nvarchar(max) NULL,
-    [PayrollTitle] nvarchar(max) NULL,
+    [Title] nvarchar(max) NULL,
     [Department] nvarchar(max) NULL,
-    [DepartmentCode] nvarchar(max) NULL,
-    [WorkAddress] nvarchar(max) NULL,
-    [WorkCity] nvarchar(max) NULL,
-    [WorkState] nvarchar(max) NULL,
-    [WorkZip] nvarchar(max) NULL,
-    [WorkPhone] nvarchar(max) NULL,
+    [Section] nvarchar(max) NULL,
+    [Service] nvarchar(max) NULL,
+    [Address] nvarchar(max) NULL,
+    [City] nvarchar(max) NULL,
+    [State] nvarchar(max) NULL,
+    [Zip] nvarchar(max) NULL,
+    [Phone] nvarchar(max) NULL,
     [CellPhone] nvarchar(max) NULL,
+    [SupervisorName] nvarchar(max) NULL,
     CONSTRAINT [PK_Requesters] PRIMARY KEY ([RequesterId]),
     CONSTRAINT [FK_Requesters_Bureaus_BureauId] FOREIGN KEY ([BureauId]) REFERENCES [Bureaus] ([BureauId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Requesters_Units_UnitId] FOREIGN KEY ([UnitId]) REFERENCES [Units] ([UnitId]) ON DELETE NO ACTION
@@ -147,8 +158,8 @@ GO
 
 CREATE TABLE [Requests] (
     [RequestId] int NOT NULL IDENTITY,
-    [Name] nvarchar(max) NOT NULL,
-    [Username] nvarchar(max) NOT NULL,
+    [Username] nvarchar(max) NULL,
+    [Name] nvarchar(max) NULL,
     [RequestTypeId] int NOT NULL,
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
@@ -222,11 +233,11 @@ CREATE TABLE [SystemAccesses] (
 
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Name', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Section', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] ON;
-INSERT INTO [Employees] ([EmployeeId], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [Name], [Phone], [Title], [Username])
-VALUES (1, NULL, N'admin@localhost.localdomain', N'PAM', 1, 0, 0, N'Admin', N'PAM Admin', NULL, NULL, N'e111111');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'Name', N'Phone', N'Title', N'Username') AND [object_id] = OBJECT_ID(N'[Employees]'))
+INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [MiddleName], [Name], [Phone], [Section], [Service], [State], [SupervisorName], [Title], [Username], [Zip])
+VALUES (1, NULL, NULL, NULL, NULL, N'admin@localhost.localdomain', N'BLAM', 1, 0, 0, N'Admin', NULL, N'PAM Admin', NULL, NULL, NULL, NULL, NULL, NULL, N'e111111', NULL);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Section', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] OFF;
 
 GO
@@ -304,7 +315,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190110000125_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190204162518_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 
