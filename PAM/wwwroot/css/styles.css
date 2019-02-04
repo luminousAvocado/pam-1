@@ -45,35 +45,71 @@ label {
 /*----------------------------------------------------------
     [ Login Container & Contents ]
 */
-.login-container {
-    color: black;
-    width: 470px;
-    height: 100vh;
-    box-shadow: rgb(128, 128, 128) 2px 2px 2px 2px;
-    overflow: hidden;
-    padding: 10px 55px 37px 55px;
-    background: linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
-    background: -webkit-linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
+.login-container{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  padding: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-container::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+}
+
+.login-form{
+  width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 55px 55px 37px 55px;
+  background: linear-gradient(to bottom, #1cb5e0 0%, #000046 80%);
+  background: -webkit-linear-gradient(to bottom, #1cb5e0 0%, #000046 80%);
+}
+
+.input-container{
+  width: 100%;
+  position: relative;
+  color:#fff;
+  border-bottom: 2px solid rgba(255,255,255, 1.0);
+  margin-bottom: 30px;
+}
+
+.input100 {
+  border:none;
+  outline:none;
+  font-size: 16px;
+  color: #FFF;
+  width: 100%;
+  height: 45px;
+  background: transparent;
+  padding: 0 5px 0 5px;
+}
+
+.input100::placeholder {
+  color:white;
 }
 
 .logo img {
-    display: block;
-    margin: 0 auto;
-    padding: 5%;
+  display: block;
+  margin: 0 auto;
 }
 
 .login-title {
-    font-size: 28px;
-    text-align: center;
-    display: block;
-    padding-bottom: 5%;
-}
-.login-container p {
-    box-shadow: rgb(128, 128, 128) 1px 1px 1px;
-    border-radius: 5px;
-    background: #FFF;
-    padding: 3%;
-    margin-top: 5%
+  font-size: 28px;
+  text-align: center;
+  display: block;
+  padding-bottom: 5%;
 }
 /*----------------------------------------------------------
     [ Main Content Styling ]
