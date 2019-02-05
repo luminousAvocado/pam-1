@@ -154,7 +154,10 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult Review(string nothing = ""){
+        public IActionResult Review(string supervisor)
+        {
+            Debug.WriteLine("*** SUPERVISOR: {0}", supervisor);
+
             return RedirectToAction("CreateRequest"); 
         }
 
