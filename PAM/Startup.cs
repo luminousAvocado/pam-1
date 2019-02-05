@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,7 @@ namespace PAM
             var connString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
@@ -52,7 +54,6 @@ namespace PAM
                             Configuration.GetValue<string>("SMTP:Password"))
                     }
                 );
-
             services.AddSingleton(
                 new EmailHelper()
                 {
@@ -61,7 +62,15 @@ namespace PAM
                     TemplateFolder = _env.ContentRootPath + "/Emails"
                 }
             );
-            services.AddSingleton<IADService, MockADService>();
+
+            if (Configuration.GetValue<bool>("ActiveDirectory:UseMockAD"))
+            {
+                services.AddSingleton<IADService, MockADService>();
+                _logger.LogWarning("Using Mock ADService");
+            }
+            else
+                services.AddSingleton<IADService, ADService>();
+
             services.AddScoped<OrganizationService>();
             services.AddScoped<UserService>();
             services.AddScoped<RequestService>();

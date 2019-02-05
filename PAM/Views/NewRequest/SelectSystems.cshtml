@@ -3,15 +3,18 @@
 @{
   ViewData["Title"] = "System Selection";
 }
+<<<<<<< HEAD:PAM/Views/SelectUnit/SelectSystems.cshtml
 
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.13.3/dist/bootstrap-table.min.css">
 </head>
+=======
+>>>>>>> eba4b6e5b5a89840101021d9023268ffc0f56875:PAM/Views/NewRequest/SelectSystems.cshtml
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="SelectUnit" asp-action="SystemSelected" method="post">
+  <form asp-controller="NewRequest" asp-action="SystemSelected" method="post">
     <div class="shadow-container">
       <div class="alert alert-info">
         Step 5 - Default Systems Associated with Unit
@@ -44,7 +47,7 @@
     </div>
     <button type="submit" class="btn btn-info float-right m-3"> Next </button>
   </form>
-  <form asp-controller="RequesterInfo" asp-action="RequestOther" method="post">
+  <form asp-controller="NewRequest" asp-action="SelectUnit" method="get">
     <button type="button" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
   </form>
   <form asp-controller="Draft">
