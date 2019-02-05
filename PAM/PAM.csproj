@@ -16,4 +16,11 @@
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Bureau\" />
+    <Folder Include="Views\Location\" />
+    <Folder Include="Views\System\" />
+    <Folder Include="Views\Unit\" />
+  </ItemGroup>
+
 </Project>
