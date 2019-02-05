@@ -25,6 +25,13 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
+        public Employee GetEmployeeByName(string name)
+        {
+            return _dbContext.Employees
+                .Where(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+        }
+
         public Employee SaveEmployee(Employee employee)
         {
             if (employee.EmployeeId == 0) _dbContext.Add(employee);

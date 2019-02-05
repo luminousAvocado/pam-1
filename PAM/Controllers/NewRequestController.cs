@@ -156,6 +156,7 @@ namespace PAM.Controllers
         [HttpPost]
         public IActionResult Review(string supervisor)
         {
+            // Probably going to move this to CreateRequest(), since email is sent out only after request created
             Debug.WriteLine("*** SUPERVISOR: {0}", supervisor);
 
             return RedirectToAction("CreateRequest"); 
