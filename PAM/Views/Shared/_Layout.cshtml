@@ -4,8 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link red="stylesheet" href="~/lib/bootstrap-treeview/dist/css/bootstrap-treeview.min.css" />
-  <link rel="stylesheet" href="~/css/bootstrap.css" />
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-lux.css" />
   <link rel="stylesheet" href="~/css/styles.css">
   <link rel="stylesheet" href="~/css/w3autocomplete.css">
   <title>PAM - @ViewData["Title"]</title>
@@ -17,10 +16,16 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarColor02">
+    <div class="collapse navbar-collapse" id="navDropDown">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/Request/Self">Requests</a>
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown-toggle" id="navDropDownMenu" data-toggle="dropdown" aria-haspopup="true" href="/Request/Self">Requests</a>
+          <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
+            <li><a class="dropdown-item" href="/Request/Self">Your Requests</a> </li>
+            <li><a class="dropdown-item" href="#">Review Requests</a> </li>
+            <li><a class="dropdown-item" href="#">Process Requests</a> </li>
+            <li><a class="dropdown-item" href="#">All Requests</a> </li>
+          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link " href="">Users</a>
@@ -28,8 +33,14 @@
         <li class="nav-item">
           <a class="nav-link" href="">Reports</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/Management/WelcomePage">Management</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" href="/Management/WelcomePage">Management</a>
+          <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
+            <li><a asp-controller="Management" asp-action="Locations" class="dropdown-item">Locations</a> </li>
+            <li><a asp-controller="Management" asp-action="Bureaus" class="dropdown-item">Bureaus</a> </li>
+            <li><a asp-controller="Management" asp-action="Units" class="dropdown-item">Units</a> </li>
+            <li><a asp-controller="Management" asp-action="Systems" class="dropdown-item">Systems</a> </li>
+          </ul>
         </li>
       </ul>
       <form asp-controller="Account" asp-action="Logout" method="post">
@@ -39,7 +50,13 @@
     </div>
   </nav>
   <div class="container-fluid p-4">
-    @RenderBody()
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2">
+        <div class="form-container shadow-lg">
+          @RenderBody()
+        </div>
+      </div>
+    </div>
   </div>
   <p style="text-align:center; color:white;">&copy; Copyright 2018-2019. Los Angeles County. </p>
   <form asp-controller="Account" asp-action="Logout" method="post">

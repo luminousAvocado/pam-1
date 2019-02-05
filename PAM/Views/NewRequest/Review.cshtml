@@ -7,97 +7,91 @@
 }
 
 <body onload="javascript: stepIndicate()">
-  <div class="row">
-    <div class="col-xl-8 offset-xl-2">
-      <div class="form-container shadow-lg">
-        <partial name="../Shared/_ProgressBar.cshtml" />
-        <form asp-controller="NewRequest" asp-action="CreateRequest" method="post">
-          <div class="alert alert-warning">
-            Please confirm that all information is correct.
-          </div>
-          <div class="alert alert-success">
-            Step 1 - Self or For
-          </div>
-          @{
-            var requestForName = "";
-            if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
-            else { requestForName = requestFor.Name; }
-          }
-          <p>This is a request made for <strong>@requestForName</strong> </p>
-          <div class="alert alert-success">
-            Step 2 - Requester(s) Information
-          </div>
-          <div class="alert alert-info" style="width:50%;">
-            Personal Information
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">First Name</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.FirstName" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">Last Name</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.LastName" disabled />
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Address</label>
-            <div class="col-sm-3">
-              <input class="form-control" value="@requester.Address" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">State</label>
-            <div class="col-sm-1">
-              <input class="form-control" value="@requester.State" disabled />
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">City</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.City" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">ZipCode</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.Zip" disabled />
-            </div>
-          </div>
-          <div class="alert alert-success">
-            Step 3 - Request Type
-          </div>
-          <p> This is a request to  </p>
-          <div class="alert alert-success">
-            Step 4 - Unit Selection
-          </div>
-          <p> The unit selected is: </p>
-          <div class="alert alert-success">
-            Step 5 - System Selection
-          </div>
-          <p> The system selected is: </p>
-          <div class="alert alert-success">
-            Step 6 - Additional Request Information
-          </div>
-          @{
-            if (request.IsHighProfileAccess)
-            { @Html.Raw("<p> This request requires High Profile Access </p>") };
-          if (request.IsGlobalAccess)
-          { @Html.Raw("<p> This request requires Global Access </p>") };
-        if (request.IsContractor)
-        { @Html.Raw("<p> This request is made for a contractor </p>") };
-      if (request.CaseloadNumber != null)
-      { @Html.Raw("<p> The Case Load number for this request is: ") @request.CaseloadNumber @Html.Raw("</p>") };
-    if (request.CaseloadFunction != null)
-    { @Html.Raw("<p> The Case Load function for this request is: ") @request.CaseloadFunction @Html.Raw("</p>") };
-  if (request.CaseloadType != null)
-  { @Html.Raw("<p> The Case Load Type for this request is: ") @request.CaseloadType @Html.Raw("</p>") };
-          }
-
-          <div class="alert alert-success">
-            Step 7 - Supervisor's Review
-          </div>
-          <p> This request will be reviewed by: </p>
-          <button type="submit" class="btn btn-primary">Confirm Submit</button>
-          <!-- TODO -->
-        </form>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="CreateRequest" method="post">
+    <div class="alert alert-warning">
+      Please confirm that all information is correct.
+    </div>
+    <div class="alert alert-success">
+      Step 1 - Self or For
+    </div>
+    @{
+      var requestForName = "";
+      if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
+      else { requestForName = requestFor.Name; }
+    }
+    <p>This is a request made for <strong>@requestForName</strong> </p>
+    <div class="alert alert-success">
+      Step 2 - Requester(s) Information
+    </div>
+    <div class="alert alert-info" style="width:50%;">
+      Personal Information
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-1 col-form-label">First Name</label>
+      <div class="col-sm-2">
+        <input class="form-control" value="@requester.FirstName" disabled />
+      </div>
+      <label class="col-sm-1 col-form-label">Last Name</label>
+      <div class="col-sm-2">
+        <input class="form-control" value="@requester.LastName" disabled />
       </div>
     </div>
-  </div>
+    <div class="form-group row">
+      <label class="col-sm-1 col-form-label">Address</label>
+      <div class="col-sm-3">
+        <input class="form-control" value="@requester.Address" disabled />
+      </div>
+      <label class="col-sm-1 col-form-label">State</label>
+      <div class="col-sm-1">
+        <input class="form-control" value="@requester.State" disabled />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-1 col-form-label">City</label>
+      <div class="col-sm-2">
+        <input class="form-control" value="@requester.City" disabled />
+      </div>
+      <label class="col-sm-1 col-form-label">ZipCode</label>
+      <div class="col-sm-2">
+        <input class="form-control" value="@requester.Zip" disabled />
+      </div>
+    </div>
+    <div class="alert alert-success">
+      Step 3 - Request Type
+    </div>
+    <p> This is a request to  </p>
+    <div class="alert alert-success">
+      Step 4 - Unit Selection
+    </div>
+    <p> The unit selected is: </p>
+    <div class="alert alert-success">
+      Step 5 - System Selection
+    </div>
+    <p> The system selected is: </p>
+    <div class="alert alert-success">
+      Step 6 - Additional Request Information
+    </div>
+    @{
+      if (request.IsHighProfileAccess)
+      { @Html.Raw("<p> This request requires High Profile Access </p>") };
+    if (request.IsGlobalAccess)
+    { @Html.Raw("<p> This request requires Global Access </p>") };
+  if (request.IsContractor)
+  { @Html.Raw("<p> This request is made for a contractor </p>") };
+if (request.CaseloadNumber != null)
+{ @Html.Raw("<p> The Case Load number for this request is: ") @request.CaseloadNumber @Html.Raw("</p>") };
+if (request.CaseloadFunction != null)
+{ @Html.Raw("<p> The Case Load function for this request is: ") @request.CaseloadFunction @Html.Raw("</p>") };
+if (request.CaseloadType != null)
+{ @Html.Raw("<p> The Case Load Type for this request is: ") @request.CaseloadType @Html.Raw("</p>") };
+    }
+
+    <div class="alert alert-success">
+      Step 7 - Supervisor's Review
+    </div>
+    <p> This request will be reviewed by: </p>
+    <button type="submit" class="btn btn-primary">Confirm Submit</button>
+    <!-- TODO -->
+  </form>
 </body>

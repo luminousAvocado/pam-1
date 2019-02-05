@@ -18,6 +18,12 @@ label {
     font-size: 14px;
 }
 
+.glyphicon-tree-conifer:before {
+  content: "\e199";
+}
+.glyphicon-tree-deciduous:before {
+  content: "\e200";
+}
 /*----------------------------------------------------------
     [ Background for Login ]
 */
