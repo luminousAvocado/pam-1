@@ -60,19 +60,31 @@
     <div class="alert alert-success">
       Step 3 - Request Type
     </div>
-    <p> This is a request to </p>
+    <p> This is a request to  </p>
     <div class="alert alert-success">
       Step 4 - Unit Selection
     </div>
+    <p> The unit selected is: </p>
     <div class="alert alert-success">
       Step 5 - System Selection
     </div>
+    <p> The system selected is: </p>
     <div class="alert alert-success">
       Step 6 - Additional Request Information
     </div>
+    @{
+         if(request.IsHighProfileAccess) { @Html.Raw("<p> This request requires High Profile Access </p>") };
+         if(request.IsGlobalAccess) { @Html.Raw("<p> This request requires Global Access </p>") };
+         if(request.IsContractor) { @Html.Raw("<p> This request is made for a contractor </p>") };
+         if(request.CaseloadNumber != null) { @Html.Raw("<p> The Case Load number for this request is: ") @request.CaseloadNumber @Html.Raw("</p>") };
+         if(request.CaseloadFunction != null) { @Html.Raw("<p> The Case Load function for this request is: ") @request.CaseloadFunction @Html.Raw("</p>") };
+         if(request.CaseloadType != null) { @Html.Raw("<p> The Case Load Type for this request is: ") @request.CaseloadType @Html.Raw("</p>") };
+    }
+
     <div class="alert alert-success">
       Step 7 - Supervisor's Review
     </div>
+    <p> This request will be reviewed by: </p>
     <button type="submit" class="btn btn-primary">Confirm Submit</button>
     <!-- TODO -->
   </form>

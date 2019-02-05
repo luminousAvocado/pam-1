@@ -57,6 +57,8 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult NewRequest(){
+            Request request = new Request();
+
             return View();
         }
 

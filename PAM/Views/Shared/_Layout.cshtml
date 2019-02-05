@@ -32,17 +32,15 @@
         </li>
       </ul>
         <form asp-controller="Account" asp-action="Logout" method="post">
-          <button type="button" data-toggle="modal" data-target=".logoutModal" class="btn btn-secondary" style="border-radius: 7px;">Logout</button>
+        <span style="color:white; font-size: 18px;"> Welcome, @identity.GetClaim(ClaimTypes.GivenName) </span>
+          <button type="button" data-toggle="modal" data-target=".logoutModal" class="btn btn-secondary" style="margin: 0 30px 0 20px;">Logout</button>
         </form>
     </div>
   </nav>
   <div class="container-fluid p-4">
     <div class="row">
+        <!--
       <div class="col-xl-2 mb-2">
-        <!--
-        <p style="background-color: white; border-radius: 7px; color:black;">Welcome, @identity.GetClaim(ClaimTypes.GivenName)</p>
-        -->
-        <!--
         <nav class="navbar navbar-dark bg-dark" style="border-radius:7px;">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -66,8 +64,6 @@
           </ul>
         </nav>
         <br />
-        <!-- this is where I should show my Location/Bureau/Uints/Systems Navigation-->
-        <!--
         <nav class="navbar navbar-dark bg-dark" style="border-radius:7px;">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -90,9 +86,9 @@
             </li>
           </ul>
         </nav>
-        -->
       </div>
-      <div class="col-xl-10">
+        -->
+      <div class="col-xl-8 offset-xl-2">
         <div class="form-container shadow-lg">
           @RenderBody()
         </div>
