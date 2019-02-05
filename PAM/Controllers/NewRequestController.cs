@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -154,11 +155,8 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult Review(string supervisor)
+        public IActionResult Review(string nothing="")
         {
-            // Probably going to move this to CreateRequest(), since email is sent out only after request created
-            Debug.WriteLine("*** SUPERVISOR: {0}", supervisor);
-
             return RedirectToAction("CreateRequest"); 
         }
 

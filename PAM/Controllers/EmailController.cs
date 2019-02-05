@@ -17,7 +17,9 @@ namespace PAM.Controllers
 
         public IActionResult EmailApprover()
         {
-            return View();
+
+
+            return RedirectToAction("Self", "Request");
         }
 
         public IActionResult Test()
