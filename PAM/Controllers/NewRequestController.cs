@@ -47,7 +47,7 @@ namespace PAM.Controllers
                 FirstName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.GivenName),
                 LastName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Surname),
                 Username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier),
-                Name = ((ClaimsIdentity)User.Identity).GetClaim("Name"),
+                Name = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Name),
             };
 
             requester = _userService.SaveRequester(requester);
