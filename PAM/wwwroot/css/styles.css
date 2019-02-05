@@ -22,7 +22,7 @@ label {
     [ Background for Login ]
 */
 .bg-display {
-    background-image: url("../Images/la.jpg");
+    background-image: url("../Images/losangeles.jpg");
     width: 100%;
     min-height: 100vh;
     justify-content: flex-end;
@@ -45,35 +45,71 @@ label {
 /*----------------------------------------------------------
     [ Login Container & Contents ]
 */
-.login-container {
-    color: black;
-    width: 470px;
-    height: 100vh;
-    box-shadow: rgb(128, 128, 128) 2px 2px 2px 2px;
-    overflow: hidden;
-    padding: 10px 55px 37px 55px;
-    background: linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
-    background: -webkit-linear-gradient(to top, #8e93ab 0%, #eef2f3 100%);
+.login-container{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  padding: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-container::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+}
+
+.login-form{
+  width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 55px 55px 10px 55px;
+  background: linear-gradient(to bottom, #434343 0%, #000000 100%);
+  background: -webkit-linear-gradient(to bottom, #434343 0%, #000000 100%);
 }
 
 .logo img {
-    display: block;
-    margin: 0 auto;
-    padding: 5%;
+  display: block;
+  margin: 0 auto;
 }
 
 .login-title {
-    font-size: 28px;
-    text-align: center;
-    display: block;
-    padding-bottom: 5%;
+  font-size: 28px;
+  text-align: center;
+  display: block;
+  padding-bottom: 5%;
 }
-.login-container p {
-    box-shadow: rgb(128, 128, 128) 1px 1px 1px;
-    border-radius: 5px;
-    background: #FFF;
-    padding: 3%;
-    margin-top: 5%
+
+.input-container{
+  width: 100%;
+  position: relative;
+  color:white;
+  border-bottom: 2px solid rgba(255,255,255, 1.0);
+  margin-bottom: 30px;
+}
+
+.input-edit{
+  border:none;
+  outline:none;
+  font-size: 16px;
+  color: white;
+  width: 100%;
+  height: 45px;
+  background: transparent;
+  padding: 0 5px 0 5px;
+}
+
+.input-edit::placeholder {
+  color:white;
 }
 /*----------------------------------------------------------
     [ Main Content Styling ]
@@ -98,9 +134,11 @@ label {
     padding: 20px 30px 30px 30px;
     z-index: -1;
 }
+
 .alert {
     border-radius: 7px;
 }
+
 .shadow-container {
     height: 80%;
     width: 100%;
@@ -188,6 +226,7 @@ input.invalid {
             .progressbar li.active + li:after {
                 background-color: #55b776;
             }
+
 /*----------------------------------------------------------
     [ Scroll Bar Styling ]
 */

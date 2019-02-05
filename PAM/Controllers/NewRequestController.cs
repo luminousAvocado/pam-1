@@ -20,16 +20,21 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly AppDbContext _dbContext;
+        private readonly TreeViewService _treeService;
+        private readonly OrganizationService _orgService;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public NewRequestController(IADService adService, UserService userService,
-            AppDbContext context, IHttpContextAccessor httpContextAccessor)
+            AppDbContext context, TreeViewService treeService,
+            OrganizationService orgService, IHttpContextAccessor httpContextAccessor)
         {
             _adService = adService;
             _dbContext = context;
             _userService = userService;
+            _treeService = treeService;
+            _orgService = orgService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -42,7 +47,7 @@ namespace PAM.Controllers
                 FirstName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.GivenName),
                 LastName = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Surname),
                 Username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier),
-                Name = ((ClaimsIdentity)User.Identity).GetClaim("Name"),
+                Name = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.Name),
             };
 
             requester = _userService.SaveRequester(requester);
@@ -52,6 +57,8 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult NewRequest(){
+            Request request = new Request();
+
             return View();
         }
 
@@ -105,7 +112,44 @@ namespace PAM.Controllers
 
             // Routing from RequestType to SelectUnit
             //return RedirectToAction("RequestInfo");
-            return RedirectToAction("PickUnit", "SelectUnit");
+            return RedirectToAction("SelectUnit");
+        }
+
+        [HttpGet]
+        public IActionResult SelectUnit()
+        {
+            var myTree = _treeService.GenerateTree();
+            ViewData["MyTree"] = myTree;
+
+            return View();
+            //return View("../SelectUnit/SelectUnit");
+        }
+
+        [HttpPost]
+        public IActionResult SelectUnit(int selectedUnit)
+        {
+            TempData["selectedUnit"] = selectedUnit;
+
+            return RedirectToAction("SelectSystems");
+        }
+
+        [HttpGet]
+        public IActionResult SelectSystems()
+        {
+            var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
+
+            // Line below breaks
+            //TempData["SystemsList"] = systemsList;
+
+            return View(systemsList);
+        }
+
+        [HttpPost]
+        public IActionResult SystemSelected()
+        {
+            // Need to create a RequestedSystem object, save in session, get requestId and create entry at end
+
+            return RedirectToAction("RequestInfo");
         }
 
         [HttpGet]
@@ -158,7 +202,7 @@ namespace PAM.Controllers
             return RedirectToAction("CreateRequest"); 
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CreateRequest ()
         {
             var update = HttpContext.Session.GetObject<Request>("Request");

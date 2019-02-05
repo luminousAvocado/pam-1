@@ -104,6 +104,7 @@ namespace PAM.Services
                 authenticated = pc.ValidateCredentials(username, password);
                 _logger.LogInformation("Authenticate user {username}: {result}", username, authenticated);
             }
+
             return authenticated;
         }
 
