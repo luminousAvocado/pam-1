@@ -13,7 +13,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <img src="~/images/ProbBadge.png" style="width: 90px;  padding-right: 1em;" />
-    <i class="navbar-brand" href="" style="color:gold;"> Probation <br /> Access <br /> Manager </i>
+    <a href="/Account/Welcome" class="navbar-brand" style="color:gold; font-size: 18px;"> Probation <br /> Access <br /> Manager </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,72 +32,17 @@
           <a class="nav-link" href="/Management/WelcomePage">Management</a>
         </li>
       </ul>
-        <form asp-controller="Account" asp-action="Logout" method="post">
+      <form asp-controller="Account" asp-action="Logout" method="post">
         <span style="color:white; font-size: 18px;"> Welcome, @identity.GetClaim(ClaimTypes.GivenName) </span>
-          <button type="button" data-toggle="modal" data-target=".logoutModal" class="btn btn-secondary" style="margin: 0 30px 0 20px;">Logout</button>
-        </form>
+        <button type="button" data-toggle="modal" data-target=".logoutModal" class="btn btn-secondary" style="margin: 0 30px 0 20px;">Logout</button>
+      </form>
     </div>
   </nav>
   <div class="container-fluid p-4">
-    <div class="row">
-        <!--
-      <div class="col-xl-2 mb-2">
-        <nav class="navbar navbar-dark bg-dark" style="border-radius:7px;">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="">Your Request</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="">Review Requests</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="">Process Requests</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="">All Requests</a>
-            </li>
-          </ul>
-        </nav>
-        <br />
-        <nav class="navbar navbar-dark bg-dark" style="border-radius:7px;">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Locations">Locations Manager</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Bureaus">Bureaus Manager</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Units">Units Manager</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" asp-area="" asp-controller="Management" asp-action="Systems">Systems Manager</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-        -->
-      <div class="col-xl-8 offset-xl-2">
-        <div class="form-container shadow-lg">
-          @RenderBody()
-        </div>
-      </div>
-    </div>
+    @RenderBody()
   </div>
   <p style="text-align:center; color:white;">&copy; Copyright 2018-2019. Los Angeles County. </p>
-    <form asp-controller="Account" asp-action="Logout" method="post">
+  <form asp-controller="Account" asp-action="Logout" method="post">
     <div class="modal logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
