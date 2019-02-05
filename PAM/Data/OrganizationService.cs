@@ -31,7 +31,9 @@ namespace PAM.Data
         public ICollection<UnitSystem> GetRelatedSystems(int unitId)
         {
             // Returns UnitSystem JOIN System. Wont show retired Systems
-            var unitAndRelatedSystems = _dbContext.UnitSystems.Include(unitSystem => unitSystem.System).Where(x => x.UnitId == unitId).ToList();
+            var unitAndRelatedSystems = _dbContext.UnitSystems
+                .Include(unitSystem => unitSystem.System)
+                .Where(x => x.UnitId == unitId).ToList();
 
             return unitAndRelatedSystems;
         }
