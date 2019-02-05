@@ -2,27 +2,21 @@
   ViewData["Title"] = "Unit Selection";
 }
 <body onload="javascript: stepIndicate()">
-  <div class="row">
-    <div class="col-xl-8 offset-xl-2">
-      <div class="form-container shadow-lg">
-        <partial name="../Shared/_ProgressBar.cshtml" />
-        <form asp-controller="NewRequest" asp-action="SelectUnit" method="post">
-          <div class="alert alert-info">
-            Step 4 - Select The Type of Job
-          </div>
-          <div id="tree"></div>
-          <input id="selectedUnit" name="selectedUnit" type="hidden" value="" />
-          <button type="submit" class="btn btn-info float-right m-3"> Next </button>
-        </form>
-        <form asp-controller="NewRequest" asp-action="RequestType" method="get">
-          <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
-        </form>
-        <form asp-controller="Draft">
-          <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
-        </form>
-      </div>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="SelectUnit" method="post">
+    <div class="alert alert-info">
+      Step 4 - Select The Type of Job
     </div>
-  </div>
+    <div id="tree"></div>
+    <input id="selectedUnit" name="selectedUnit" type="hidden" value="" />
+    <button type="submit" class="btn btn-info float-right m-3"> Next </button>
+  </form>
+  <form asp-controller="NewRequest" asp-action="RequestType" method="get">
+    <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
+  </form>
   <script src="~/lib/jquery/dist/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
   <script>
