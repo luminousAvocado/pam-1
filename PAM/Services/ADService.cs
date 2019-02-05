@@ -5,6 +5,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PAM.Extensions;
 using PAM.Models;
 
 namespace PAM.Services
@@ -13,7 +14,9 @@ namespace PAM.Services
     {
         bool Authenticate(string username, string password);
 
-        Employee GetEmployee(string username);
+        Employee GetEmployeeByUsername(string username);
+
+        Employee GetEmployeeByName(string name);
 
         ICollection<Employee> GetEmployees(string firstName, string lastName);
 
@@ -35,35 +38,60 @@ namespace PAM.Services
             _logger = logger;
         }
 
+        public static readonly string[] Properties =
+        {
+            "sAMAccountName", // Username, a.k.a. Employee Number
+            "cn", // Name (Full Name + Employee Number)
+            "givenName", // First Name
+            "middleName", // Middle Name
+            "sn", // Last Name
+            "mail", "userPrincipalName", // Email
+            "title", // Title
+            "department", // Department
+            "section", // Section
+            "service", // Service
+            "streetAddress", // Address
+            "l", // City
+            "st", // State
+            "postalCode", // Zip
+            "telephoneNumber", // Phone
+            "mobile", // CellPhone
+            "supervisor", "manager" // Supervisor
+        };
+
         private void setSearchProperties(DirectorySearcher searcher)
         {
-            searcher.PropertiesToLoad.Add("sAMAccountName"); // aka Employee Number, Username
-            searcher.PropertiesToLoad.Add("cn"); // Full Name + Employee Number
-            searcher.PropertiesToLoad.Add("givenName"); // First Name
-            searcher.PropertiesToLoad.Add("sn"); // Last Name
-            searcher.PropertiesToLoad.Add("mail"); // Email (could be empty)
-            searcher.PropertiesToLoad.Add("userPrincipalName"); // Email
-            searcher.PropertiesToLoad.Add("title"); // Title (could be empty)
-            searcher.PropertiesToLoad.Add("department"); // Department
-            searcher.PropertiesToLoad.Add("telephoneNumber"); // Phone (could be empty)
+            foreach (var property in Properties)
+                searcher.PropertiesToLoad.Add(property);
         }
 
         private Employee getEmployee(SearchResult result)
         {
             Employee employee = new Employee();
-            employee.Username = result.Properties["sAMAccountName"][0].ToString();
-            employee.Name = result.Properties["cn"][0].ToString();
-            employee.FirstName = result.Properties["givenName"][0].ToString();
-            employee.LastName = result.Properties["sn"][0].ToString();
-            employee.Email = result.Properties["userPrincipalName"][0].ToString();
-            employee.Department = result.Properties["department"][0].ToString();
+            employee.Username = result.GetProperty("sAMAccountName");
+            employee.Name = result.GetProperty("cn");
+            employee.FirstName = result.GetProperty("givenName");
+            employee.MiddleName = result.GetProperty("middleName");
+            employee.LastName = result.GetProperty("sn");
+            employee.Email = result.GetProperty("mail") ?? result.GetProperty("userPrincipalName");
 
-            if (result.Properties.Contains("mail"))
-                employee.Email = result.Properties["userPrincipalName"][0].ToString();
-            if (result.Properties.Contains("title"))
-                employee.Title = result.Properties["title"][0].ToString();
-            if (result.Properties.Contains("telephoneNumber"))
-                employee.Phone = result.Properties["telephoneNumber"][0].ToString();
+            employee.Title = result.GetProperty("title");
+            employee.Department = result.GetProperty("department");
+            employee.Section = result.GetProperty("section");
+            employee.Service = result.GetProperty("service");
+
+            employee.Address = result.GetProperty("streetAddress");
+            employee.City = result.GetProperty("l");
+            employee.State = result.GetProperty("st");
+            employee.Zip = result.GetProperty("postalCode");
+
+            employee.Phone = result.GetProperty("telephoneNumber");
+            employee.CellPhone = result.GetProperty("mobile");
+
+            string supervisor = result.GetProperty("supervisor") ?? result.GetProperty("manager");
+            int startIndex = supervisor.IndexOf("CN=") + 3;
+            int endIndex = supervisor.IndexOf(',', startIndex);
+            employee.SupervisorName = supervisor.Substring(startIndex, (endIndex - startIndex));
 
             return employee;
         }
@@ -76,10 +104,11 @@ namespace PAM.Services
                 authenticated = pc.ValidateCredentials(username, password);
                 _logger.LogInformation("Authenticate user {username}: {result}", username, authenticated);
             }
+
             return authenticated;
         }
 
-        public Employee GetEmployee(string username)
+        public Employee GetEmployeeByUsername(string username)
         {
             Employee employee = null;
             using (DirectoryEntry entry = new DirectoryEntry(_url, _username, _password))
@@ -87,6 +116,21 @@ namespace PAM.Services
                 using (DirectorySearcher searcher = new DirectorySearcher(entry))
                 {
                     searcher.Filter = $"(&(SAMAccountName={username}))";
+                    setSearchProperties(searcher);
+                    employee = getEmployee(searcher.FindOne());
+                }
+            }
+            return employee;
+        }
+
+        public Employee GetEmployeeByName(string name)
+        {
+            Employee employee = null;
+            using (DirectoryEntry entry = new DirectoryEntry(_url, _username, _password))
+            {
+                using (DirectorySearcher searcher = new DirectorySearcher(entry))
+                {
+                    searcher.Filter = $"(&(cn={name}))";
                     setSearchProperties(searcher);
                     employee = getEmployee(searcher.FindOne());
                 }
@@ -137,6 +181,17 @@ namespace PAM.Services
         {
             new Employee()
             {
+                Username = "e111111",
+                Name = "Pam Admin (e111111)",
+                FirstName = "Pam",
+                LastName = "Admin",
+                Email = "pam@localhost.localdomain",
+                Title = "Administrator",
+                Department = "IT Systems",
+                Phone = "111-222-3333"
+            },
+            new Employee()
+            {
                 Username = "e123456",
                 Name = "John Doe (e123456)",
                 FirstName = "John",
@@ -144,7 +199,12 @@ namespace PAM.Services
                 Email = "jdoe1@localhost.localdomain",
                 Title = "Developer",
                 Department = "IT Systems",
-                Phone = "123-456-7890"
+                Phone = "123-456-7890",
+                Address = "123 Main St.",
+                City = "Los Angeles",
+                State = "CA",
+                Zip = "90032",
+                SupervisorName = "Jane Doe (e234567)"
             },
             new Employee()
             {
@@ -155,7 +215,8 @@ namespace PAM.Services
                 Email = "jdoe2@localhost.localdomain",
                 Title = "Supervisor",
                 Department = "IT Systems",
-                Phone = "234-567-8901"
+                Phone = "234-567-8901",
+                SupervisorName = "Tom Smith (e345678)"
             },
             new Employee()
             {
@@ -168,94 +229,6 @@ namespace PAM.Services
                 Department = "IT Systems",
                 Phone = "345-678-9012"
             },
-            new Employee()
-            {
-                Username = "e456789",
-                Name = "Brandon Lam (e456789)",
-                FirstName = "Brandon",
-                LastName = "Lam",
-                Email = "blam@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e567891",
-                Name = "Jaime Borunda (e567891)",
-                FirstName = "Jaime",
-                LastName = "Borunda",
-                Email = "jborunda@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e678912",
-                Name = "James Kang (e678912)",
-                FirstName = "James",
-                LastName = "Kang",
-                Email = "jkang@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e789123",
-                Name = "Kevork Gib (e789123)",
-                FirstName = "Kevork",
-                LastName = "Gilabouchian",
-                Email = "kgilabouchian@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e891234",
-                Name = "Chengyu Sun (e891234)",
-                FirstName = "Chengyu",
-                LastName = "Sun",
-                Email = "csun@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e912345",
-                Name = "Zilong Yi (e912345)",
-                FirstName = "Zilong",
-                LastName = "Yi",
-                Email = "zyi@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e987654",
-                Name = "Diana Salazar (e987654)",
-                FirstName = "Diana",
-                LastName = "Salazar",
-                Email = "dsalazar@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            },
-            new Employee()
-            {
-                Username = "e876543",
-                Name = "Benjamin Morales (e876543)",
-                FirstName = "Benjamin",
-                LastName = "Morales",
-                Email = "bmorales@localhost.localdomain",
-                Title = "Director",
-                Department = "IT Systems",
-                Phone = "345-678-9012"
-            }
         };
 
         public bool Authenticate(string username, string password)
@@ -263,10 +236,17 @@ namespace PAM.Services
             return employees.Any(employee => employee.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
 
-        public Employee GetEmployee(string username)
+        public Employee GetEmployeeByUsername(string username)
         {
             return employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+        }
+
+        public Employee GetEmployeeByName(string name)
+        {
+            return employees
+                .Where(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
         }
 
