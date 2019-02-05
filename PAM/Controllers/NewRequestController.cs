@@ -213,12 +213,12 @@ namespace PAM.Controllers
         public Requester updateInfo(Requester current, Requester req){
             current.FirstName = req.FirstName;
             current.LastName = req.LastName;
-            current.WorkAddress = req.WorkAddress;
-            current.WorkCity = req.WorkCity;
-            current.WorkState = req.WorkState;
-            current.WorkZip = req.WorkZip;
+            current.Address = req.Address;
+            current.City = req.City;
+            current.State = req.State;
+            current.Zip = req.Zip;
             current.Email = req.Email;
-            current.WorkPhone = req.WorkPhone;
+            current.Phone = req.Phone;
             current.CellPhone = req.CellPhone;
 
             return current;

@@ -42,7 +42,7 @@ namespace PAM.Controllers
                     Message = "Authentication Failed"
                 });
 
-            Employee employee = _adService.GetEmployee(username);
+            Employee employee = _adService.GetEmployeeByUsername(username);
             Employee user = _userService.GetEmployee(username);
             if (user != null)
             {
