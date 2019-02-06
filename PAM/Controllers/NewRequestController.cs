@@ -116,8 +116,6 @@ namespace PAM.Controllers
             update.RequestTypeId = req.RequestTypeId;
             HttpContext.Session.SetObject("Request", update);
 
-            // Routing from RequestType to SelectUnit
-            //return RedirectToAction("RequestInfo");
             return RedirectToAction("SelectUnit");
         }
 
@@ -150,7 +148,6 @@ namespace PAM.Controllers
         public IActionResult SystemSelected()
         {
             // Need to create a RequestedSystem object, save in session, get requestId and create entry at end
-
             return RedirectToAction("RequestInfo");
         }
 
