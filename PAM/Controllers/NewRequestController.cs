@@ -200,22 +200,25 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult Review()
+        public IActionResult Review(string supervisor)
         {
+            TempData["Supervisor"] = supervisor;
             var req = HttpContext.Session.GetObject<Request>("Request");
             var unitId = HttpContext.Session.GetObject<int>("UnitId");
             ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
             ViewData["Request"] = _reqService.GetRequest(req.RequestId);
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Review(string nothing = "")
+        public IActionResult Review()
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestStatus = RequestStatus.PendingReview;
             _reqService.UpdateRequest(update);
-            return RedirectToAction("Self", "Request"); 
+
+            return RedirectToAction("EmailApprover", "NewRequest"); 
         }
 
         public IActionResult EmailApprover()
