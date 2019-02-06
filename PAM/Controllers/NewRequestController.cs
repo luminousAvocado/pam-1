@@ -139,8 +139,11 @@ namespace PAM.Controllers
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
 
-            // Line below breaks
-            //TempData["SystemsList"] = systemsList;
+            Debug.WriteLine("*** TEST MEEEEE");
+            foreach(var obj in systemsList)
+            {
+                Debug.WriteLine(obj.System.Name);
+            }
 
             return View(systemsList);
         }
@@ -212,6 +215,8 @@ namespace PAM.Controllers
             var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
 
             Debug.WriteLine("*** TEST ***");
+            Debug.WriteLine("TempData: {0}", TempData["Supervisor"]);
+            Debug.WriteLine("SUP: {0}", supervisor.Name);
             foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(supervisor))
             {
                 string name = descriptor.Name;
