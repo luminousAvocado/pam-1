@@ -24,7 +24,7 @@
           <label for="countyDeptName">Agency Name</label>
           <input asp-for="Service" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <label for="countyDeptNum">Dept. #</label>
           <input asp-for="Department" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
         </div>
@@ -77,6 +77,17 @@
         <div class="form-group col-md-5">
           <label for="countyEmail">Email Address</label><span style="color:red">*</span>
           <input asp-for="Email" type="text" value="@requester.Email" class="form-control" id="validate">
+        </div>
+      </div>
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="title">Title</label>
+          <input asp-for="Title" type="text" value="@requester.Title" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="section">Section</label>
+          <input asp-for="Section" type="text" value="@requester.Section" class="form-control">
         </div>
       </div>
     </div>
@@ -153,6 +164,9 @@
   </form>
   <form asp-controller="NewRequest" asp-action="NewRequest" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="NewRequest" asp-action="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
   </form>
 </body>
 

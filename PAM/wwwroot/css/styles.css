@@ -3,8 +3,8 @@
     background-position: center;
     background-size: cover;
     min-height: 100vh;
-    background: linear-gradient(to right, #023e8d 0%, #E4E5E6 50%, #023e8d 100%);
-    background: -webkit-linear-gradient(to right, #023e8d 0%, #E4E5E6 50%, #023e8d 100%);
+    background: linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
+    background: -webkit-linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
 }
 input[type=radio] + label:before{
     border: 1px solid #777;
