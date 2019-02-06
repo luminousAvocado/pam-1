@@ -43,8 +43,8 @@ namespace PAM.Services
                     id = bureau.BureauId,
                     type = "Bureau",
                     text = bureau.Description,
-                    nodes = new List<TreeViewNode>(),
-                    selectable = false
+                    selectable = false,
+                    nodes = new List<TreeViewNode>()
                 };
                 bureauList.Add(temp);
                 bureauDictionary.Add(temp.id, temp);

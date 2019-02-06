@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -22,15 +24,16 @@ namespace PAM.Controllers
         private readonly AppDbContext _dbContext;
         private readonly TreeViewService _treeService;
         private readonly OrganizationService _orgService;
+        private readonly IFluentEmail _email;
+        private readonly EmailHelper _emailHelper;
         private readonly RequestService _reqService;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public NewRequestController(IADService adService, UserService userService,
-            AppDbContext context, TreeViewService treeService,
-            OrganizationService orgService, RequestService reqService,
-            IHttpContextAccessor httpContextAccessor)
+            AppDbContext context, TreeViewService treeService, IHttpContextAccessor httpContextAccessor, IFluentEmail email, EmailHelper emailHelper,
+            OrganizationService orgService, RequestService reqService)
         {
             _adService = adService;
             _dbContext = context;
@@ -39,6 +42,8 @@ namespace PAM.Controllers
             _orgService = orgService;
             _reqService = reqService;
             _httpContextAccessor = httpContextAccessor;
+            _email = email;
+            _emailHelper = emailHelper;
         }
 
         [HttpGet]
@@ -126,7 +131,6 @@ namespace PAM.Controllers
             ViewData["MyTree"] = myTree;
 
             return View();
-            //return View("../SelectUnit/SelectUnit");
         }
 
         [HttpPost]
@@ -141,9 +145,6 @@ namespace PAM.Controllers
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
             HttpContext.Session.SetObject("UnitId", (int)TempData["selectedUnit"]);
-      
-            // Line below breaks
-            //TempData["SystemsList"] = systemsList;
 
             return View(systemsList);
         }
@@ -152,7 +153,6 @@ namespace PAM.Controllers
         public IActionResult SystemSelected()
         {
             // Need to create a RequestedSystem object, save in session, get requestId and create entry at end
-
             return RedirectToAction("RequestInfo");
         }
 
@@ -197,21 +197,50 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult Review()
+        public IActionResult Review(string supervisor)
         {
+            TempData["Supervisor"] = supervisor;
             var req = HttpContext.Session.GetObject<Request>("Request");
             var unitId = HttpContext.Session.GetObject<int>("UnitId");
             ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
             ViewData["Request"] = _reqService.GetRequest(req.RequestId);
+            ViewData["Supervisor"] = supervisor;
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Review(string nothing = ""){
+        public IActionResult Review()
+        {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestStatus = RequestStatus.PendingReview;
             _reqService.UpdateRequest(update);
-            return RedirectToAction("Self", "Request"); 
+
+            return RedirectToAction("EmailApprover", "NewRequest"); 
+        }
+
+        public IActionResult EmailApprover()
+        {
+            var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
+
+            var req = HttpContext.Session.GetObject<Request>("Request");
+            Request Request = _reqService.GetRequest(req.RequestId);
+
+            string receipient = supervisor.Email;
+            string emailName = "ReviewRequest";
+
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request};
+
+            string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+            _email.To(receipient)
+                .Subject(subject)
+                .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                .SendAsync();
+
+            ViewData["Receipient"] = receipient;
+            ViewData["Subject"] = subject;
+
+            return RedirectToAction("Self", "Request");
         }
 
         public Requester updateInfo(Requester current, Requester req){

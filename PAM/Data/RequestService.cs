@@ -19,7 +19,9 @@ namespace PAM.Data
 
         public Request GetRequest(int id){
             return _dbContext.Requests
-                .Include(r => r.RequestType).Where(r => r.RequestId.Equals(id)).FirstOrDefault();
+                .Include(r => r.RequestType)
+                .Include(r => r.RequestedFor)
+                .Where(r => r.RequestId.Equals(id)).FirstOrDefault();
         }
 
         public ICollection<Request> GetRequestsByUsername(string username)
