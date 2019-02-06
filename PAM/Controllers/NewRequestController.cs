@@ -145,9 +145,6 @@ namespace PAM.Controllers
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
             HttpContext.Session.SetObject("UnitId", (int)TempData["selectedUnit"]);
-      
-            // Line below breaks
-            //TempData["SystemsList"] = systemsList;
 
             return View(systemsList);
         }
