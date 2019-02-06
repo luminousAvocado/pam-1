@@ -23,7 +23,27 @@ namespace PAM.Controllers
         public IActionResult Self()
         {
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            ViewData["Requests"] = _requestService.GetRequests(username);
+            ViewData["Requests"] = _requestService.GetRequestsByUsername(username);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ReviewRequests(){
+            //-----TODO-----
+            ViewData["Requests"] = _requestService.GetRequests();
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ProcessRequests(){
+            //-----TODO-----
+            ViewData["Requests"] = _requestService.GetRequests();
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AllRequests(){
+            ViewData["Requests"] = _requestService.GetRequests();
             return View();
         }
 
@@ -33,7 +53,7 @@ namespace PAM.Controllers
             if (id == null) return NotFound();
 
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            var requests = _requestService.GetRequests(username);
+            var requests = _requestService.GetRequestsByUsername(username);
             if (requests == null) return RedirectToAction("Self");
             else return View();
         }
@@ -43,7 +63,7 @@ namespace PAM.Controllers
         public IActionResult DeleteConfirm(int id)
         {
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            var requests = _requestService.GetRequests(username);
+            var requests = _requestService.GetRequestsByUsername(username);
 
             foreach(var request in requests)
             {

@@ -19,17 +19,17 @@
     <div class="row shadow-container form-group text-center" style="margin-left: 3px;">
       <div class="col-4">
         <p>Is this Request for a Contractor?</p>
-        <input asp-for="IsContractor" type="checkbox" class="custom-control-input" style="display:inline-block" id="contractor" />
+        <input asp-for="IsContractor" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="contractor" />
         <label class="custom-control-label" for="contractor"> Contractor </label>
       </div>
       <div class="col-4">
         <p>Does this request require high profile access?</p>
-        <input asp-for="IsHighProfileAccess" type="checkbox" class="custom-control-input" style="display:inline-block" id="highProfile" />
+        <input asp-for="IsHighProfileAccess" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="highProfile" />
         <label class="custom-control-label" for="highProfile"> High Profile</label>
       </div>
       <div class="col-4">
         <p>Does this request require global access?</p>
-        <input asp-for="IsGlobalAccess" type="checkbox" class="custom-control-input" style="display:inline-block" id="globalAccess" />
+        <input asp-for="IsGlobalAccess" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="globalAccess" />
         <label class="custom-control-label" for="globalAccess"> Global Access </label>
       </div>
     </div>
@@ -62,7 +62,7 @@
   <form asp-controller="NewRequest" asp-action="RequestType" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
   </form>
-  <form asp-controller="Draft">
+  <form asp-controller="NewRequest" asp-controller="Draft">
     <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
   </form>
 </body>
