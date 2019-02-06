@@ -207,6 +207,7 @@ namespace PAM.Controllers
             var unitId = HttpContext.Session.GetObject<int>("UnitId");
             ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
             ViewData["Request"] = _reqService.GetRequest(req.RequestId);
+            ViewData["Supervisor"] = supervisor;
 
             return View();
         }
@@ -225,14 +226,14 @@ namespace PAM.Controllers
         {
             var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
 
-            string receipient = supervisor.Email;
-            string emailName = "Test";
-            //string emailName = "ReviewRequest";
+            // Test
+            var req = HttpContext.Session.GetObject<Request>("Request");
+            Request Request = _reqService.GetRequest(req.RequestId);
 
-            // MAYBE send over the RequestId or Request object when going to this method/controller and
-            // include that Request in the 'model' below
-            // Brandon will implement to create Request entry in db early on
-            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail };
+            string receipient = supervisor.Email;
+            string emailName = "ReviewRequest";
+
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request};
 
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
             _email.To(receipient)

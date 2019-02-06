@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using FluentEmail.Core.Interfaces;
+using PAM.Models;
 
 namespace PAM.Services
 {
