@@ -28,7 +28,6 @@ namespace PAM.Data
 
         public Employee GetEmployeeByName(string name)
         {
-            Debug.WriteLine("*** NAME: {0}", name);
             return _dbContext.Employees
                 .Where(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();

@@ -210,28 +210,16 @@ namespace PAM.Controllers
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Email", "NewRequest");
+            return RedirectToAction("EmailApprover", "Email");
         }
 
-        [HttpGet]
-        public IActionResult Email()
-        {
-            Debug.WriteLine("*** IM HERE");
+        //[HttpGet]
+        //public IActionResult Email()
+        //{
+        //    var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
 
-            var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
-
-            Debug.WriteLine("*** TEST ***");
-            Debug.WriteLine("TempData: {0}", TempData["Supervisor"]);
-            Debug.WriteLine("SUP: {0}", supervisor.Name);
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(supervisor))
-            {
-                string name = descriptor.Name;
-                object value = descriptor.GetValue(supervisor);
-                Debug.WriteLine("{0} = {1}", name, value);
-            }
-
-            return RedirectToAction("Self", "Request");
-        }
+        //    return RedirectToAction("EmailApprover", "Email");
+        //}
 
         public Requester updateInfo(Requester current, Requester req){
             current.FirstName = req.FirstName;
