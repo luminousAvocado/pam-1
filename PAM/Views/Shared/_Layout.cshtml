@@ -22,9 +22,9 @@
           <a class="nav-link dropdown-toggle" id="navDropDownMenu" data-toggle="dropdown" aria-haspopup="true" href="/Request/Self">Requests</a>
           <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
             <li><a class="dropdown-item" href="/Request/Self">Your Requests</a> </li>
-            <li><a class="dropdown-item" href="#">Review Requests</a> </li>
-            <li><a class="dropdown-item" href="#">Process Requests</a> </li>
-            <li><a class="dropdown-item" href="#">All Requests</a> </li>
+            <li><a class="dropdown-item" href="/Request/ReviewRequests">Review Requests</a> </li>
+            <li><a class="dropdown-item" href="/Request/ProcessRequests">Process Requests</a> </li>
+            <li><a class="dropdown-item" href="/Request/AllRequests">All Requests</a> </li>
           </ul>
         </li>
         <li class="nav-item">
@@ -49,7 +49,7 @@
       </form>
     </div>
   </nav>
-  <div class="container-fluid p-4">
+  <div class="container-fluid p-5">
     <div class="row">
       <div class="col-xl-8 offset-xl-2">
         <div class="form-container shadow-lg">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <p style="text-align:center; color:white;">&copy; Copyright 2018-2019. Los Angeles County. </p>
+  <p style="text-align:center; color:black;">&copy; Copyright 2018-2019. Los Angeles County. </p>
   <form asp-controller="Account" asp-action="Logout" method="post">
     <div class="modal logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-sm">

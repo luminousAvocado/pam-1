@@ -64,7 +64,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
             //return RedirectToAction("Self", "Request");
-            return View("Welcome");
+            return RedirectToAction("Welcome");
         }
 
         [HttpGet]
