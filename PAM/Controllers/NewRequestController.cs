@@ -208,7 +208,32 @@ namespace PAM.Controllers
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToAction("EmailApprover", "Email");
+            return RedirectToAction("EmailApprover", "NewRequest");
+        }
+
+        public IActionResult EmailApprover()
+        {
+            var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
+
+            string receipient = supervisor.Email;
+            string emailName = "Test";
+            //string emailName = "ReviewRequest";
+
+            // MAYBE send over the RequestId or Request object when going to this method/controller and
+            // include that Request in the 'model' below
+            // Brandon will implement to create Request entry in db early on
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail };
+
+            string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+            _email.To(receipient)
+                .Subject(subject)
+                .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                .SendAsync();
+
+            ViewData["Receipient"] = receipient;
+            ViewData["Subject"] = subject;
+
+            return RedirectToAction("Self", "Request");
         }
 
         public Requester updateInfo(Requester current, Requester req){
