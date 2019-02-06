@@ -129,7 +129,6 @@ namespace PAM.Controllers
         public IActionResult SelectUnit(int selectedUnit)
         {
             TempData["selectedUnit"] = selectedUnit;
-
             return RedirectToAction("SelectSystems");
         }
 
@@ -137,7 +136,8 @@ namespace PAM.Controllers
         public IActionResult SelectSystems()
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
-
+            HttpContext.Session.SetObject("UnitId", (int)TempData["selectedUnit"]);
+      
             // Line below breaks
             //TempData["SystemsList"] = systemsList;
 
@@ -194,6 +194,8 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult Review()
         {
+            var unitId = HttpContext.Session.GetObject<int>("UnitId");
+            ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
             return View();
         }
 
