@@ -193,20 +193,32 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult Review()
+        public IActionResult Review(string supervisor)
         {
+            TempData["Supervisor"] = supervisor;
+
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Review(string nothing="")
-        {
-            return RedirectToAction("CreateRequest"); 
-        }
+        //[HttpPost]
+        //public IActionResult Review()
+        //{
+        //    return RedirectToAction("CreateRequest"); 
+        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateRequest ()
         {
+            var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
+
+            Debug.WriteLine("*** TEST ***");
+            foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(supervisor))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(supervisor);
+                Debug.WriteLine("{0} = {1}", name, value);
+            }
+
             var update = HttpContext.Session.GetObject<Request>("Request");
             _dbContext.Add(update);
             await _dbContext.SaveChangesAsync();
