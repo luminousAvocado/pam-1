@@ -223,7 +223,6 @@ namespace PAM.Controllers
         {
             var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
 
-            // Test
             var req = HttpContext.Session.GetObject<Request>("Request");
             Request Request = _reqService.GetRequest(req.RequestId);
 
