@@ -208,7 +208,9 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult Review(string nothing = ""){
-            _session.Clear();
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            update.RequestStatus = RequestStatus.PendingReview;
+            _reqService.UpdateRequest(update);
             return RedirectToAction("Self", "Request"); 
         }
 

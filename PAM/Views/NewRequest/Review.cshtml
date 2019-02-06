@@ -1,4 +1,5 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
      var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
      var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
@@ -98,6 +99,5 @@
     </div>
     <p> This request will be reviewed by: </p>
     <button type="submit" class="btn btn-primary">Confirm Submit</button>
-    <!-- TODO -->
   </form>
 </body>

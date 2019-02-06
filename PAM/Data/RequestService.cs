@@ -22,13 +22,19 @@ namespace PAM.Data
                 .Include(r => r.RequestType).Where(r => r.RequestId.Equals(id)).FirstOrDefault();
         }
 
-        public ICollection<Request> GetRequests(string username)
+        public ICollection<Request> GetRequestsByUsername(string username)
         {
             return _dbContext.Requests
                 .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
                 .Where(r => r.RequestedBy.Username == username || r.RequestedFor.Username == username)
                 .ToList();
         }
+
+        public ICollection<Request> GetRequests(){
+            return _dbContext.Requests
+                .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
+                .ToList();
+        } 
 
         public Request SaveRequest(Request request)
         {
