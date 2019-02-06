@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -23,13 +24,15 @@ namespace PAM.Controllers
         private readonly AppDbContext _dbContext;
         private readonly TreeViewService _treeService;
         private readonly OrganizationService _orgService;
+        private readonly IFluentEmail _email;
+        private readonly EmailHelper _emailHelper;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public NewRequestController(IADService adService, UserService userService,
             AppDbContext context, TreeViewService treeService,
-            OrganizationService orgService, IHttpContextAccessor httpContextAccessor)
+            OrganizationService orgService, IHttpContextAccessor httpContextAccessor, IFluentEmail email, EmailHelper emailHelper)
         {
             _adService = adService;
             _dbContext = context;
@@ -37,6 +40,8 @@ namespace PAM.Controllers
             _treeService = treeService;
             _orgService = orgService;
             _httpContextAccessor = httpContextAccessor;
+            _email = email;
+            _emailHelper = emailHelper;
         }
 
         [HttpGet]
@@ -123,7 +128,6 @@ namespace PAM.Controllers
             ViewData["MyTree"] = myTree;
 
             return View();
-            //return View("../SelectUnit/SelectUnit");
         }
 
         [HttpPost]
