@@ -8,29 +8,47 @@ using PAM.Data;
 using PAM.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PAM.Services;
+using System.Diagnostics;
 
 namespace PAM.Controllers
 {
     public class UnitController : Controller
     {
         private readonly AppDbContext _context;
-
-        public UnitController(AppDbContext context)
+        private readonly TreeViewService _treeService;
+        public UnitController(AppDbContext context, TreeViewService treeService)
         {
+            _treeService = treeService;
             _context = context;
         }
-        public async Task<IActionResult> DetailsUnit(int? id)
+
+        
+        public IActionResult SelectUnit()
         {
-            if (id == null)
+            var myTree = _treeService.GenerateTree();
+            ViewData["MyTree"] = myTree;
+
+            return View();
+            //return View("../SelectUnit/SelectUnit");
+        }
+
+        
+        
+        public async Task<IActionResult> DetailsUnit(int? selectedUnit)
+        {
+            Debug.WriteLine(selectedUnit + "************************");
+            if (selectedUnit == null)
             {
                 return NotFound();
             }
+            Debug.WriteLine(selectedUnit + "************************");
 
             var unit = await _context.Units
                 .Include(u => u.Bureau)
                 .Include(u => u.Parent)
                 .Include(u => u.UnitType)
-                .FirstOrDefaultAsync(m => m.UnitId == id);
+                .FirstOrDefaultAsync(m => m.UnitId == selectedUnit);
             if (unit == null)
             {
                 return NotFound();
@@ -59,7 +77,7 @@ namespace PAM.Controllers
             {
                 _context.Add(unit);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(SelectUnit));
             }
             ViewData["BureauId"] = new SelectList(_context.Bureaus, "BureauId", "Code", unit.BureauId);
             ViewData["ParentId"] = new SelectList(_context.Units, "UnitId", "Name", unit.ParentId);
@@ -68,6 +86,7 @@ namespace PAM.Controllers
         }
 
         // GET: Units/Edit/5
+        [HttpGet]
         public async Task<IActionResult> EditUnit(int? id)
         {
             if (id == null)
@@ -116,7 +135,7 @@ namespace PAM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(SelectUnit));
             }
             ViewData["BureauId"] = new SelectList(_context.Bureaus, "BureauId", "Code", unit.BureauId);
             ViewData["ParentId"] = new SelectList(_context.Units, "UnitId", "Name", unit.ParentId);
@@ -153,12 +172,20 @@ namespace PAM.Controllers
             var unit = await _context.Units.FindAsync(id);
             _context.Units.Remove(unit);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(SelectUnit));
         }
 
         private bool UnitExists(int id)
         {
             return _context.Units.Any(e => e.UnitId == id);
+        }
+
+        public async Task<IActionResult> SystemPortfolio(int? id)
+        {
+            //get related data
+            var systemPortfolio = _context.UnitSystems.Include(u => u.System).Where(u => u.UnitId == id).ToListAsync();
+
+            return View(await systemPortfolio);
         }
     }
 }
