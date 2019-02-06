@@ -85,6 +85,8 @@ namespace PAM.Controllers
             var currRequester = HttpContext.Session.GetObject<Requester>("Requester");
             currRequester = updateInfo(currRequester, formData);
             _userService.UpdateRequester(currRequester);
+            HttpContext.Session.SetObject("Requester", currRequester);
+
             var request = HttpContext.Session.GetObject<Request>("Request");
             
             var requestFor = HttpContext.Session.GetObject<Requester>("RequestFor");
@@ -206,6 +208,7 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult Review(string nothing = ""){
+            _session.Clear();
             return RedirectToAction("Self", "Request"); 
         }
 

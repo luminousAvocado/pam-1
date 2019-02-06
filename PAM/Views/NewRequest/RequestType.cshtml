@@ -16,6 +16,7 @@
       Step 3 - Select The Type of Request
     </div>
     <div class="form-group">
+      <p class="text-danger"> You must select a Request Type.</p>
       <div class="custom-control custom-radio">
         <input asp-for="RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg">
         <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
@@ -51,7 +52,7 @@
       <strong>Important: </strong> Please submit a seperate system registration form to remove your current
       systems access with the <strong>"Transfer"</strong> request.
     </div>
-    <button type="submit" class="btn btn-info float-right m-3"> Next </button>
+    <button type="button" class="btn btn-info float-right m-3" onclick="validateType()" id="next"> Next </button>
   </form>
   <form asp-controller="NewRequest" asp-action="RequesterInfo" method="get">
     <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
@@ -60,3 +61,22 @@
     <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
   </form>
 </body>
+
+<script>
+  function validateType() {
+    if (!validateRadios()) return false;
+    else document.getElementById("reqType").submit();
+  }
+
+  function validateRadios() {
+    let radios = document.getElementsByClassName("custom-control-input");
+    let valid = false;
+
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked)
+        valid = true;
+    }
+    return valid;
+  }
+
+</script>
