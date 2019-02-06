@@ -139,12 +139,6 @@ namespace PAM.Controllers
         {
             var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
 
-            Debug.WriteLine("*** TEST MEEEEE");
-            foreach(var obj in systemsList)
-            {
-                Debug.WriteLine(obj.System.Name);
-            }
-
             return View(systemsList);
         }
 
@@ -212,21 +206,29 @@ namespace PAM.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest ()
         {
+            var update = HttpContext.Session.GetObject<Request>("Request");
+            _dbContext.Add(update);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Email", "NewRequest");
+        }
+
+        [HttpGet]
+        public IActionResult Email()
+        {
+            Debug.WriteLine("*** IM HERE");
+
             var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
 
             Debug.WriteLine("*** TEST ***");
             Debug.WriteLine("TempData: {0}", TempData["Supervisor"]);
             Debug.WriteLine("SUP: {0}", supervisor.Name);
-            foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(supervisor))
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(supervisor))
             {
                 string name = descriptor.Name;
                 object value = descriptor.GetValue(supervisor);
                 Debug.WriteLine("{0} = {1}", name, value);
             }
-
-            var update = HttpContext.Session.GetObject<Request>("Request");
-            _dbContext.Add(update);
-            await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Self", "Request");
         }
