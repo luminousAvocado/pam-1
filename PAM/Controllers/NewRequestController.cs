@@ -197,12 +197,6 @@ namespace PAM.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Review()
-        //{
-        //    return RedirectToAction("CreateRequest"); 
-        //}
-
         [HttpPost]
         public async Task<IActionResult> CreateRequest ()
         {
@@ -212,14 +206,6 @@ namespace PAM.Controllers
 
             return RedirectToAction("EmailApprover", "Email");
         }
-
-        //[HttpGet]
-        //public IActionResult Email()
-        //{
-        //    var supervisor = _userService.GetEmployeeByName((string)TempData["Supervisor"]);
-
-        //    return RedirectToAction("EmailApprover", "Email");
-        //}
 
         public Requester updateInfo(Requester current, Requester req){
             current.FirstName = req.FirstName;
