@@ -22,19 +22,22 @@ namespace PAM.Controllers
         private readonly AppDbContext _dbContext;
         private readonly TreeViewService _treeService;
         private readonly OrganizationService _orgService;
+        private readonly RequestService _reqService;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public NewRequestController(IADService adService, UserService userService,
             AppDbContext context, TreeViewService treeService,
-            OrganizationService orgService, IHttpContextAccessor httpContextAccessor)
+            OrganizationService orgService, RequestService reqService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _adService = adService;
             _dbContext = context;
             _userService = userService;
             _treeService = treeService;
             _orgService = orgService;
+            _reqService = reqService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -108,10 +111,9 @@ namespace PAM.Controllers
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestTypeId = req.RequestTypeId;
+            update = _reqService.SaveRequest(update);
             HttpContext.Session.SetObject("Request", update);
 
-            // Routing from RequestType to SelectUnit
-            //return RedirectToAction("RequestInfo");
             return RedirectToAction("SelectUnit");
         }
 
@@ -154,7 +156,6 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult RequestInfo(){
-            var update = HttpContext.Session.GetObject<Request>("Request");
             return View();
         }
 
@@ -169,6 +170,8 @@ namespace PAM.Controllers
             update.CaseloadFunction = req.CaseloadFunction;
             update.CaseloadNumber = req.CaseloadNumber;
             update.DepartureReason = req.DepartureReason;
+
+            _reqService.UpdateRequest(update);
             HttpContext.Session.SetObject("Request", update);
             return RedirectToAction("Supervisors");
         }
@@ -194,24 +197,16 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult Review()
         {
+            var req = HttpContext.Session.GetObject<Request>("Request");
             var unitId = HttpContext.Session.GetObject<int>("UnitId");
             ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
+            ViewData["Request"] = _reqService.GetRequest(req.RequestId);
             return View();
         }
 
         [HttpPost]
         public IActionResult Review(string nothing = ""){
-            return RedirectToAction("CreateRequest"); 
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateRequest ()
-        {
-            var update = HttpContext.Session.GetObject<Request>("Request");
-            _dbContext.Add(update);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction("Self", "Request");
+            return RedirectToAction("Self", "Request"); 
         }
 
         public Requester updateInfo(Requester current, Requester req){

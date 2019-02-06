@@ -2,7 +2,7 @@
 @{
      var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
      var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
-     var request = HttpContextAccessor.HttpContext.Session.GetObject<Request>("Request");
+     var request = (Request)ViewData["Request"];
      var systems = (List<UnitSystem>)ViewData["Systems"];
      ViewData["Title"] = "Review";
 }
@@ -38,7 +38,7 @@
     <div class="alert alert-success">
       Step 3 - Request Type
     </div>
-    <p> This is a request to  </p>
+    <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
     <div class="alert alert-success">
       Step 4 - Unit Selection
     </div>
