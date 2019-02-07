@@ -10,35 +10,31 @@
 }
 
 <body onload="javascript: stepIndicate()">
-  <div class="col-xl-8 offset-xl-2">
-    <div class="form-container shadow-lg">
-      <partial name="../Shared/_ProgressBar.cshtml" />
-      <form asp-controller="NewRequest" asp-action="NewRequest" method="post">
-        <div class="alert alert-info">
-          Step 1 - Please specify the following.
-        </div>
-        <div class="text-center">
-          <p style="font-size: 30px;"> To whom is this request made for? </p>
-        </div>
-
-        <div class="text-center">
-          <input asp-for="Name" value="@requester.Name" type="hidden" />
-          <input asp-for="Username" value="@requester.Username" type="hidden" />
-          <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
-
-          <div class="custom-radio custom-control">
-            <input type="radio" class="custom-control-input" name="selfOrFor" id="selfRadio" value="self" />
-            <label class="custom-control-label label-edit" for="selfRadio"> Request for Self </label>
-          </div>
-
-          <div class="custom-radio custom-control">
-            <input type="radio" class="custom-control-input" name="selfOrFor" id="forRadio" value="for" />
-            <label class="custom-control-label label-edit" for="forRadio"> Request for Another </label>
-          </div>
-
-          <button type="submit" class="btn btn-info" style="position:relative;margin-top: 40px;">Confirm</button>
-        </div>
-      </form>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="NewRequest" method="post">
+    <div class="alert alert-info">
+      Step 1 - Please specify the following.
     </div>
-  </div>
+    <div class="text-center">
+      <p style="font-size: 30px;"> To whom is this request made for? </p>
+    </div>
+
+    <div class="text-center">
+      <input asp-for="Name" value="@requester.Name" type="hidden" />
+      <input asp-for="Username" value="@requester.Username" type="hidden" />
+      <input asp-for="RequestedById" value=@requester.RequesterId type="hidden" />
+
+      <div class="custom-radio custom-control">
+        <input type="radio" class="custom-control-input" name="selfOrFor" id="selfRadio" value="self" />
+        <label class="custom-control-label label-edit" for="selfRadio"> Request for Self </label>
+      </div>
+
+      <div class="custom-radio custom-control">
+        <input type="radio" class="custom-control-input" name="selfOrFor" id="forRadio" value="for" />
+        <label class="custom-control-label label-edit" for="forRadio"> Request for Another </label>
+      </div>
+
+      <button type="submit" class="btn btn-info" style="position:relative;margin-top: 40px;">Next</button>
+    </div>
+  </form>
 </body>

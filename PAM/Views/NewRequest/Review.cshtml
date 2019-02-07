@@ -1,103 +1,106 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
-  var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
-  var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
-  var request = HttpContextAccessor.HttpContext.Session.GetObject<Request>("Request");
-  ViewData["Title"] = "Review";
+    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+    var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
+    var request = (Request)ViewData["Request"];
+    var systems = (List<UnitSystem>)ViewData["Systems"];
+    var supervisor = ViewData["Supervisor"];
+    ViewData["Title"] = "Review";
 }
 
 <body onload="javascript: stepIndicate()">
-  <div class="row">
-    <div class="col-xl-8 offset-xl-2">
-      <div class="form-container shadow-lg">
-        <partial name="../Shared/_ProgressBar.cshtml" />
-        <form asp-controller="NewRequest" asp-action="CreateRequest" method="post">
-          <div class="alert alert-warning">
-            Please confirm that all information is correct.
-          </div>
-          <div class="alert alert-success">
-            Step 1 - Self or For
-          </div>
-          @{
-            var requestForName = "";
-            if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
-            else { requestForName = requestFor.Name; }
-          }
-          <p>This is a request made for <strong>@requestForName</strong> </p>
-          <div class="alert alert-success">
-            Step 2 - Requester(s) Information
-          </div>
-          <div class="alert alert-info" style="width:50%;">
-            Personal Information
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">First Name</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.FirstName" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">Last Name</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.LastName" disabled />
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Address</label>
-            <div class="col-sm-3">
-              <input class="form-control" value="@requester.Address" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">State</label>
-            <div class="col-sm-1">
-              <input class="form-control" value="@requester.State" disabled />
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-1 col-form-label">City</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.City" disabled />
-            </div>
-            <label class="col-sm-1 col-form-label">ZipCode</label>
-            <div class="col-sm-2">
-              <input class="form-control" value="@requester.Zip" disabled />
-            </div>
-          </div>
-          <div class="alert alert-success">
-            Step 3 - Request Type
-          </div>
-          <p> This is a request to  </p>
-          <div class="alert alert-success">
-            Step 4 - Unit Selection
-          </div>
-          <p> The unit selected is: </p>
-          <div class="alert alert-success">
-            Step 5 - System Selection
-          </div>
-          <p> The system selected is: </p>
-          <div class="alert alert-success">
-            Step 6 - Additional Request Information
-          </div>
-          @{
-            if (request.IsHighProfileAccess)
-            { @Html.Raw("<p> This request requires High Profile Access </p>") };
-          if (request.IsGlobalAccess)
-          { @Html.Raw("<p> This request requires Global Access </p>") };
-        if (request.IsContractor)
-        { @Html.Raw("<p> This request is made for a contractor </p>") };
-      if (request.CaseloadNumber != null)
-      { @Html.Raw("<p> The Case Load number for this request is: ") @request.CaseloadNumber @Html.Raw("</p>") };
-    if (request.CaseloadFunction != null)
-    { @Html.Raw("<p> The Case Load function for this request is: ") @request.CaseloadFunction @Html.Raw("</p>") };
-  if (request.CaseloadType != null)
-  { @Html.Raw("<p> The Case Load Type for this request is: ") @request.CaseloadType @Html.Raw("</p>") };
-          }
-
-          <div class="alert alert-success">
-            Step 7 - Supervisor's Review
-          </div>
-          <p> This request will be reviewed by: </p>
-          <button type="submit" class="btn btn-primary">Confirm Submit</button>
-          <!-- TODO -->
-        </form>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="Review" method="post">
+    <div class="alert alert-warning">
+      Please confirm that all information is correct.
+    </div>
+    <div class="alert alert-success">
+      Step 1 - Self or For
+    </div>
+    @{
+      var requestForName = "";
+      if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
+      else { requestForName = requestFor.Name; }
+    }
+    <p>This is a request made for <i>@requestForName</i> </p>
+    <div class="alert alert-success">
+      Step 2 - Requester(s) Information
+    </div>
+    <div class="alert alert-info" style="width:50%;">
+      Personal Information
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <p>First Name: <i>@requester.FirstName</i></p>
+      </div>
+      <div class="col-3">
+        <p>Last Name: <i>@requester.LastName</i></p>
       </div>
     </div>
-  </div>
+    <p>Address: <i>@requester.Address</i></p>
+    <p>City: <i>@requester.City</i></p>
+    <div class="row">
+      <div class="col-3">
+        <p>State: <i>@requester.State</i></p>
+      </div>
+      <div class="col-3">
+        <p>ZipCode: <i>@requester.Zip</i></p>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      Step 3 - Request Type
+    </div>
+    <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
+    <div class="alert alert-success">
+      Step 4 - Unit Selection
+    </div>
+    <p> The unit selected is: <i>@systems.First().Unit.Name</i></p>
+    <div class="alert alert-success">
+      Step 5 - System Selection
+    </div>
+    @{
+      @Html.Raw("<p> The systems associated with this unit are: ")
+      foreach (var system in systems)
+      {
+        @Html.Raw("<i>");
+        @system.System.Name;
+        @Html.Raw("</i>");
+        @Html.Raw(", ");
+      }
+      @Html.Raw("</p>")
+    }
+    <div class="alert alert-success">
+      Step 6 - Additional Request Information
+    </div>
+    @{
+      if (request.IsHighProfileAccess)
+      {
+        @Html.Raw("<p> This request requires <i>High Profile Access</i></p>") };
+      if (request.IsGlobalAccess)
+      {
+        @Html.Raw("<p> This request requires <i>Global Access</i></p>") };
+      if (request.IsContractor)
+      {
+        @Html.Raw("<p> This request is made for a <i>contractor</i></p>") };
+      if (request.CaseloadNumber != null)
+      {
+        @Html.Raw("<p> The Case Load number for this request is: <i>") @request.CaseloadNumber @Html.Raw("</i></p>") };
+      if (request.CaseloadFunction != null)
+      {
+        @Html.Raw("<p> The Case Load function for this request is: <i>") @request.CaseloadFunction @Html.Raw("</i></p>") };
+      if (request.CaseloadType != null)
+      {
+        @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
+    }
+
+    <div class="alert alert-success">
+      Step 7 - Supervisor's Review
+    </div>
+    <p> This request will be reviewed by: <i>@supervisor</i> </p>
+    <div style="display:flex;" class="justify-content-center">
+      <button type="submit" class="btn btn-primary">Confirm Submit</button>
+    </div>
+  </form>
 </body>

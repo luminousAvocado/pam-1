@@ -17,12 +17,37 @@ namespace PAM.Data
             _logger = logger;
         }
 
-        public ICollection<Request> GetRequests(string username)
+        public Request GetRequest(int id){
+            return _dbContext.Requests
+                .Include(r => r.RequestType)
+                .Include(r => r.RequestedFor)
+                .Where(r => r.RequestId.Equals(id)).FirstOrDefault();
+        }
+
+        public ICollection<Request> GetRequestsByUsername(string username)
         {
             return _dbContext.Requests
                 .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
                 .Where(r => r.RequestedBy.Username == username || r.RequestedFor.Username == username)
                 .ToList();
+        }
+
+        public ICollection<Request> GetRequests(){
+            return _dbContext.Requests
+                .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
+                .ToList();
+        } 
+
+        public Request SaveRequest(Request request)
+        {
+            if (request.RequestId == 0) _dbContext.Add(request);
+            _dbContext.SaveChanges();
+            return request;
+        }
+
+        public void UpdateRequest (Request request){
+            _dbContext.Update(request);
+            _dbContext.SaveChanges();
         }
 
         public void RemoveRequest(Request request)

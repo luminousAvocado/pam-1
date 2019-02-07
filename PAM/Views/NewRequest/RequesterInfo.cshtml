@@ -10,161 +10,168 @@
 }
 
 <body onload="javascript: stepIndicate()">
-  <div class="row">
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="RequesterInfo" id="requesterInfo" method="post">
+    <div class="formInformation">
+      <input asp-for="Username" value="@requester.Username" type="hidden" />
+      <input asp-for="Name" value="@requester.Username" type="hidden" />
+      <div class="alert alert-info">
+        Step 2 - Fill In Your Information
+      </div>
+      <p class="text-danger"> *Required Fields </p>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="countyDeptName">Agency Name</label>
+          <input asp-for="Service" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="countyDeptNum">Dept. #</label>
+          <input asp-for="Department" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+        </div>
+      </div>
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="validateFirstName">First Name</label><span style="color:red">*</span>
+          <input asp-for="FirstName" type="text" value="@requester.FirstName" class="form-control" id="validate">
+        </div>
 
-    <div class="col-xl-8 offset-xl-2">
-      <div class="form-container shadow-lg">
-        <partial name="../Shared/_ProgressBar.cshtml" />
-        <form asp-controller="NewRequest" asp-action="RequesterInfo" id="requesterInfo" method="post">
-          <div class="formInformation">
-            <input asp-for="Username" value="@requester.Username" type="hidden" />
-            <input asp-for="Name" value="@requester.Username" type="hidden" />
-            <div class="alert alert-info">
-              Step 2 - Fill In Your Information
-            </div>
-            <p class="text-danger"> *Required Fields </p>
-            <div class="form-row">
-              <div class="form-group col-md-5">
-                <label for="countyDeptName">Agency Name</label>
-                <input asp-for="Service" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
-              </div>
-              <div class="form-group col-md-2">
-                <label for="countyDeptNum">Dept. #</label>
-                <input asp-for="Department" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
-              </div>
-            </div>
-            <hr />
-            <div class="form-row">
-              <div class="form-group col-md-5">
-                <label for="validateFirstName">First Name</label><span style="color:red">*</span>
-                <input asp-for="FirstName" type="text" value="@requester.FirstName" class="form-control" id="validate">
-              </div>
-
-              <div class="form-group col-md-5">
-                <label for="validateLastName">Last Name</label><span style="color:red">*</span>
-                <input asp-for="LastName" type="text" value="@requester.LastName" class="form-control" id="validate">
-              </div>
-              <div class="form-group col-md-2">
-                <label for="middleName">Middle Name</label>
-                <input asp-for="MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-4">
-                <label for="workAddr">Address</label>
-                <input asp-for="Address" type="text" class="form-control" id="workAddr" placeholder="1234 Main Street">
-              </div>
-              <div class="form-group col-md-4">
-                <label for="workCity">City</label>
-                <input asp-for="City" type="text" class="form-control" id="workCity" placeholder="Los Angeles">
-              </div>
-              <div class="form-group col-md-1">
-                <label for="workState">State</label>
-                <input asp-for="State" type="text" class="form-control" id="workState" placeholder="CA">
-              </div>
-              <div class="form-group col-md-3">
-                <label for="workZip">Zip Code</label>
-                <input asp-for="Zip" type="text" class="form-control" id="workZip" placeholder="90056">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="locationPhoneNum">Employee Location Phone #</label>
-                <input asp-for="Phone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="employeeCellNum">Employee Cell Phone #</label>
-                <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-5">
-                <label for="countyEmail">Email Address</label><span style="color:red">*</span>
-                <input asp-for="Email" type="text" value="@requester.Email" class="form-control" id="validate">
-              </div>
-            </div>
-          </div>
-          <!--
-          <div class="formInformation" id="forInfo">
-            <div class="shadow-container">
-              <div class="alert alert-info">
-                Step 2 - Fill In Their Information
-              </div>
-              <p class="text-danger"> *Required Fields </p>
-              <div class="form-row">
-                <div class="form-group col-md-5">
-                  <label for="countyDeptName">Agency Name</label>
-                  <input asp-for="Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="countyDeptNum">Dept. #</label>
-                  <input asp-for="DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
-                </div>
-              </div>
-              <hr />
-              <div class="form-row">
-                <div class="form-group col-md-5">
-                  <label for="validateFirstName">First Name</label><span style="color:red">*</span>
-                  <input asp-for="FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
-                </div>
-                <div class="form-group col-md-5">
-                  <label for="validateLastName">Last Name</label><span style="color:red">*</span>
-                  <input asp-for="LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="middleName">Middle Name</label>
-                  <input asp-for="MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="workAddr">Address</label>
-                  <input asp-for="WorkAddress" type="text" class="form-control" id="workAddr" placeholder="1234 Main Street">
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="workCity">City</label>
-                  <input asp-for="WorkCity" type="text" class="form-control" id="workCity" placeholder="Los Angeles">
-                </div>
-                <div class="form-group col-md-1">
-                  <label for="workState">State</label>
-                  <input asp-for="WorkState" type="text" class="form-control" id="workState" placeholder="CA">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="workZip">Zip Code</label>
-                  <input asp-for="WorkZip" type="text" class="form-control" id="workZip" placeholder="90056">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="locationPhoneNum">Employee Location Phone #</label>
-                  <input asp-for="WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="employeeCellNum">Employee Cell Phone #</label>
-                  <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-5">
-                  <label for="countyEmail">Email Address</label><span style="color:red">*</span>
-                  <input asp-for="Email" type="text" class="form-control" id="validate" placeholder="Email">
-                </div>
-              </div>
-            </div>
-          </div>
-            -->
-          <button type="button" class="btn btn-info float-right m-3" onclick="validateForm();"> Next </button>
-        </form>
-        <form asp-controller="NewRequest" asp-action="NewRequest" method="get">
-          <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
-        </form>
+        <div class="form-group col-md-5">
+          <label for="validateLastName">Last Name</label><span style="color:red">*</span>
+          <input asp-for="LastName" type="text" value="@requester.LastName" class="form-control" id="validate">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="middleName">Middle Name</label>
+          <input asp-for="MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="workAddr">Address</label>
+          <input asp-for="Address" type="text" class="form-control" id="workAddr" placeholder="1234 Main Street">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="workCity">City</label>
+          <input asp-for="City" type="text" class="form-control" id="workCity" placeholder="Los Angeles">
+        </div>
+        <div class="form-group col-md-1">
+          <label for="workState">State</label>
+          <input asp-for="State" type="text" class="form-control" id="workState" placeholder="CA">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="workZip">Zip Code</label>
+          <input asp-for="Zip" type="text" class="form-control" id="workZip" placeholder="90056">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="locationPhoneNum">Employee Location Phone #</label>
+          <input asp-for="Phone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="employeeCellNum">Employee Cell Phone #</label>
+          <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="countyEmail">Email Address</label><span style="color:red">*</span>
+          <input asp-for="Email" type="text" value="@requester.Email" class="form-control" id="validate">
+        </div>
+      </div>
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="title">Title</label>
+          <input asp-for="Title" type="text" value="@requester.Title" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="section">Section</label>
+          <input asp-for="Section" type="text" value="@requester.Section" class="form-control">
+        </div>
       </div>
     </div>
-  </div>
+    <!--
+    <div class="formInformation" id="forInfo">
+      <div class="shadow-container">
+        <div class="alert alert-info">
+          Step 2 - Fill In Their Information
+        </div>
+        <p class="text-danger"> *Required Fields </p>
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="countyDeptName">Agency Name</label>
+            <input asp-for="Department" type="text" class="form-control" id="countyDeptName" placeholder="Ex. Probation">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="countyDeptNum">Dept. #</label>
+            <input asp-for="DepartmentCode" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
+          </div>
+        </div>
+        <hr />
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="validateFirstName">First Name</label><span style="color:red">*</span>
+            <input asp-for="FirstName" type="text" class="form-control" id="validate" placeholder="First Name">
+          </div>
+          <div class="form-group col-md-5">
+            <label for="validateLastName">Last Name</label><span style="color:red">*</span>
+            <input asp-for="LastName" type="text" class="form-control" id="validate" placeholder="Last Name">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="middleName">Middle Name</label>
+            <input asp-for="MiddleName" type="text" class="form-control" id="middleName" placeholder="Middle Name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="workAddr">Address</label>
+            <input asp-for="WorkAddress" type="text" class="form-control" id="workAddr" placeholder="1234 Main Street">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="workCity">City</label>
+            <input asp-for="WorkCity" type="text" class="form-control" id="workCity" placeholder="Los Angeles">
+          </div>
+          <div class="form-group col-md-1">
+            <label for="workState">State</label>
+            <input asp-for="WorkState" type="text" class="form-control" id="workState" placeholder="CA">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="workZip">Zip Code</label>
+            <input asp-for="WorkZip" type="text" class="form-control" id="workZip" placeholder="90056">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="locationPhoneNum">Employee Location Phone #</label>
+            <input asp-for="WorkPhone" type="text" class="form-control" id="locationPhoneNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="employeeCellNum">Employee Cell Phone #</label>
+            <input asp-for="CellPhone" type="text" class="form-control" id="employeeCellNum" placeholder="(_ _ _) _ _ _ - _ _ _ _">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="countyEmail">Email Address</label><span style="color:red">*</span>
+            <input asp-for="Email" type="text" class="form-control" id="validate" placeholder="Email">
+          </div>
+        </div>
+      </div>
+    </div>
+      -->
+    <button type="button" class="btn btn-info float-right m-3" onclick="validateInfo();"> Next </button>
+  </form>
+  <form asp-controller="NewRequest" asp-action="NewRequest" method="get">
+    <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <form asp-controller="NewRequest" asp-action="Draft">
+    <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
+  </form>
 </body>
 
 <script>
-  function validateForm() {
+  function validateInfo() {
     if (!validateInput()) return false;
     else document.getElementById("requesterInfo").submit();
   }

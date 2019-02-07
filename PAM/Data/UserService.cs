@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,13 @@ namespace PAM.Data
         {
             return _dbContext.Employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+        }
+
+        public Employee GetEmployeeByName(string name)
+        {
+            return _dbContext.Employees
+                .Where(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
         }
 

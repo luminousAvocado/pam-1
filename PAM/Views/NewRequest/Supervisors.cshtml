@@ -3,23 +3,17 @@
 }
 
 <body onload="javascript: stepIndicate()">
-  <div class="row">
-    <div class="col-xl-8 offset-xl-2">
-      <div class="form-container shadow-lg">
-        <partial name="../Shared/_ProgressBar.cshtml" />
-        <form asp-controller="NewRequest" asp-action="Review" method="get">
-          <div class="alert alert-info">
-            Step 7 - Select the supervisor(s) to review this request.
-          </div>
-          <div class="autocomplete" style="width:400px;">
-            <label>Supervisors</label>
-            <input id="adEmployees" type="text" placeholder="Supervisor" autocomplete="off">
-          </div>
-          <button type="submit" class="btn btn-primary"> Next </button>
-        </form>
-      </div>
+  <partial name="../Shared/_ProgressBar.cshtml" />
+  <form asp-controller="NewRequest" asp-action="Review" method="get">
+    <div class="alert alert-info">
+      Step 7 - Select the supervisor(s) to review this request.
     </div>
-  </div>
+    <div class="autocomplete" style="width:400px;">
+      <label>Supervisors</label>
+      <input id="adEmployees" name="supervisor" type="text" placeholder="Supervisor" autocomplete="off" value="">
+    </div>
+    <button type="submit" class="btn btn-primary"> Next </button>
+  </form>
 </body>
 
 <script>
