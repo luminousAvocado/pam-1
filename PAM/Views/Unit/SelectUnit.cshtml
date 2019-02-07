@@ -1,0 +1,37 @@
+﻿@{
+  ViewData["Title"] = "Unit Selection";
+}
+
+<body onload="javascript: stepIndicate()">
+  <div class="alert alert-info">
+    <form asp-controller="Unit" asp-action="CreateUnit">
+      <button type="submit" class="btn btn-info float-right " style="display:inline-block">Create New</button>
+    </form>
+
+    <form asp-controller="Unit" asp-action="DetailsUnit" method="post">
+
+      Step 4 - Select The Type of Job
+      <input id="selectedUnit" name="selectedUnit" type="hidden" value="" />
+      <button type="submit" class="btn btn-info float-right"> Select Unit </button>
+
+
+
+    </form>
+  </div>
+    <div id="tree"></div>
+
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+    <script>
+      var mytree = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MyTree"]));
+    $('#tree').treeview({
+      data: mytree,
+      levels: 1,
+      onNodeSelected: function (event, node) {
+        var unitInput = document.getElementById("selectedUnit");
+        unitInput.value = node.id;
+      }
+    });
+    </script>
+</body>
