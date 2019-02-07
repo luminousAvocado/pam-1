@@ -18,8 +18,6 @@
   <form asp-controller="NewRequest" asp-action="Draft">
     <button type="button" class="btn btn-warning float-left m-3"> Save Draft </button>
   </form>
-  <script src="~/lib/jquery/dist/jquery.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
   <script>
       var mytree = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MyTree"]));
     $('#tree').treeview({

@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-lux.css" />
+  <link rel="stylesheet" href="~/lib/bootswatch/cerulean/bootstrap.min.css" />
+  <link rel="stylesheet" href="~/lib/bootstrap-4-navbar/bootstrap-4-navbar.css">
   <link rel="stylesheet" href="~/css/styles.css">
-  <link rel="stylesheet" href="~/css/w3autocomplete.css">
   <title>PAM - @ViewData["Title"]</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
     <div class="collapse navbar-collapse" id="navDropDown">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown active">
-          <a class="nav-link dropdown-toggle" id="navDropDownMenu" data-toggle="dropdown" aria-haspopup="true" href="/Request/Self">Requests</a>
+          <a class="nav-link dropdown-toggle" id="navDropDownMenu" data-toggle="dropdown" aria-haspopup="true">Requests</a>
           <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
             <li><a class="dropdown-item" href="/Request/Self">Your Requests</a> </li>
             <li><a class="dropdown-item" href="/Request/ReviewRequests">Review Requests</a> </li>
@@ -34,7 +34,7 @@
           <a class="nav-link" href="">Reports</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" href="/Management/WelcomePage">Management</a>
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">Management</a>
           <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
             <li><a asp-controller="Location" asp-action="Locations" class="dropdown-item">Locations</a> </li>
             <li><a asp-controller="Bureau" asp-action="Bureaus" class="dropdown-item">Bureaus</a> </li>
@@ -69,9 +69,11 @@
       </div>
     </div>
   </form>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="~/js/w3autocomplete.js"></script>
+  <script src="~/lib/jquery/jquery.min.js"></script>
+  <script src="~/lib/popper.js/umd/popper.min.js"></script>
+  <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+  <script src="~/lib/bootstrap-4-navbar/bootstrap-4-navbar.js"></script>
 </body>
 </html>
