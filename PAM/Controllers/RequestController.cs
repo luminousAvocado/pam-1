@@ -35,7 +35,8 @@ namespace PAM.Controllers
             int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
             var requestsForReview = _requestService.GetRequestsForReview(supervisorId);
 
-            //ViewData["RequestsForReview"] = _requestService.GetReviews();
+            ViewData["RequestsForReview"] = requestsForReview;
+
             return View();
         }
 

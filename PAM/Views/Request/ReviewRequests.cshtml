@@ -34,24 +34,23 @@
           </tr>
         </thead>
         <tbody>
-          @*@foreach (var request in (List<Request>)ViewData["requests"])
+          @foreach (var request in (List<Review>)ViewData["RequestsForReview"])
           {
-            @if (request.RequestStatus == RequestStatus.PendingReview)
+            @if (request.Request.RequestStatus == RequestStatus.PendingReview)
             {
               <tr>
-                <td>@request.RequestId</td>
-                <td>@request.Name</td>
-                <td>@request.RequestType.DisplayCode</td>
-                <td>@request.SubmittedOn</td>
-                <td>@request.RequestStatus</td>
+                <td>@request.Request.RequestId</td>
+                <td>@request.Request.Name</td>
+                @*<td>@request.Request.RequestType.DisplayCode</td>*@
+                <td>@request.Request.SubmittedOn</td>
+                <td>@request.Request.RequestStatus</td>
                 <td>
                   <a asp-action="View">View</a> |
-                  <a asp-action="Edit">Edit</a> |
-                  <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
+                  @*<a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>*@
                 </td>
               </tr>
             }
-          }*@
+          }
         </tbody>
       </table>
     </div>

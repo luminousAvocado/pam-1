@@ -65,6 +65,7 @@ namespace PAM.Data
 
         public ICollection<Review> GetRequestsForReview(int supervisorId)
         {
+            // Currently this will not include RequestType, so we cant show RequestType name
             var relatedRequests = _dbContext.Review
                 .Include(x => x.Request)
                 .Where(x => x.ReviewerId == supervisorId)
