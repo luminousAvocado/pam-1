@@ -27,28 +27,79 @@
     <div class="alert alert-success">
       Step 2 - Requester(s) Information
     </div>
-    <div class="alert alert-info" style="width:50%;">
+    <div class="alert alert-info" style="width:40%;">
       Personal Information
     </div>
-    <div class="row">
-      <div class="col-3">
-        <p>First Name: <i>@requester.FirstName</i></p>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="countyDeptName">Agency Name</label>
+          <input value=@requester.Service class="form-control" id="countyDeptName" disabled />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="countyDeptNum">Dept. #</label>
+          <input value="@requester.Department" type="text" class="form-control" id="countyDeptNum" disabled />
+        </div>
       </div>
-      <div class="col-3">
-        <p>Last Name: <i>@requester.LastName</i></p>
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="validateFirstName">First Name</label>
+          <input value="@requester.FirstName" type="text" class="form-control"disabled />
+        </div>
+        <div class="form-group col-md-5">
+          <label for="validateLastName">Last Name</label>
+          <input value="@requester.LastName" type="text" class="form-control" disabled />
+        </div>
+        <div class="form-group col-md-2">
+          <label for="middleName">Middle Name</label>
+          <input value="@requester.MiddleName" type="text" class="form-control" id="middleName" disabled />
+        </div>
       </div>
-    </div>
-    <p>Address: <i>@requester.Address</i></p>
-    <p>City: <i>@requester.City</i></p>
-    <div class="row">
-      <div class="col-3">
-        <p>State: <i>@requester.State</i></p>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="workAddr">Address</label>
+          <input value="@requester.Address" class="form-control" id="workAddr" disabled /> 
+        </div>
+        <div class="form-group col-md-4">
+          <label for="workCity">City</label>
+          <input value="@requester.City" type="text" class="form-control" id="workCity" disabled />
+        </div>
+        <div class="form-group col-md-1">
+          <label for="workState">State</label>
+          <input value="@requester.State" type="text" class="form-control" id="workState" disabled />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="workZip">Zip Code</label>
+          <input value="@requester.Zip" type="text" class="form-control" id="workZip" disabled />
+        </div>
       </div>
-      <div class="col-3">
-        <p>ZipCode: <i>@requester.Zip</i></p>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="locationPhoneNum">Employee Location Phone #</label>
+          <input value="@requester.Phone" class="form-control" id="locationPhoneNum" disabled />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="employeeCellNum">Employee Cell Phone #</label>
+          <input value="@requester.CellPhone" class="form-control" id="employeeCellNum" disabled />
+        </div>
       </div>
-    </div>
-
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="countyEmail">Email Address</label>
+          <input value="@requester.Email" type="text" class="form-control" id="countyEmail" disabled /> 
+        </div>
+      </div>
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="title">Title</label>
+          <input value="@requester.Title" type="text" class="form-control" id="title" disabled />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="section">Section</label>
+          <input value="@requester.Section" type="text" class="form-control" id="section" disabled />
+        </div>
+      </div>
     <div class="alert alert-success">
       Step 3 - Request Type
     </div>
