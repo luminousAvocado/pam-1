@@ -62,5 +62,11 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return review;
         }
+
+        public ICollection<Request> GetRequestsForReview(int supervisorId)
+        {
+            //var relatedRequests = _dbContext.Requests
+            return null;
+        }
     }
 }

@@ -30,7 +30,12 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult ReviewRequests(){
             //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
+            //ViewData["Requests"] = _requestService.GetRequests();
+
+            int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
+            _requestService.GetRequestsForReview(supervisorId);
+
+            //ViewData["RequestsForReview"] = _requestService.GetReviews();
             return View();
         }
 

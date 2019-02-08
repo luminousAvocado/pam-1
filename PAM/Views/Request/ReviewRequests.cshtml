@@ -5,7 +5,7 @@
 <body>
   <p style="font-size: 40px;">
     Review Requests
-    <a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>
+    @*<a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>*@
   </p>
   <hr />
   <ul class="nav nav-tabs">
@@ -34,7 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach (var request in (List<Request>)ViewData["requests"])
+          @*@foreach (var request in (List<Request>)ViewData["requests"])
           {
             @if (request.RequestStatus == RequestStatus.PendingReview)
             {
@@ -51,7 +51,7 @@
                 </td>
               </tr>
             }
-          }
+          }*@
         </tbody>
       </table>
     </div>
@@ -68,7 +68,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach (var request in (List<Request>)ViewData["requests"])
+          @*@foreach (var request in (List<Request>)ViewData["requests"])
           {
             <tr>
               <td>@request.RequestId</td>
@@ -82,7 +82,7 @@
                 <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
               </td>
             </tr>
-          }
+          }*@
         </tbody>
       </table>
     </div>
@@ -99,7 +99,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach (var request in (List<Request>)ViewData["requests"])
+          @*@foreach (var request in (List<Request>)ViewData["requests"])
           {
             @if (request.RequestStatus == RequestStatus.Draft)
             {
@@ -116,7 +116,7 @@
                 </td>
               </tr>
             }
-          }
+          }*@
         </tbody>
       </table>
     </div>
