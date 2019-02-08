@@ -72,17 +72,20 @@ namespace PAM.Controllers
 
         [HttpPost]
         public IActionResult NewRequest(Request req, string selfOrFor){
+            Request request = req;
             if(selfOrFor == "for"){
                 Requester requestFor = new Requester();
                 HttpContext.Session.SetObject("RequestFor", requestFor);
             }
-            HttpContext.Session.SetObject("Request", req);
+            //request = _reqService.SaveRequest(request);
+            HttpContext.Session.SetObject("Request", request);
             return RedirectToAction("RequesterInfo");
         }
 
         [HttpGet]
         public IActionResult RequesterInfo(){
-            return View();
+            var requester = HttpContext.Session.GetObject<Requester>("Requester");
+            return View(requester);
         }
 
         [HttpPost]
@@ -119,6 +122,7 @@ namespace PAM.Controllers
             var update = HttpContext.Session.GetObject<Request>("Request");
             update.RequestTypeId = req.RequestTypeId;
             update = _reqService.SaveRequest(update);
+            //_reqService.UpdateRequest(update);
             HttpContext.Session.SetObject("Request", update);
 
             return RedirectToAction("SelectUnit");

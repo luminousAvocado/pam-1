@@ -72,11 +72,11 @@
           <label for="workAddr">Address</label>
           <input value="@requester.Address" class="form-control" id="workAddr" disabled /> 
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
           <label for="workCity">City</label>
           <input value="@requester.City" type="text" class="form-control" id="workCity" disabled />
         </div>
-        <div class="form-group col-md-1">
+        <div class="form-group col-md-2">
           <label for="workState">State</label>
           <input value="@requester.State" type="text" class="form-control" id="workState" disabled />
         </div>
@@ -115,17 +115,23 @@
     <div class="alert alert-success">
       Step 5 - Systems Associated 
     </div>
-    @{
-      @Html.Raw("<p> The systems associated with this unit are: ")
-      foreach (var system in systems)
-      {
-        @Html.Raw("<i>");
-        @system.System.Name;
-        @Html.Raw("</i>");
-        @Html.Raw(", ");
-      }
-      @Html.Raw("</p>")
-    }
+    <table class="table table-hover">
+      <thead class="table-info">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var system in systems)
+        {
+          <tr>
+            <td>@system.System.Name;</td>
+            <td>@system.System.Description;</td>
+          </tr>
+        }
+      </tbody>
+    </table>
     <div class="alert alert-success">
       Step 6 - Additional Request Information
       <a class ="float-right" href="/NewRequest/RequestInfo"> Edit </a>
