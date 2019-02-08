@@ -40,10 +40,10 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewRequest(int requestId)
+        public IActionResult ViewRequest(int reqId)
         {
-            Debug.WriteLine("*** HERE");
-            return null;
+            Debug.WriteLine("*** TEST: {0}", reqId);
+            return View("RequestForReview");
         }
 
         [HttpGet]

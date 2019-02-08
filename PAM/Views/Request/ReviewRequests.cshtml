@@ -5,7 +5,6 @@
 <body>
   <p style="font-size: 40px;">
     Review Requests
-    @*<a asp-controller="NewRequest" asp-action="CreateRequester" method="get" class="btn btn-info float-right">+ New Request</a>*@
   </p>
   <hr />
   <ul class="nav nav-tabs">
@@ -19,68 +18,69 @@
 
   <div id="myTabContent" class="tab-content">
     <div id="review" class="tab-pane fade show active">
-      <table class="table table-hover table-responsive-xl">
-        <thead class="table-info">
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Submitted By</th>
-            @*<th scope="col">Type</th>*@
-            <th scope="col">Submitted On</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var request in (List<Review>)ViewData["RequestsForReview"])
-          {
-            @if (request.Request.RequestStatus == RequestStatus.PendingReview)
+      <form asp-controller="Request" asp-action="ViewRequest" method="get">
+        <table class="table table-hover table-responsive-xl">
+          <thead class="table-info">
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Submitted By</th>
+              @*<th scope="col">Type</th>*@
+              <th scope="col">Submitted On</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in (List<Review>)ViewData["RequestsForReview"])
+            {
+              @if (request.Request.RequestStatus == RequestStatus.PendingReview)
+              {
+                <tr>
+                  <td>@request.Request.RequestId</td>
+                  <td>@request.Request.Name</td>
+                  @*<td>@request.Request.RequestType.DisplayCode</td>*@
+                  <td>@request.Request.SubmittedOn</td>
+                  <td>@request.Request.RequestStatus</td>
+                  <td>
+                    <button type="submit" class="btn btn-link" name="reqId" value="@request.Request.RequestId">View</button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </form>
+    </div>
+    @*<div id="completed" class="tab-pane fade">
+        <table class="table table-hover table-responsive-xl">
+          <thead class="table-info">
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Submitted By</th>
+              <th scope="col">Type</th>
+              <th scope="col">Submitted On</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in (List<Request>)ViewData["requests"])
             {
               <tr>
-                <td>@request.Request.RequestId</td>
-                <td>@request.Request.Name</td>
-                @*<td>@request.Request.RequestType.DisplayCode</td>*@
-                <td>@request.Request.SubmittedOn</td>
-                <td>@request.Request.RequestStatus</td>
+                <td>@request.RequestId</td>
+                <td>@request.Name</td>
+                <td>@request.RequestType.DisplayCode</td>
+                <td>@request.SubmittedOn</td>
+                <td>@request.RequestStatus</td>
                 <td>
-                  <a asp-action="ViewRequest">View</a>
-                  @*<a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>*@
+                  <a asp-action="View">View</a> |
+                  <a asp-action="Edit">Edit</a> |
+                  <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
                 </td>
               </tr>
             }
-          }
-        </tbody>
-      </table>
-    </div>
-    @*<div id="completed" class="tab-pane fade">
-      <table class="table table-hover table-responsive-xl">
-        <thead class="table-info">
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Submitted By</th>
-            <th scope="col">Type</th>
-            <th scope="col">Submitted On</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var request in (List<Request>)ViewData["requests"])
-          {
-            <tr>
-              <td>@request.RequestId</td>
-              <td>@request.Name</td>
-              <td>@request.RequestType.DisplayCode</td>
-              <td>@request.SubmittedOn</td>
-              <td>@request.RequestStatus</td>
-              <td>
-                <a asp-action="View">View</a> |
-                <a asp-action="Edit">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>*@
+          </tbody>
+        </table>
+      </div>*@
   </div>
 </body>
