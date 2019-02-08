@@ -19,11 +19,7 @@ namespace PAM.Controllers
         {
             _context = context;
         }
-        //this is the page we want the user to see first when pressing Management in the Navigation BAR
-        public ActionResult WelcomePage()
-        {
-            return View();
-        }
+
 
         // GET: Systems1
         public async Task<IActionResult> Systems()
