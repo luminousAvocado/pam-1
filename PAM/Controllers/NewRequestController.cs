@@ -234,7 +234,7 @@ namespace PAM.Controllers
                 ReviewerTitle = supervisor.Title,
                 //ReviewOrder =
             };
-
+            _reqService.SaveReview(newReview);
 
             string receipient = supervisor.Email;
             string emailName = "ReviewRequest";
