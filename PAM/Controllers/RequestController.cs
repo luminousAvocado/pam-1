@@ -28,7 +28,8 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult ReviewRequests(){
+        public IActionResult ReviewRequests()
+        {
 
             int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
             var requestsForReview = _requestService.GetRequestsForReview(supervisorId);
@@ -36,6 +37,13 @@ namespace PAM.Controllers
             ViewData["RequestsForReview"] = requestsForReview;
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult ViewRequest(int requestId)
+        {
+            Debug.WriteLine("*** HERE");
+            return null;
         }
 
         [HttpGet]
