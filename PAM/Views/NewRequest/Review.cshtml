@@ -17,7 +17,7 @@
     </div>
     <div class="alert alert-success">
       Step 1 - Self or For
-      <a class ="float-right" href="/NewRequest/NewRequest"> Edit </a>
+      <a class="float-right" href="/NewRequest/NewRequest"> Edit </a>
     </div>
     @{
       var requestForName = "";
@@ -27,93 +27,125 @@
     <p>This is a request made for <i>@requestForName</i> </p>
     <div class="alert alert-success">
       Step 2 - Requester(s) Information
-      <a class ="float-right" href="/NewRequest/RequesterInfo"> Edit </a>
+      <a class="float-right" href="/NewRequest/RequesterInfo"> Edit </a>
     </div>
-    <div class="alert alert-info" style="width:40%;">
-      Personal Information
+    <div class="row">
+      <div class="col-xl-6">
+        <div class="alert alert-info">
+          Personal Information
+        </div>
+      </div>
     </div>
-      <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="countyDeptName">Agency Name</label>
-          <input value=@requester.Service class="form-control" id="countyDeptName" disabled />
-        </div>
-        <div class="form-group col-md-3">
-          <label for="countyDeptNum">Dept. #</label>
-          <input value="@requester.Department" type="text" class="form-control" id="countyDeptNum" disabled />
-        </div>
+    <div class="form-row">
+      <div class="form-group col-md-5">
+        <label for="countyDeptName">Agency Name</label>
+        <input value=@requester.Service class="form-control" id="countyDeptName" disabled />
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="title">Title</label>
-          <input value="@requester.Title" type="text" class="form-control" id="title" disabled />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="section">Section</label>
-          <input value="@requester.Section" type="text" class="form-control" id="section" disabled />
-        </div>
+      <div class="form-group col-md-3">
+        <label for="countyDeptNum">Dept. #</label>
+        <input value="@requester.Department" type="text" class="form-control" id="countyDeptNum" disabled />
       </div>
-      <hr />
-      <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="validateFirstName">First Name</label>
-          <input value="@requester.FirstName" type="text" class="form-control"disabled />
-        </div>
-        <div class="form-group col-md-5">
-          <label for="validateLastName">Last Name</label>
-          <input value="@requester.LastName" type="text" class="form-control" disabled />
-        </div>
-        <div class="form-group col-md-2">
-          <label for="middleName">Middle Name</label>
-          <input value="@requester.MiddleName" type="text" class="form-control" id="middleName" disabled />
-        </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="title">Title</label>
+        <input value="@requester.Title" type="text" class="form-control" id="title" disabled />
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="workAddr">Address</label>
-          <input value="@requester.Address" class="form-control" id="workAddr" disabled /> 
-        </div>
-        <div class="form-group col-md-3">
-          <label for="workCity">City</label>
-          <input value="@requester.City" type="text" class="form-control" id="workCity" disabled />
-        </div>
-        <div class="form-group col-md-2">
-          <label for="workState">State</label>
-          <input value="@requester.State" type="text" class="form-control" id="workState" disabled />
-        </div>
-        <div class="form-group col-md-3">
-          <label for="workZip">Zip Code</label>
-          <input value="@requester.Zip" type="text" class="form-control" id="workZip" disabled />
-        </div>
+      <div class="form-group col-md-6">
+        <label for="section">Section</label>
+        <input value="@requester.Section" type="text" class="form-control" id="section" disabled />
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="locationPhoneNum">Employee Location Phone #</label>
-          <input value="@requester.Phone" class="form-control" id="locationPhoneNum" disabled />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="employeeCellNum">Employee Cell Phone #</label>
-          <input value="@requester.CellPhone" class="form-control" id="employeeCellNum" disabled />
-        </div>
+    </div>
+    <hr />
+    <div class="form-row">
+      <div class="form-group col-md-5">
+        <label for="validateFirstName">First Name</label>
+        <input value="@requester.FirstName" type="text" class="form-control" disabled />
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="countyEmail">Email Address</label>
-          <input value="@requester.Email" type="text" class="form-control" id="countyEmail" disabled /> 
-        </div>
+      <div class="form-group col-md-5">
+        <label for="validateLastName">Last Name</label>
+        <input value="@requester.LastName" type="text" class="form-control" disabled />
       </div>
-      <hr />
+      <div class="form-group col-md-2">
+        <label for="middleName">Middle Name</label>
+        <input value="@requester.MiddleName" type="text" class="form-control" id="middleName" disabled />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="workAddr">Address</label>
+        <input value="@requester.Address" class="form-control" id="workAddr" disabled />
+      </div>
+      <div class="form-group col-md-3">
+        <label for="workCity">City</label>
+        <input value="@requester.City" type="text" class="form-control" id="workCity" disabled />
+      </div>
+      <div class="form-group col-md-2">
+        <label for="workState">State</label>
+        <input value="@requester.State" type="text" class="form-control" id="workState" disabled />
+      </div>
+      <div class="form-group col-md-3">
+        <label for="workZip">Zip Code</label>
+        <input value="@requester.Zip" type="text" class="form-control" id="workZip" disabled />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="locationPhoneNum">Employee Location Phone #</label>
+        <input value="@requester.Phone" class="form-control" id="locationPhoneNum" disabled />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="employeeCellNum">Employee Cell Phone #</label>
+        <input value="@requester.CellPhone" class="form-control" id="employeeCellNum" disabled />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-5">
+        <label for="countyEmail">Email Address</label>
+        <input value="@requester.Email" type="text" class="form-control" id="countyEmail" disabled />
+      </div>
+    </div>
     <div class="alert alert-success">
       Step 3 - Request Type
-      <a class ="float-right" href="/NewRequest/RequestType"> Edit </a>
+      <a class="float-right" href="/NewRequest/RequestType"> Edit </a>
     </div>
-    <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
+      <div class="custom-control custom-radio">
+        <input value="1" type="radio" class="custom-control-input" id="newReg" disabled>
+        <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
+        <p> -Initiates first time registrations for new users and systems access. </p>
+      </div>
+      <div class="custom-control custom-radio">
+        <input value="2" type="radio" class="custom-control-input" id="transfer" disabled>
+        <label class="custom-control-label label-edit" for="transfer"> Transfer </label>
+        <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
+      </div>
+      <div class="custom-control custom-radio">
+        <input value="4" type="radio" class="custom-control-input" id="portfolio" disabled>
+        <label class="custom-control-label label-edit" for="portfolio"> Portfolio Assignment </label>
+        <p> -Initiates the update of information for the portfolio. </p>
+      </div>
+      <div class="custom-control custom-radio">
+        <input value="5" type="radio" class="custom-control-input" id="leaving" checked="" disabled>
+        <label class="custom-control-label label-edit" for="leaving"> Leaving Probation </label>
+        <p> -Initiates removal of ALL system(s) access. </p>
+      </div>
+      <div class="custom-control custom-radio">
+        <input value="11" type="radio" class="custom-control-input" id="addAccess" disabled>
+        <label class="custom-control-label label-edit" for="addAccess">Add Access</label>
+        <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
+      </div>
+      <div class="custom-control custom-radio">
+        <input value="12" type="radio" class="custom-control-input" id="removeAccess" disabled>
+        <label class="custom-control-label label-edit" for="removeAccess"> Remove Access </label>
+        <p> -Initiates removal access for individual system(s). </p>
+      </div>
     <div class="alert alert-success">
       Step 4 - Unit Selection
-      <a class ="float-right" href="/Request/SelectUnit"> Edit </a>
+      <a class="float-right" href="/NewRequest/SelectUnit"> Edit </a>
     </div>
     <p> The unit selected is: <i>@systems.First().Unit.Name</i></p>
     <div class="alert alert-success">
-      Step 5 - Systems Associated 
+      Step 5 - Systems Associated
     </div>
     <table class="table table-hover">
       <thead class="table-info">
@@ -126,40 +158,44 @@
         @foreach (var system in systems)
         {
           <tr>
-            <td>@system.System.Name;</td>
-            <td>@system.System.Description;</td>
+            <td>@system.System.Name</td>
+            <td>@system.System.Description</td>
           </tr>
         }
       </tbody>
     </table>
     <div class="alert alert-success">
       Step 6 - Additional Request Information
-      <a class ="float-right" href="/NewRequest/RequestInfo"> Edit </a>
+      <a class="float-right" href="/NewRequest/RequestInfo">Edit</a>
     </div>
-    @{
-      if (request.IsHighProfileAccess)
-      {
-        @Html.Raw("<p> This request requires <i>High Profile Access</i></p>") };
-      if (request.IsGlobalAccess)
-      {
-        @Html.Raw("<p> This request requires <i>Global Access</i></p>") };
-      if (request.IsContractor)
-      {
-        @Html.Raw("<p> This request is made for a <i>contractor</i></p>") };
-      if (request.CaseloadNumber != null)
-      {
-        @Html.Raw("<p> The Case Load number for this request is: <i>") @request.CaseloadNumber @Html.Raw("</i></p>") };
-      if (request.CaseloadFunction != null)
-      {
-        @Html.Raw("<p> The Case Load function for this request is: <i>") @request.CaseloadFunction @Html.Raw("</i></p>") };
-      if (request.CaseloadType != null)
-      {
-        @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
-    }
+    <div class="form-group">
+      <fieldset>
+        <label class="control-label" for="readOnlyInput">Caseload Type</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </fieldset>
+    </div>
+    <div class="form-group">
+      <fieldset>
+        <label class="control-label" for="readOnlyInput">Caseload Function</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </fieldset>
+    </div>
+    <div class="form-group">
+      <fieldset>
+        <label class="control-label" for="readOnlyInput">Caseload Number</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </fieldset>
+    </div>
+    <div class="form-group">
+      <fieldset>
+        <label class="control-label" for="readOnlyInput">Departure Reason</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </fieldset>
+    </div>
 
     <div class="alert alert-success">
       Step 7 - Supervisor's Review
-      <a class ="float-right" href="/NewRequest/Supervisors"> Edit </a>
+      <a class="float-right" href="/NewRequest/Supervisors"> Edit </a>
     </div>
     <p> This request will be reviewed by: <i>@supervisor</i> </p>
     <div style="display:flex;" class="justify-content-center">

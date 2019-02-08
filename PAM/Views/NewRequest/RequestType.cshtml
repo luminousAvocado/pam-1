@@ -18,7 +18,7 @@
     <div class="form-group">
       <p class="text-danger"> You must select a Request Type.</p>
       <div class="custom-control custom-radio">
-        <input asp-for="RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg">
+        <input asp-for="RequestTypeId" value="1" type="radio" class="custom-control-input" id="newReg" checked="">
         <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
         <p> -Initiates first time registrations for new users and systems access. </p>
       </div>
@@ -63,6 +63,9 @@
 </body>
 
 <script>
+  function radioValue() {
+
+  }
   function validateType() {
     if (!validateRadios()) return false;
     else document.getElementById("reqType").submit();
