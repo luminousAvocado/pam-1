@@ -28,9 +28,7 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) RedirectToAction("Self", "Request");
-
-            return View();
+            return User.Identity.IsAuthenticated ? RedirectToAction("Self", "Request") : (IActionResult)View();
         }
 
         [HttpPost]
@@ -68,11 +66,11 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult Welcome(){
+        public IActionResult Welcome()
+        {
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             _logger.LogInformation($"User {User.Identity.Name} logged out at {DateTime.UtcNow}.");

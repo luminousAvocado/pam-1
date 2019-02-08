@@ -5,75 +5,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="~/lib/bootswatch/cerulean/bootstrap.min.css" />
-  <link rel="stylesheet" href="~/lib/bootstrap-4-navbar/bootstrap-4-navbar.css">
   <link rel="stylesheet" href="~/css/styles.css">
+  @RenderSection("StyleSheets", required: false)
   <title>PAM - @ViewData["Title"]</title>
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <img src="~/images/ProbBadge.png" style="width: 90px;  padding-right: 1em;" />
-    <a href="/Account/Welcome" class="navbar-brand" style="color:gold; font-size: 18px;"> Probation <br /> Access <br /> Manager </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <a href="/" class="navbar-brand" style="color:gold;">Probation Access Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navDropDown">
+    <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown active">
-          <a class="nav-link dropdown-toggle" id="navDropDownMenu" data-toggle="dropdown" aria-haspopup="true">Requests</a>
-          <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
-            <li><a class="dropdown-item" href="/Request/Self">Your Requests</a> </li>
-            <li><a class="dropdown-item" href="/Request/ReviewRequests">Review Requests</a> </li>
-            <li><a class="dropdown-item" href="/Request/ProcessRequests">Process Requests</a> </li>
-            <li><a class="dropdown-item" href="/Request/AllRequests">All Requests</a> </li>
-          </ul>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="requestsMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Requests</a>
+          <div class="dropdown-menu" aria-labeledby="requestsMenu">
+            <a class="dropdown-item" href="/Request/Self">Your Requests</a>
+            <a class="dropdown-item" href="/Request/ReviewRequests">Review Requests</a>
+            <a class="dropdown-item" href="/Request/ProcessRequests">Process Requests</a>
+            <a class="dropdown-item" href="/Request/AllRequests">All Requests</a>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="">Users</a>
+          <a class="nav-link " href="#">Users</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Reports</a>
+          <a class="nav-link" href="#">Reports</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">Management</a>
-          <ul class="dropdown-menu" aria-labeledby="navDropDownMenu">
-            <li><a asp-controller="Location" asp-action="Locations" class="dropdown-item">Locations</a> </li>
-            <li><a asp-controller="Bureau" asp-action="Bureaus" class="dropdown-item">Bureaus</a> </li>
-            <li><a asp-controller="Unit" asp-action="SelectUnit" class="dropdown-item">Units</a> </li>
-            <li><a asp-controller="System" asp-action="Systems" class="dropdown-item">Systems</a> </li>
-          </ul>
+          <a class="nav-link dropdown-toggle" href="#" id="organizationMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organization</a>
+          <div class="dropdown-menu" aria-labeledby="navDropDownMenu">
+            <a asp-controller="Location" asp-action="Locations" class="dropdown-item">Locations</a>
+            <a asp-controller="Bureau" asp-action="Bureaus" class="dropdown-item">Bureaus</a>
+            <a asp-controller="Unit" asp-action="SelectUnit" class="dropdown-item">Units</a>
+            <a asp-controller="System" asp-action="Systems" class="dropdown-item">Systems</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
         </li>
       </ul>
-      <form asp-controller="Account" asp-action="Logout" method="post">
-        <span style="color:white; font-size: 18px;"> Welcome, @identity.GetClaim(ClaimTypes.GivenName) </span>
-        <button type="button" data-toggle="modal" data-target=".logoutModal" class="btn btn-secondary" style="margin: 0 30px 0 20px;">Logout</button>
-      </form>
+      <span style="color:white;" class="d-none d-lg-inline">Welcome, @identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)!</span>
     </div>
   </nav>
-  <div class="container-fluid p-5">
-    <div class="row">
-      <div class="col-xl-8 offset-xl-2">
-        <div class="form-container shadow-lg">
-          @RenderBody()
-        </div>
-      </div>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="main-content">
+      @RenderBody()
     </div>
   </div>
-  <p style="text-align:center; color:black;">&copy; Copyright 2018-2019. Los Angeles County. </p>
-  <form asp-controller="Account" asp-action="Logout" method="post">
-    <div class="modal logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-body text-center" style="font-size:18px;"> Are you sure you want to log-off?</div>
-          <div class="modal-footer"><button type="submit" class="btn btn-primary btn-block">Logout</button></div>
-        </div>
-      </div>
-    </div>
-  </form>
+  <!-- Footer -->
+  <footer>&copy; Copyright 2018-2019. Los Angeles County. </footer>
+  <!-- Scripts -->
   <script src="~/lib/jquery/jquery.min.js"></script>
-  <script src="~/lib/popper.js/umd/popper.min.js"></script>
   <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
-  <script src="~/lib/core-js/core.min.js"></script>
-  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-  <script src="~/lib/bootstrap-4-navbar/bootstrap-4-navbar.js"></script>
+  @RenderSection("Scripts", required: false)
 </body>
 </html>
