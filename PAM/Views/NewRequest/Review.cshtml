@@ -17,6 +17,7 @@
     </div>
     <div class="alert alert-success">
       Step 1 - Self or For
+      <a class ="float-right" href="/NewRequest/NewRequest"> Edit </a>
     </div>
     @{
       var requestForName = "";
@@ -26,6 +27,7 @@
     <p>This is a request made for <i>@requestForName</i> </p>
     <div class="alert alert-success">
       Step 2 - Requester(s) Information
+      <a class ="float-right" href="/NewRequest/RequesterInfo"> Edit </a>
     </div>
     <div class="alert alert-info" style="width:40%;">
       Personal Information
@@ -38,6 +40,16 @@
         <div class="form-group col-md-3">
           <label for="countyDeptNum">Dept. #</label>
           <input value="@requester.Department" type="text" class="form-control" id="countyDeptNum" disabled />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="title">Title</label>
+          <input value="@requester.Title" type="text" class="form-control" id="title" disabled />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="section">Section</label>
+          <input value="@requester.Section" type="text" class="form-control" id="section" disabled />
         </div>
       </div>
       <hr />
@@ -90,26 +102,18 @@
         </div>
       </div>
       <hr />
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="title">Title</label>
-          <input value="@requester.Title" type="text" class="form-control" id="title" disabled />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="section">Section</label>
-          <input value="@requester.Section" type="text" class="form-control" id="section" disabled />
-        </div>
-      </div>
     <div class="alert alert-success">
       Step 3 - Request Type
+      <a class ="float-right" href="/NewRequest/RequestType"> Edit </a>
     </div>
     <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
     <div class="alert alert-success">
       Step 4 - Unit Selection
+      <a class ="float-right" href="/Request/SelectUnit"> Edit </a>
     </div>
     <p> The unit selected is: <i>@systems.First().Unit.Name</i></p>
     <div class="alert alert-success">
-      Step 5 - System Selection
+      Step 5 - Systems Associated 
     </div>
     @{
       @Html.Raw("<p> The systems associated with this unit are: ")
@@ -124,6 +128,7 @@
     }
     <div class="alert alert-success">
       Step 6 - Additional Request Information
+      <a class ="float-right" href="/NewRequest/RequestInfo"> Edit </a>
     </div>
     @{
       if (request.IsHighProfileAccess)
@@ -148,6 +153,7 @@
 
     <div class="alert alert-success">
       Step 7 - Supervisor's Review
+      <a class ="float-right" href="/NewRequest/Supervisors"> Edit </a>
     </div>
     <p> This request will be reviewed by: <i>@supervisor</i> </p>
     <div style="display:flex;" class="justify-content-center">

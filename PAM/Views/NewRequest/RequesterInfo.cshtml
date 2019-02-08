@@ -29,6 +29,16 @@
           <input asp-for="Department" type="text" class="form-control" id="countyDeptNum" placeholder="Dept. #">
         </div>
       </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="title">Title</label>
+          <input asp-for="Title" type="text" value="@requester.Title" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="section">Section</label>
+          <input asp-for="Section" type="text" value="@requester.Section" class="form-control">
+        </div>
+      </div>
       <hr />
       <div class="form-row">
         <div class="form-group col-md-5">
@@ -80,16 +90,6 @@
         </div>
       </div>
       <hr />
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="title">Title</label>
-          <input asp-for="Title" type="text" value="@requester.Title" class="form-control">
-        </div>
-        <div class="form-group col-md-6">
-          <label for="section">Section</label>
-          <input asp-for="Section" type="text" value="@requester.Section" class="form-control">
-        </div>
-      </div>
     </div>
     <!--
     <div class="formInformation" id="forInfo">
