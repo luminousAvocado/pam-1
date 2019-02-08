@@ -3,14 +3,15 @@
 @{
     //var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
     //var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
-    //var request = (Request)ViewData["Request"];
-    //var systems = (List<UnitSystem>)ViewData["Systems"];
+    var request = (Request)ViewData["RequestForReview"];
+    //var systems = (List<UnitSystem>)ViewData["SystemsForReview"];
     //var supervisor = ViewData["Supervisor"];
     ViewData["Title"] = "Request For Review";
 }
 
 <body>
   @*<form asp-controller="NewRequest" asp-action="Review" method="post">*@
+  <form>
     <div class="alert alert-warning">
       Please confirm that all information is correct.
     </div>
@@ -22,7 +23,7 @@
       if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
       else { requestForName = requestFor.Name; }
     }*@
-    <p>This is a request made for <i>@*@requestForName*@</i> </p>
+    <p>This is a request made for <i>@request.Name</i> </p>
     <div class="alert alert-success">
       Step 2 - Requester(s) Information
     </div>
@@ -51,7 +52,7 @@
     <div class="alert alert-success">
       Step 3 - Request Type
     </div>
-    <p> This is a request to: <i>@*@request.RequestType.DisplayCode*@</i> </p>
+    <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
     <div class="alert alert-success">
       Step 4 - Unit Selection
     </div>
@@ -73,7 +74,7 @@
     <div class="alert alert-success">
       Step 6 - Additional Request Information
     </div>
-    @*@{
+    @{
       if (request.IsHighProfileAccess)
       {
         @Html.Raw("<p> This request requires <i>High Profile Access</i></p>") };
@@ -92,7 +93,7 @@
       if (request.CaseloadType != null)
       {
         @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
-    }*@
+    }
 
     <div class="alert alert-success">
       Step 7 - Supervisor's Review

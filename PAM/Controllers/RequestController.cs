@@ -13,10 +13,12 @@ namespace PAM.Controllers
     public class RequestController : Controller
     {
         private readonly RequestService _requestService;
+        private readonly OrganizationService _orgService;
 
-        public RequestController(RequestService requestService)
+        public RequestController(RequestService requestService, OrganizationService orgService)
         {
             _requestService = requestService;
+            _orgService = orgService;
         }
 
         [HttpGet]
@@ -43,6 +45,9 @@ namespace PAM.Controllers
         public IActionResult RequestForReview(int reqId)
         {
             Debug.WriteLine("*** ReqId: {0}", reqId);
+
+            ViewData["RequestForReview"] = _requestService.GetRequest(reqId);
+            //ViewData["SystemsForReview"] = _orgService.
 
             return View();
         }
