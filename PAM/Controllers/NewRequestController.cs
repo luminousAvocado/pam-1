@@ -226,6 +226,16 @@ namespace PAM.Controllers
             var req = HttpContext.Session.GetObject<Request>("Request");
             Request Request = _reqService.GetRequest(req.RequestId);
 
+            // Create Review entry
+            Review newReview = new Review
+            {
+                RequestId = req.RequestId,
+                ReviewerId = supervisor.EmployeeId,
+                ReviewerTitle = supervisor.Title,
+                //ReviewOrder =
+            };
+
+
             string receipient = supervisor.Email;
             string emailName = "ReviewRequest";
 

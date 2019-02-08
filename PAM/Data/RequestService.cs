@@ -55,5 +55,12 @@ namespace PAM.Data
             _dbContext.Remove(request);
             _dbContext.SaveChanges();
         }
+
+        public Review SaveReview(Review review)
+        {
+            _dbContext.Add(review);
+            _dbContext.SaveChanges();
+            return review;
+        }
     }
 }
