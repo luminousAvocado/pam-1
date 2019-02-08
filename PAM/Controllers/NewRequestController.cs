@@ -137,14 +137,15 @@ namespace PAM.Controllers
         public IActionResult SelectUnit(int selectedUnit)
         {
             TempData["selectedUnit"] = selectedUnit;
+            HttpContext.Session.SetObject("UnitId", (int)TempData["selectedUnit"]);
+
             return RedirectToAction("SelectSystems");
         }
 
         [HttpGet]
         public IActionResult SelectSystems()
         {
-            var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);
-            HttpContext.Session.SetObject("UnitId", (int)TempData["selectedUnit"]);
+            var systemsList = _orgService.GetRelatedSystems((int)TempData["selectedUnit"]);        
 
             return View(systemsList);
         }

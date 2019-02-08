@@ -29,8 +29,6 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult ReviewRequests(){
-            //-----TODO-----
-            //ViewData["Requests"] = _requestService.GetRequests();
 
             int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
             var requestsForReview = _requestService.GetRequestsForReview(supervisorId);

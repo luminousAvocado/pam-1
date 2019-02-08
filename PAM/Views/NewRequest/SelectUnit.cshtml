@@ -1,4 +1,5 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
   ViewData["Title"] = "Unit Selection";
 }
 
@@ -21,13 +22,13 @@
   <script src="~/lib/jquery/dist/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
   <script>
-      var mytree = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MyTree"]));
+    var mytree = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MyTree"]));
     $('#tree').treeview({
       data: mytree,
       levels: 1,
       onNodeSelected: function (event, node) {
         var unitInput = document.getElementById("selectedUnit");
-        unitInput.value = node.id;
+        unitInput.value = node.id;   
       }
     });
   </script>
