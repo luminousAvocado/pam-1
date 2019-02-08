@@ -253,7 +253,7 @@ namespace PAM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(SystemPortfolio));
+                
             }
             return View(system);
         }
