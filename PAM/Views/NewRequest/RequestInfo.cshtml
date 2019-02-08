@@ -33,30 +33,30 @@
         <label class="custom-control-label" for="globalAccess"> Global Access </label>
       </div>
     </div>
-    <div class="form-group">
-      <fieldset>
+    <div class="form-row">
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Type</label>
-        <input asp-for="CaseloadType" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
-    </div>
-    <div class="form-group">
-      <fieldset>
+        <input asp-for="CaseloadType" value="@Model.CaseloadType"class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </div>
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Function</label>
-        <input asp-for="CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
+        <input asp-for="CaseloadFunction" value="@Model.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </div>
     </div>
-    <div class="form-group">
-      <fieldset>
+    <div class="form-row">
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Number</label>
-        <input asp-for="CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
+        <input asp-for="CaseloadNumber" value="@Model.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </div>
+      <div class="form-group col-xl-6">
+        <label class="control-label" for="readOnlyInput">Old Caseload Number</label>
+        <input asp-for="OldCaseloadNumber" value="@Model.OldCaseloadNumber" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </div>
     </div>
-    <div class="form-group">
-      <fieldset>
+      <div class="form-group">
         <label class="control-label" for="readOnlyInput">Departure Reason</label>
-        <input asp-for="DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
-    </div>
+        <input asp-for="DepartureReason" value="@Model.DepartureReason" class="form-control" id="readOnlyInput" type="text" placeholder="" />
+      </div>
     <button type="submit" class="btn btn-info float-right m-3"> Next </button>
   </form>
   <form asp-controller="NewRequest" asp-action="RequestType" method="get">

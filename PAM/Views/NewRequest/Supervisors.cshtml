@@ -4,19 +4,40 @@
 
 <body onload="javascript: stepIndicate()">
   <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="NewRequest" asp-action="Review" method="get">
+  <form asp-controller="NewRequest" asp-action="Review" method="get" id="supervisorReview">
     <div class="alert alert-info">
       Step 7 - Select the supervisor(s) to review this request.
     </div>
     <div class="autocomplete" style="width:400px;">
       <label>Supervisors</label>
-      <input id="adEmployees" name="supervisor" type="text" placeholder="Supervisor" autocomplete="off" value="">
+      <input id="adEmployees" name="supervisor" class="form-control" type="text" placeholder="Supervisor" autocomplete="off" value="">
     </div>
-    <button type="submit" class="btn btn-primary"> Next </button>
+    <button type="button" class="btn btn-primary" onclick="validateReviewer()"> Next </button>
   </form>
-</body>
-
 <script>
+  function validateReviewer() {
+    if (!validateSupervisor()) return false;
+    else document.getElementById("supervisorReview").submit();
+  }
+
+  function validateSupervisor() {
+    // This function deals with validation of the form fields
+    let valid = true;
+    let y = document.getElementById("adEmployees");
+    // A loop that checks every input field in the current tab:
+    for (let i = 0; i < y.length; i++) {
+      alert(y.length);
+        // If a field is empty...
+        if (y[i].value == "") {
+          // add an "invalid" class to the field:
+          y[i].className += " invalid";
+          // and set the current valid status to false:
+          valid = false;
+      }
+    }
+    return valid;
+  }
   var supervisors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["adEmployees"]));
 </script>
 
+</body>

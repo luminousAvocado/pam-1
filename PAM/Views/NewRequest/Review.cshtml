@@ -168,30 +168,32 @@
       Step 6 - Additional Request Information
       <a class="float-right" href="/NewRequest/RequestInfo">Edit</a>
     </div>
-    <div class="form-group">
-      <fieldset>
+    
+    <div class="form-row">
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Type</label>
-        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
-    </div>
-    <div class="form-group">
-      <fieldset>
+        <input value="@request.CaseloadType" class="form-control" id="readOnlyInput" type="text" disabled/>
+      </div>
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Function</label>
-        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
+        <input value="@request.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" disabled/>
+      </div>
     </div>
-    <div class="form-group">
-      <fieldset>
+    <div class="form-row">
+      <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Number</label>
-        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
+        <input value="@request.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled/>
+      </div>
+      <div class="form-group col-xl-6">
+        <label class="control-label" for="readOnlyInput">Old Caseload Number</label>
+        <input value="@request.OldCaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled/>
+      </div>
     </div>
-    <div class="form-group">
-      <fieldset>
+      <div class="form-group">
         <label class="control-label" for="readOnlyInput">Departure Reason</label>
-        <input class="form-control" id="readOnlyInput" type="text" placeholder="" />
-      </fieldset>
-    </div>
+        <input value="@request.DepartureReason" class="form-control" id="readOnlyInput" type="text" disabled/>
+      </div>
+
 
     <div class="alert alert-success">
       Step 7 - Supervisor's Review

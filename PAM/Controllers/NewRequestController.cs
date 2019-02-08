@@ -162,7 +162,8 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult RequestInfo(){
-            return View();
+            var request = HttpContext.Session.GetObject<Request>("Request");
+            return View(request);
         }
 
         [HttpPost]
