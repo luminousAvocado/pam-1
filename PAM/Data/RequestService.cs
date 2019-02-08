@@ -63,16 +63,14 @@ namespace PAM.Data
             return review;
         }
 
-        public ICollection<Request> GetRequestsForReview(int supervisorId)
+        public ICollection<Review> GetRequestsForReview(int supervisorId)
         {
-            //var relatedRequests = _dbContext.Review.
+            var relatedRequests = _dbContext.Review
+                .Include(x => x.Request)
+                .Where(x => x.ReviewerId == supervisorId)
+                .ToList();
 
-            //var unitAndRelatedSystems = _dbContext.UnitSystems.Include(u => u.System)
-            //                .Include(u => u.Unit)
-            //                .Where(x => x.UnitId == unitId)
-            //                .ToList();
-
-            return null;
+            return relatedRequests;
         }
     }
 }
