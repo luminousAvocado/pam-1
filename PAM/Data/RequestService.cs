@@ -65,7 +65,13 @@ namespace PAM.Data
 
         public ICollection<Request> GetRequestsForReview(int supervisorId)
         {
-            //var relatedRequests = _dbContext.Requests
+            //var relatedRequests = _dbContext.Review.
+
+            //var unitAndRelatedSystems = _dbContext.UnitSystems.Include(u => u.System)
+            //                .Include(u => u.Unit)
+            //                .Where(x => x.UnitId == unitId)
+            //                .ToList();
+
             return null;
         }
     }
