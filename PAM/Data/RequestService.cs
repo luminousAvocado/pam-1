@@ -63,6 +63,12 @@ namespace PAM.Data
             return review;
         }
 
+        public void UpdateReview(Review review)
+        {
+            _dbContext.Update(review);
+            _dbContext.SaveChanges();
+        }
+
         public ICollection<Review> GetRequestsForReview(int supervisorId)
         {
             // Currently this will not include RequestType, so we cant show RequestType name
