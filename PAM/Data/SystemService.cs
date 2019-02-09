@@ -12,7 +12,7 @@ namespace PAM.Data
         private readonly AppDbContext _dbContext;
         private readonly ILogger _logger;
 
-        public SystemService(AppDbContext dbContext, ILogger logger)
+        public SystemService(AppDbContext dbContext, ILogger<SystemService> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
