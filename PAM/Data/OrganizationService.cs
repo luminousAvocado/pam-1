@@ -31,7 +31,8 @@ namespace PAM.Data
         public ICollection<UnitSystem> GetRelatedSystems(int unitId)
         {
             // Returns UnitSystem JOIN System. Systems related to the specific unitId
-            var unitAndRelatedSystems = _dbContext.UnitSystems.Include(u => u.System)
+            var unitAndRelatedSystems = _dbContext.UnitSystems
+                            .Include(u => u.System)
                             .Include(u => u.Unit)
                             .Where(x => x.UnitId == unitId)
                             .ToList();

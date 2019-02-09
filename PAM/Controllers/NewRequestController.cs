@@ -27,13 +27,14 @@ namespace PAM.Controllers
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly RequestService _reqService;
+        private readonly SystemService _sysService;
 
         private IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public NewRequestController(IADService adService, UserService userService,
             AppDbContext context, TreeViewService treeService, IHttpContextAccessor httpContextAccessor, IFluentEmail email, EmailHelper emailHelper,
-            OrganizationService orgService, RequestService reqService)
+            OrganizationService orgService, RequestService reqService, SystemService sysService)
         {
             _adService = adService;
             _dbContext = context;
@@ -44,6 +45,7 @@ namespace PAM.Controllers
             _httpContextAccessor = httpContextAccessor;
             _email = email;
             _emailHelper = emailHelper;
+            _sysService = sysService;
         }
 
         [HttpGet]
@@ -236,6 +238,18 @@ namespace PAM.Controllers
                 //ReviewOrder =
             };
             _reqService.SaveReview(newReview);
+
+            // Create RequestedSystems
+            var systemsList = _orgService.GetRelatedSystems(HttpContext.Session.GetObject<int>("UnitId"));
+            foreach(var system in systemsList)
+            {
+                RequestedSystem newReqSystem = new RequestedSystem
+                {
+                    RequestId = req.RequestId,
+                    SystemId = system.SystemId
+                };
+                _sysService.SaveRequestedSystem(newReqSystem);
+            }
 
             string receipient = supervisor.Email;
             string emailName = "ReviewRequest";
