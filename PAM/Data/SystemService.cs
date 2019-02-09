@@ -24,12 +24,5 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return reqSystem;
         }
-
-        public ICollection<RequestedSystem> GetRequestedSystemsByRequestId(int requestId)
-        {
-            return _dbContext.RequestedSystem
-                .Where(r => r.RequestId == requestId)
-                .ToList();
-        }
     }
 }

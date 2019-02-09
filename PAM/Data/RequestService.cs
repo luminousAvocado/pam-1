@@ -56,6 +56,14 @@ namespace PAM.Data
             _dbContext.SaveChanges();
         }
 
+        public ICollection<Request> GetRequestedSystemsByRequestId(int requestId)
+        {
+            return _dbContext.Requests
+                .Include(x => x.Systems)
+                .Where(x => x.RequestId == requestId)
+                .ToList();
+        }
+
         public Review SaveReview(Review review)
         {
             _dbContext.Add(review);
@@ -72,7 +80,7 @@ namespace PAM.Data
         public ICollection<Review> GetRequestsForReview(int supervisorId)
         {
             // Currently this will not include RequestType, so we cant show RequestType name
-            var relatedRequests = _dbContext.Review
+            var relatedRequests = _dbContext.Reviews
                 .Include(x => x.Request)
                 .Where(x => x.ReviewerId == supervisorId)
                 .ToList();

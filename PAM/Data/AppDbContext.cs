@@ -22,8 +22,8 @@ namespace PAM.Data
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
-        public DbSet<Review> Review { get; set; }
-        public DbSet<RequestedSystem> RequestedSystem { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<RequestedSystem> RequestedSystems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
