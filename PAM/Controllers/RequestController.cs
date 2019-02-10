@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Claims;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
+using PAM.Services;
 
 namespace PAM.Controllers
 {
@@ -14,11 +16,15 @@ namespace PAM.Controllers
     {
         private readonly RequestService _requestService;
         private readonly OrganizationService _orgService;
+        private readonly EmailHelper _emailHelper;
+        private readonly IFluentEmail _email;
 
-        public RequestController(RequestService requestService, OrganizationService orgService)
+        public RequestController(RequestService requestService, OrganizationService orgService, EmailHelper emailHelper, IFluentEmail email)
         {
             _requestService = requestService;
             _orgService = orgService;
+            _emailHelper = emailHelper;
+            _email = email;
         }
 
         [HttpGet]
@@ -67,13 +73,13 @@ namespace PAM.Controllers
                     _requestService.UpdateRequest(request);
                     review.Approve();
                     _requestService.UpdateReview(review);
-                    SendReviewResultEmail(request.RequestedFor.Email);
+                    SendReviewResultEmail(request);
                     break;
                 case "reject":
                     request.RequestStatus = RequestStatus.Denied;
                     _requestService.UpdateRequest(request);
                     review.Deny(comment);
-                    SendReviewResultEmail(request.RequestedFor.Email);
+                    SendReviewResultEmail(request);
                     break;
             }
 
@@ -124,12 +130,12 @@ namespace PAM.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public void SendReviewResultEmail(string requesterEmail)
+        public void SendReviewResultEmail(Request request)
         {
-            string receipient = requesterEmail;
+            string receipient = request.RequestedFor.Email;
             string emailName = "ReviewResult";
 
-            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request };
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, request };
 
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
             _email.To(receipient)
@@ -139,8 +145,6 @@ namespace PAM.Controllers
 
             ViewData["Receipient"] = receipient;
             ViewData["Subject"] = subject;
-
-            return RedirectToAction("Self", "Request");
         }
     }
 }
