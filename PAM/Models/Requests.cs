@@ -99,6 +99,7 @@ namespace PAM.Models
         public string ReviewerTitle { get; set; }
 
         public bool? Approved { get; private set; }
+
         public string Comments { get; private set; }
         public DateTime Timestamp { get; private set; }
 

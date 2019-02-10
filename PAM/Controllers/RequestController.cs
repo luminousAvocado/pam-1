@@ -60,19 +60,23 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequestedSystemsByRequestId((int)TempData["RequestId"]);
             var review = _requestService.GetReviewByRequestId(request.RequestId);
-            Debug.WriteLine("*** SUBMIT VAL:" + submitValue);
-            Debug.WriteLine("*** COM: " + comment);
-
+            
             switch (submitValue)
             {
                 case "approve":
-
+                    request.RequestStatus = RequestStatus.Approved;
+                    _requestService.UpdateRequest(request);
+                    review.Approve();
+                    _requestService.UpdateReview(review);
                     break;
                 case "reject":
+                    request.RequestStatus = RequestStatus.Denied;
+                    _requestService.UpdateRequest(request);
+                    review.Deny(comment);
                     break;
             }
 
-            return View();
+            return View("ReviewRequests");
         }
 
         [HttpGet]
