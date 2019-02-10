@@ -1,11 +1,6 @@
-﻿@*@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor*@
-
-@{
-    //var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
-    //var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
+﻿@{
     var request = (Request)ViewData["RequestForReview"];
     var systems = (ICollection<RequestedSystem>)ViewData["RelatedSystems"];
-    //var supervisor = ViewData["Supervisor"];
     ViewData["Title"] = "Request For Review";
 }
 
@@ -16,7 +11,7 @@
       Please confirm that all information is correct.
     </div>
     <div class="alert alert-success">
-      Step 1 - Self or For
+      Request For
     </div>
     @*@{
       var requestForName = "";
@@ -25,7 +20,7 @@
     }*@
     <p>This is a request made for <i>@request.Name</i> </p>
     <div class="alert alert-success">
-      Step 2 - Requester(s) Information
+      Requester(s) Information
     </div>
     <div class="alert alert-info" style="width:50%;">
       Personal Information
@@ -50,15 +45,15 @@
     </div>
 
     <div class="alert alert-success">
-      Step 3 - Request Type
+      Request Type
     </div>
     <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
     <div class="alert alert-success">
-      Step 4 - Unit Selection
+      Unit Selection
     </div>
     <p> The unit selected is: <i>@*@systems.First().Unit.Name*@</i></p>
     <div class="alert alert-success">
-      Step 5 - System Selection
+      System Selection
     </div>
     @{
       @Html.Raw("<p> The systems associated with this unit are: ")
@@ -72,7 +67,7 @@
       @Html.Raw("</p>")
     }
     <div class="alert alert-success">
-      Step 6 - Additional Request Information
+      Additional Request Information
     </div>
     @{
       if (request.IsHighProfileAccess)
@@ -94,13 +89,9 @@
       {
         @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
     }
-
-    <div class="alert alert-success">
-      Step 7 - Supervisor's Review
-    </div>
-    <p> This request will be reviewed by: <i>@*@supervisor*@</i> </p>
-    <div style="display:flex;" class="justify-content-center">
-      <button type="submit" class="btn btn-primary">Confirm Submit</button>
+    <div style="display:flex;" class="justify-content-around">
+      <button type="submit" class="btn btn-outline-danger" value="reject">Reject</button>
+      <button type="submit" class="btn btn-success" value="approve">Approve</button>
     </div>
   </form>
 </body>
