@@ -61,6 +61,7 @@ namespace PAM.Data
         {
             return _dbContext.Requests
                 .Include(x => x.Systems)
+                    .ThenInclude((RequestedSystem z) => z.System)
                 .Where(x => x.RequestId == requestId)
                 .ToList().FirstOrDefault();
         }

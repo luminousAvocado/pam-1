@@ -55,7 +55,7 @@ namespace PAM.Controllers
             Debug.WriteLine("*** TEST ***");
             foreach(var obj in test.Systems)
             {
-                Debug.WriteLine("ReqId: {0}, SysId: {1}", obj.RequestId, obj.SystemId);
+                Debug.WriteLine("ReqId: {0}, SysId: {1}, SysName: {2}", obj.RequestId, obj.SystemId, obj.System.Name);
             }
 
             return View();
