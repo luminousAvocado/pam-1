@@ -4,7 +4,7 @@
     //var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
     //var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
     var request = (Request)ViewData["RequestForReview"];
-    var systems = (ICollection<System>)ViewData["RelatedSystems"];
+    var systems = (ICollection<RequestedSystem>)ViewData["RelatedSystems"];
     //var supervisor = ViewData["Supervisor"];
     ViewData["Title"] = "Request For Review";
 }
@@ -65,7 +65,7 @@
       foreach (var system in systems)
       {
         @Html.Raw("<i>");
-        @system.Name;
+        @system.System.Name;
         @Html.Raw("</i>");
         @Html.Raw(", ");
       }

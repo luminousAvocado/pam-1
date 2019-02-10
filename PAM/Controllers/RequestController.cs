@@ -44,19 +44,10 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult RequestForReview(int reqId)
         {
-            Debug.WriteLine("*** ReqId: {0}", reqId);
-
             ViewData["RequestForReview"] = _requestService.GetRequest(reqId);
-            //var req = _requestService.GetRequestedSystemsByRequestId(reqId);
-            //var systems = req.Systems;
-            //ViewData["RelatedSystems"] = systems.
-
-            var test = _requestService.GetRequestedSystemsByRequestId(reqId);
-            Debug.WriteLine("*** TEST ***");
-            foreach(var obj in test.Systems)
-            {
-                Debug.WriteLine("ReqId: {0}, SysId: {1}, SysName: {2}", obj.RequestId, obj.SystemId, obj.System.Name);
-            }
+            var req = _requestService.GetRequestedSystemsByRequestId(reqId);
+            var requestedSystems = req.Systems;
+            ViewData["RelatedSystems"] = requestedSystems;
 
             return View();
         }
