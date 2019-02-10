@@ -67,11 +67,13 @@ namespace PAM.Controllers
                     _requestService.UpdateRequest(request);
                     review.Approve();
                     _requestService.UpdateReview(review);
+                    SendReviewResultEmail(request.RequestedFor.Email);
                     break;
                 case "reject":
                     request.RequestStatus = RequestStatus.Denied;
                     _requestService.UpdateRequest(request);
                     review.Deny(comment);
+                    SendReviewResultEmail(request.RequestedFor.Email);
                     break;
             }
 
@@ -120,6 +122,25 @@ namespace PAM.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        } 
+        }
+
+        public void SendReviewResultEmail(string requesterEmail)
+        {
+            string receipient = requesterEmail;
+            string emailName = "ReviewResult";
+
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request };
+
+            string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+            _email.To(receipient)
+                .Subject(subject)
+                .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                .SendAsync();
+
+            ViewData["Receipient"] = receipient;
+            ViewData["Subject"] = subject;
+
+            return RedirectToAction("Self", "Request");
+        }
     }
 }
