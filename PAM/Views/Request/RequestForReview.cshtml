@@ -4,7 +4,7 @@
     //var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
     //var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
     var request = (Request)ViewData["RequestForReview"];
-    //var systems = (List<UnitSystem>)ViewData["SystemsForReview"];
+    var systems = (ICollection<System>)ViewData["RelatedSystems"];
     //var supervisor = ViewData["Supervisor"];
     ViewData["Title"] = "Request For Review";
 }
@@ -60,17 +60,17 @@
     <div class="alert alert-success">
       Step 5 - System Selection
     </div>
-    @*@{
+    @{
       @Html.Raw("<p> The systems associated with this unit are: ")
       foreach (var system in systems)
       {
         @Html.Raw("<i>");
-        @system.System.Name;
+        @system.Name;
         @Html.Raw("</i>");
         @Html.Raw(", ");
       }
       @Html.Raw("</p>")
-    }*@
+    }
     <div class="alert alert-success">
       Step 6 - Additional Request Information
     </div>

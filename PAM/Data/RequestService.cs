@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -56,12 +57,12 @@ namespace PAM.Data
             _dbContext.SaveChanges();
         }
 
-        public ICollection<Request> GetRequestedSystemsByRequestId(int requestId)
+        public Request GetRequestedSystemsByRequestId(int requestId)
         {
             return _dbContext.Requests
                 .Include(x => x.Systems)
                 .Where(x => x.RequestId == requestId)
-                .ToList();
+                .ToList().FirstOrDefault();
         }
 
         public Review SaveReview(Review review)

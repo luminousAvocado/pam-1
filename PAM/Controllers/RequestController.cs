@@ -47,7 +47,16 @@ namespace PAM.Controllers
             Debug.WriteLine("*** ReqId: {0}", reqId);
 
             ViewData["RequestForReview"] = _requestService.GetRequest(reqId);
-            //ViewData["SystemsForReview"] = _orgService.
+            //var req = _requestService.GetRequestedSystemsByRequestId(reqId);
+            //var systems = req.Systems;
+            //ViewData["RelatedSystems"] = systems.
+
+            var test = _requestService.GetRequestedSystemsByRequestId(reqId);
+            Debug.WriteLine("*** TEST ***");
+            foreach(var obj in test.Systems)
+            {
+                Debug.WriteLine("ReqId: {0}, SysId: {1}", obj.RequestId, obj.SystemId);
+            }
 
             return View();
         }
