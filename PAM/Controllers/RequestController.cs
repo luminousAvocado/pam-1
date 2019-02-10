@@ -130,12 +130,12 @@ namespace PAM.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public void SendReviewResultEmail(Request request)
+        public void SendReviewResultEmail(Request Request)
         {
-            string receipient = request.RequestedFor.Email;
+            string receipient = Request.RequestedFor.Email;
             string emailName = "ReviewResult";
 
-            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, request };
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request };
 
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
             _email.To(receipient)
