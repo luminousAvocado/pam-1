@@ -44,10 +44,22 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult RequestForReview(int reqId)
         {
-            ViewData["RequestForReview"] = _requestService.GetRequest(reqId);
-            var req = _requestService.GetRequestedSystemsByRequestId(reqId);
-            var requestedSystems = req.Systems;
+            var request = _requestService.GetRequestedSystemsByRequestId(reqId);
+            TempData["RequestId"] = reqId;
+            ViewData["RequestForReview"] = request;
+            var requestedSystems = request.Systems;
             ViewData["RelatedSystems"] = requestedSystems;
+            //List<RequestedSystem> tempReqSys = (List<RequestedSystem>)requestedSystems;
+            //ViewData["Unit"] = _orgService.GetUnitSystemBySystemId(tempSystem.)
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RequestForReview(string submitValue, string comment)
+        {
+            Debug.WriteLine("*** SUBMIT VAL:" + submitValue);
+            Debug.WriteLine("*** COM: " + comment);
 
             return View();
         }

@@ -39,5 +39,12 @@ namespace PAM.Data
 
             return unitAndRelatedSystems;
         }
+
+        public UnitSystem GetUnitSystemBySystemId(int systemId)
+        {
+            return _dbContext.UnitSystems
+                .Where(u => u.SystemId == systemId)
+                .ToList().FirstOrDefault();
+        }
     }
 }

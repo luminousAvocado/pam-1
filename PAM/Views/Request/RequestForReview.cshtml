@@ -5,10 +5,9 @@
 }
 
 <body>
-  @*<form asp-controller="NewRequest" asp-action="Review" method="post">*@
-  <form>
+  <form asp-controller="Request" asp-action="RequestForReview" method="post">
     <div class="alert alert-warning">
-      Please confirm that all information is correct.
+      Please review this request.
     </div>
     <div class="alert alert-success">
       Request For
@@ -89,9 +88,13 @@
       {
         @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
     }
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea name="comment" class="form-control" rows="5" id="comment"></textarea>
+    </div>
     <div style="display:flex;" class="justify-content-around">
-      <button type="submit" class="btn btn-outline-danger" value="reject">Reject</button>
-      <button type="submit" class="btn btn-success" value="approve">Approve</button>
+      <button type="submit" name="submitValue" class="btn btn-success" value="approve">Approve</button>
+      <button type="submit" name="submitValue" class="btn btn-outline-danger" value="reject">Reject</button>
     </div>
   </form>
 </body>
