@@ -58,8 +58,19 @@ namespace PAM.Controllers
         [HttpPost]
         public IActionResult RequestForReview(string submitValue, string comment)
         {
+            var request = _requestService.GetRequestedSystemsByRequestId((int)TempData["RequestId"]);
+            var review = _requestService.GetReviewByRequestId(request.RequestId);
             Debug.WriteLine("*** SUBMIT VAL:" + submitValue);
             Debug.WriteLine("*** COM: " + comment);
+
+            switch (submitValue)
+            {
+                case "approve":
+
+                    break;
+                case "reject":
+                    break;
+            }
 
             return View();
         }

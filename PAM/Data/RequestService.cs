@@ -68,6 +68,13 @@ namespace PAM.Data
                 .ToList().FirstOrDefault();
         }
 
+        public Review GetReviewByRequestId(int reqId)
+        {
+            return _dbContext.Reviews
+                 .Where(review => review.RequestId == reqId)
+                 .ToList().FirstOrDefault();
+        }
+
         public Review SaveReview(Review review)
         {
             _dbContext.Add(review);
