@@ -32,7 +32,6 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult ReviewRequests()
         {
-
             int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
             var requestsForReview = _requestService.GetRequestsForReview(supervisorId);
 
@@ -76,7 +75,7 @@ namespace PAM.Controllers
                     break;
             }
 
-            return View("ReviewRequests");
+            return RedirectToAction("ReviewRequests");
         }
 
         [HttpGet]
