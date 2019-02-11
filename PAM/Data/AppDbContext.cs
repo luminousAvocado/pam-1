@@ -22,6 +22,8 @@ namespace PAM.Data
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<RequestedSystem> RequestedSystems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,9 +55,9 @@ namespace PAM.Data
             {
                 EmployeeId = 1,
                 Username = _configuration.GetSection("Presets")["AdminUser"],
-                Name = "PAM Admin",
-                Email = "admin@localhost.localdomain",
-                FirstName = "BLAM",
+                Name = "Pam Admin (e111111)",
+                Email = "pam@localhost.localdomain",
+                FirstName = "Pam",
                 LastName = "Admin",
                 IsAdmin = true
             });

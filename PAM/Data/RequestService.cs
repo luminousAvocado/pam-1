@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,14 @@ namespace PAM.Data
             _logger = logger;
         }
 
-        public ICollection<Request> GetRequests(string username)
+        public Request GetRequest(int id){
+            return _dbContext.Requests
+                .Include(r => r.RequestType)
+                .Include(r => r.RequestedFor)
+                .Where(r => r.RequestId.Equals(id)).FirstOrDefault();
+        }
+
+        public ICollection<Request> GetRequestsByUsername(string username)
         {
             return _dbContext.Requests
                 .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
@@ -25,10 +33,70 @@ namespace PAM.Data
                 .ToList();
         }
 
+        public ICollection<Request> GetRequests(){
+            return _dbContext.Requests
+                .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
+                .ToList();
+        } 
+
+        public Request SaveRequest(Request request)
+        {
+            if (request.RequestId == 0) _dbContext.Add(request);
+            _dbContext.SaveChanges();
+            return request;
+        }
+
+        public void UpdateRequest (Request request){
+            _dbContext.Update(request);
+            _dbContext.SaveChanges();
+        }
+
         public void RemoveRequest(Request request)
         {
             _dbContext.Remove(request);
             _dbContext.SaveChanges();
+        }
+
+        public Request GetRequestedSystemsByRequestId(int requestId)
+        {
+            return _dbContext.Requests
+                .Include(x => x.Systems)
+                    .ThenInclude((RequestedSystem z) => z.System)
+                .Include(x => x.RequestType)
+                .Include(x => x.RequestedFor)
+                .Where(x => x.RequestId == requestId)
+                .ToList().FirstOrDefault();
+        }
+
+        public Review GetReviewByRequestId(int reqId)
+        {
+            return _dbContext.Reviews
+                 .Where(review => review.RequestId == reqId)
+                 .ToList().FirstOrDefault();
+        }
+
+        public Review SaveReview(Review review)
+        {
+            _dbContext.Add(review);
+            _dbContext.SaveChanges();
+            return review;
+        }
+
+        public void UpdateReview(Review review)
+        {
+            _dbContext.Update(review);
+            _dbContext.SaveChanges();
+        }
+
+        public ICollection<Review> GetRequestsForReview(int supervisorId)
+        {
+            // Currently this will not include RequestType, so we cant show RequestType name
+            var relatedRequests = _dbContext.Reviews
+                .Include(x => x.Request)
+                .Where(x => x.ReviewerId == supervisorId)
+                .ToList();
+
+            return relatedRequests;
         }
     }
 }

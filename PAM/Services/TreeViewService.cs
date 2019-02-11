@@ -43,6 +43,7 @@ namespace PAM.Services
                     id = bureau.BureauId,
                     type = "Bureau",
                     text = bureau.Description,
+                    selectable = false,
                     nodes = new List<TreeViewNode>()
                 };
                 bureauList.Add(temp);
@@ -68,7 +69,8 @@ namespace PAM.Services
                         {
                             id = unit.UnitId,
                             type = "Unit",
-                            text = unit.Name
+                            text = unit.Name,
+                            selectable = true
                         };
                         parent.nodes.Add(temp);
                         unitDictionary.Add(temp.id, temp);
@@ -82,6 +84,7 @@ namespace PAM.Services
                             id = unit.UnitId,
                             type = "Unit",
                             text = unit.Name,
+                            selectable = true
                         };
                         if(parent.nodes != null)
                         {
@@ -91,6 +94,7 @@ namespace PAM.Services
                         {
                             parent.nodes = new List<TreeViewNode>();
                             parent.nodes.Add(temp);
+                            parent.selectable = false;
                         }
                         unitDictionary.Add(temp.id, temp);
                         unitList.Remove(unit);
@@ -107,6 +111,7 @@ namespace PAM.Services
         public string type { get; set; }
         public string text { get; set; }
         public List<TreeViewNode> nodes { get; set; }
+        public bool selectable { get; set; }
     }
 
 

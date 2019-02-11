@@ -1,5 +1,6 @@
 ﻿using FluentEmail.Core;
 using Microsoft.AspNetCore.Mvc;
+using PAM.Data;
 using PAM.Services;
 
 namespace PAM.Controllers
@@ -8,11 +9,13 @@ namespace PAM.Controllers
     {
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
+        private readonly UserService _userService;
 
-        public EmailController(IFluentEmail email, EmailHelper emailHelper)
+        public EmailController(IFluentEmail email, EmailHelper emailHelper, UserService userService)
         {
             _email = email;
             _emailHelper = emailHelper;
+            _userService = userService;
         }
 
         public IActionResult Test()

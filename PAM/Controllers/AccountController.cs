@@ -42,7 +42,7 @@ namespace PAM.Controllers
                     Message = "Authentication Failed"
                 });
 
-            Employee employee = _adService.GetEmployee(username);
+            Employee employee = _adService.GetEmployeeByUsername(username);
             Employee user = _userService.GetEmployee(username);
             if (user != null)
             {
@@ -63,8 +63,13 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
+            //return RedirectToAction("Self", "Request");
+            return RedirectToAction("Welcome");
+        }
 
-            return RedirectToAction("Self", "Request");
+        [HttpGet]
+        public IActionResult Welcome(){
+            return View();
         }
 
         [HttpPost]

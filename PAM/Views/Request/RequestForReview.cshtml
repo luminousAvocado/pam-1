@@ -1,64 +1,58 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
-@{
-    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
-    var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
-    var request = (Request)ViewData["Request"];
-    var systems = (List<UnitSystem>)ViewData["Systems"];
-    var supervisor = ViewData["Supervisor"];
-    ViewData["Title"] = "Review";
+﻿@{
+    var request = (Request)ViewData["RequestForReview"];
+    var systems = (ICollection<RequestedSystem>)ViewData["RelatedSystems"];
+    ViewData["Title"] = "Request For Review";
 }
 
-<body onload="javascript: stepIndicate()">
-  <partial name="../Shared/_ProgressBar.cshtml" />
-  <form asp-controller="NewRequest" asp-action="Review" method="post">
+<body>
+  <form asp-controller="Request" asp-action="RequestForReview" method="post">
     <div class="alert alert-warning">
-      Please confirm that all information is correct.
+      Please review this request.
     </div>
     <div class="alert alert-success">
-      Step 1 - Self or For
+      Request For
     </div>
-    @{
+    @*@{
       var requestForName = "";
       if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
       else { requestForName = requestFor.Name; }
-    }
-    <p>This is a request made for <i>@requestForName</i> </p>
+    }*@
+    <p>This is a request made for <i>@request.Name</i> </p>
     <div class="alert alert-success">
-      Step 2 - Requester(s) Information
+      Requester(s) Information
     </div>
     <div class="alert alert-info" style="width:50%;">
       Personal Information
     </div>
     <div class="row">
       <div class="col-3">
-        <p>First Name: <i>@requester.FirstName</i></p>
+        <p>First Name: <i>@*@requester.FirstName*@</i></p>
       </div>
       <div class="col-3">
-        <p>Last Name: <i>@requester.LastName</i></p>
+        <p>Last Name: <i>@*@requester.LastName*@</i></p>
       </div>
     </div>
-    <p>Address: <i>@requester.Address</i></p>
-    <p>City: <i>@requester.City</i></p>
+    <p>Address: <i>@*@requester.Address*@</i></p>
+    <p>City: <i>@*@requester.City*@</i></p>
     <div class="row">
       <div class="col-3">
-        <p>State: <i>@requester.State</i></p>
+        <p>State: <i>@*@requester.State*@</i></p>
       </div>
       <div class="col-3">
-        <p>ZipCode: <i>@requester.Zip</i></p>
+        <p>ZipCode: <i>@*@requester.Zip*@</i></p>
       </div>
     </div>
 
     <div class="alert alert-success">
-      Step 3 - Request Type
+      Request Type
     </div>
     <p> This is a request to: <i>@request.RequestType.DisplayCode</i> </p>
     <div class="alert alert-success">
-      Step 4 - Unit Selection
+      Unit Selection
     </div>
-    <p> The unit selected is: <i>@systems.First().Unit.Name</i></p>
+    <p> The unit selected is: <i>@*@systems.First().Unit.Name*@</i></p>
     <div class="alert alert-success">
-      Step 5 - System Selection
+      System Selection
     </div>
     @{
       @Html.Raw("<p> The systems associated with this unit are: ")
@@ -72,7 +66,7 @@
       @Html.Raw("</p>")
     }
     <div class="alert alert-success">
-      Step 6 - Additional Request Information
+      Additional Request Information
     </div>
     @{
       if (request.IsHighProfileAccess)
@@ -94,13 +88,13 @@
       {
         @Html.Raw("<p> The Case Load Type for this request is: <i>") @request.CaseloadType @Html.Raw("</i></p>") };
     }
-
-    <div class="alert alert-success">
-      Step 7 - Supervisor's Review
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea name="comment" class="form-control" rows="5" id="comment"></textarea>
     </div>
-    <p> This request will be reviewed by: <i>@supervisor</i> </p>
-    <div style="display:flex;" class="justify-content-center">
-      <button type="submit" class="btn btn-primary">Confirm Submit</button>
+    <div style="display:flex;" class="justify-content-around">
+      <button type="submit" name="submitValue" class="btn btn-success" value="approve">Approve</button>
+      <button type="submit" name="submitValue" class="btn btn-outline-danger" value="reject">Reject</button>
     </div>
   </form>
 </body>
