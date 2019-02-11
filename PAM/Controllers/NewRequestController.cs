@@ -220,7 +220,7 @@ namespace PAM.Controllers
             _reqService.UpdateRequest(update);
 
             // Consider making a SendEmail() method that basically does what EmailApprover does and just call in here
-            // Ask Dr. Sun about this, pretty sure its gonna be SendEmail(0
+            // Ask Dr. Sun about this, pretty sure its gonna be SendEmail()
 
             return RedirectToAction("EmailApprover", "NewRequest"); 
         }
