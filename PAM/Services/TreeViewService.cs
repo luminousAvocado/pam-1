@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
@@ -11,108 +7,93 @@ namespace PAM.Services
 {
     public class TreeViewService
     {
-        private readonly OrganizationService _orgService;
-        private List<TreeViewNode> MyTree = new List<TreeViewNode>();
-        private Dictionary<int, TreeViewNode> bureauDictionary = new Dictionary<int, TreeViewNode>();
-        private Dictionary<int, TreeViewNode> unitDictionary = new Dictionary<int, TreeViewNode>();
+        private readonly OrganizationService _organizationService;
 
-        public TreeViewService(OrganizationService orgService)
+
+        public TreeViewService(OrganizationService organizationService)
         {
-            _orgService = orgService;
+            _organizationService = organizationService;
         }
 
         public List<TreeViewNode> GenerateTree()
         {
-            var bureauList = _orgService.GetBureaus();
-            var unitList = _orgService.GetUnits();
+            List<TreeViewNode> tree = new List<TreeViewNode>();
+            Dictionary<string, TreeViewNode> nodeDictionary = new Dictionary<string, TreeViewNode>();
+            var bureauList = _organizationService.GetBureaus();
+            var unitList = _organizationService.GetUnits();
 
-            MyTree = CreateBureaus(bureauList);
-            CreateUnits(unitList);
-
-            return MyTree;
-        }
-
-        public List<TreeViewNode> CreateBureaus(ICollection<Bureau> list)
-        {
-            List<TreeViewNode> bureauList = new List<TreeViewNode>();
-
-            foreach(Bureau bureau in list)
+            foreach (var bureau in bureauList)
             {
-                TreeViewNode temp = new TreeViewNode
-                {
-                    id = bureau.BureauId,
-                    type = "Bureau",
-                    text = bureau.Description,
-                    selectable = false,
-                    nodes = new List<TreeViewNode>()
-                };
-                bureauList.Add(temp);
-                bureauDictionary.Add(temp.id, temp);
-            }            
-            return bureauList;
-        }
-
-        public int CreateUnits(ICollection<Unit> unitList)
-        {
-            if(unitList.Count == 0)
-            {
-                return 1;
+                var node = new TreeViewNode(bureau);
+                tree.Add(node);
+                nodeDictionary.Add("b" + node.id, node);
             }
-            else
+
+            int unitsProcessed = 0;
+            while (unitsProcessed < unitList.Count)
             {
-                foreach (Unit unit in unitList.ToList())
+                foreach (var unit in unitList)
                 {
+                    if (unit.UnitId < 0) continue;
                     if (unit.ParentId == null)
                     {
-                        TreeViewNode parent = bureauDictionary[unit.BureauId];
-                        TreeViewNode temp = new TreeViewNode
-                        {
-                            id = unit.UnitId,
-                            type = "Unit",
-                            text = unit.Name,
-                            selectable = true
-                        };
-                        parent.nodes.Add(temp);
-                        unitDictionary.Add(temp.id, temp);
-                        unitList.Remove(unit);
+                        var node = new TreeViewNode(unit);
+                        nodeDictionary["b" + unit.BureauId].nodes.Add(node);
+                        nodeDictionary.Add("u" + node.id, node);
+                        unit.UnitId = -1;
+                        ++unitsProcessed;
                     }
-                    else if (unitDictionary.ContainsKey((int)unit.ParentId))
+                    else
                     {
-                        TreeViewNode parent = unitDictionary[(int)unit.ParentId];
-                        TreeViewNode temp = new TreeViewNode
+                        var parentKey = "u" + unit.ParentId;
+                        if (nodeDictionary.ContainsKey(parentKey))
                         {
-                            id = unit.UnitId,
-                            type = "Unit",
-                            text = unit.Name,
-                            selectable = true
-                        };
-                        if(parent.nodes != null)
-                        {
-                            parent.nodes.Add(temp);
-                        }
-                        else
-                        {
-                            parent.nodes = new List<TreeViewNode>();
-                            parent.nodes.Add(temp);
+                            var node = new TreeViewNode(unit);
+                            var parent = nodeDictionary[parentKey];
+                            parent.nodes.Add(node);
                             parent.selectable = false;
+                            nodeDictionary.Add("u" + node.id, node);
+                            unit.UnitId = -1;
+                            ++unitsProcessed;
                         }
-                        unitDictionary.Add(temp.id, temp);
-                        unitList.Remove(unit);
                     }
                 }
-                return CreateUnits(unitList);
             }
+
+            return tree;
+        }
+
+        public string GenerateTreeInJson()
+        {
+            return JsonConvert.SerializeObject(GenerateTree());
         }
     }
+
 
     public class TreeViewNode
     {
         public int id { get; set; }
         public string type { get; set; }
         public string text { get; set; }
-        public List<TreeViewNode> nodes { get; set; }
         public bool selectable { get; set; }
+        public List<TreeViewNode> nodes { get; set; }
+
+        public TreeViewNode(Bureau bureau)
+        {
+            id = bureau.BureauId;
+            type = "Bureau";
+            text = $"{bureau.Description} ({bureau.Code})";
+            selectable = false;
+            nodes = new List<TreeViewNode>();
+        }
+
+        public TreeViewNode(Unit unit)
+        {
+            id = unit.UnitId;
+            type = "Unit";
+            text = unit.Name;
+            selectable = true;
+            nodes = new List<TreeViewNode>();
+        }
     }
-
-
 }

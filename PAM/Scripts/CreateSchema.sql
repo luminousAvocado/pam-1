@@ -28,7 +28,6 @@ CREATE TABLE [Employees] (
     [Email] nvarchar(450) NOT NULL,
     [Title] nvarchar(max) NULL,
     [Department] nvarchar(max) NULL,
-    [Section] nvarchar(max) NULL,
     [Service] nvarchar(max) NULL,
     [Address] nvarchar(max) NULL,
     [City] nvarchar(max) NULL,
@@ -63,7 +62,9 @@ CREATE TABLE [RequestTypes] (
     [RequestTypeId] int NOT NULL IDENTITY,
     [Code] nvarchar(max) NOT NULL,
     [DisplayCode] nvarchar(max) NOT NULL,
+    [DisplayOrder] int NULL,
     [Description] nvarchar(max) NULL,
+    [Enabled] bit NOT NULL,
     CONSTRAINT [PK_RequestTypes] PRIMARY KEY ([RequestTypeId])
 );
 
@@ -130,7 +131,6 @@ CREATE TABLE [Requesters] (
     [UnitId] int NULL,
     [Title] nvarchar(max) NULL,
     [Department] nvarchar(max) NULL,
-    [Section] nvarchar(max) NULL,
     [Service] nvarchar(max) NULL,
     [Address] nvarchar(max) NULL,
     [City] nvarchar(max) NULL,
@@ -164,18 +164,21 @@ CREATE TABLE [Requests] (
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
     [RequestStatus] nvarchar(max) NOT NULL,
-    [SubmittedOn] datetime2 NOT NULL,
+    [CreatedOn] datetime2 NULL,
+    [SubmittedOn] datetime2 NULL,
+    [CompletedOn] datetime2 NULL,
     [IsContractor] bit NOT NULL,
     [IsHighProfileAccess] bit NOT NULL,
     [IsGlobalAccess] bit NOT NULL,
-    [CaseloadType] nvarchar(max) NOT NULL,
-    [CaseloadFunction] nvarchar(max) NOT NULL,
+    [CaseloadType] nvarchar(max) NULL,
+    [CaseloadFunction] nvarchar(max) NULL,
     [CaseloadNumber] nvarchar(max) NULL,
     [OldCaseloadNumber] nvarchar(max) NULL,
     [TransferredFromUnitId] int NULL,
-    [DepartureReason] nvarchar(max) NOT NULL,
+    [DepartureReason] nvarchar(max) NULL,
     [IpAddress] nvarchar(max) NULL,
     [Notes] nvarchar(max) NULL,
+    [Deleted] bit NOT NULL,
     CONSTRAINT [PK_Requests] PRIMARY KEY ([RequestId]),
     CONSTRAINT [FK_Requests_RequestTypes_RequestTypeId] FOREIGN KEY ([RequestTypeId]) REFERENCES [RequestTypes] ([RequestTypeId]) ON DELETE CASCADE,
     CONSTRAINT [FK_Requests_Requesters_RequestedById] FOREIGN KEY ([RequestedById]) REFERENCES [Requesters] ([RequesterId]) ON DELETE NO ACTION,
@@ -191,9 +194,9 @@ CREATE TABLE [RequestedSystems] (
     [InPortfolio] bit NOT NULL,
     [RemoveAccess] bit NOT NULL,
     [ProcessedById] int NULL,
-    [ProcessedOn] datetime2 NOT NULL,
+    [ProcessedOn] datetime2 NULL,
     [ConfirmedById] int NULL,
-    [ConfirmedOn] datetime2 NOT NULL,
+    [ConfirmedOn] datetime2 NULL,
     CONSTRAINT [PK_RequestedSystems] PRIMARY KEY ([RequestId], [SystemId]),
     CONSTRAINT [FK_RequestedSystems_Employees_ConfirmedById] FOREIGN KEY ([ConfirmedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_RequestedSystems_Employees_ProcessedById] FOREIGN KEY ([ProcessedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
@@ -233,11 +236,11 @@ CREATE TABLE [SystemAccesses] (
 
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Section', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] ON;
-INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [MiddleName], [Name], [Phone], [Section], [Service], [State], [SupervisorName], [Title], [Username], [Zip])
-VALUES (1, NULL, NULL, NULL, NULL, N'admin@localhost.localdomain', N'BLAM', 1, 0, 0, N'Admin', NULL, N'PAM Admin', NULL, NULL, NULL, NULL, NULL, NULL, N'e111111', NULL);
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Section', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
+INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [IsProcessor], [LastName], [MiddleName], [Name], [Phone], [Service], [State], [SupervisorName], [Title], [Username], [Zip])
+VALUES (1, NULL, NULL, NULL, NULL, N'pam@localhost.localdomain', N'Pam', 1, 0, 0, N'Admin', NULL, N'Pam Admin (e111111)', NULL, NULL, NULL, NULL, NULL, N'e111111', NULL);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'IsProcessor', N'LastName', N'MiddleName', N'Name', N'Phone', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] OFF;
 
 GO
@@ -315,7 +318,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190204162518_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190211070024_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

@@ -1,10 +1,11 @@
-﻿body {
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    min-height: 100vh;
-    background: linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
-    background: -webkit-linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
+﻿/*
+body {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+  background: linear-gradient(to right, #E4E5E6 0%, #19547b 50%, #E4E5E6 100%);
+  background: -webkit-linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
 }
 input[type=radio] + label:before{
     border: 1px solid #777;
@@ -19,92 +20,20 @@ label {
 }
 i{
 background-color: yellow;
-}
-/*----------------------------------------------------------
-    [ Background for Login ]
-*/
-.bg-display {
-    background-image: url("../Images/losangeles.jpg");
-    width: 100%;
-    min-height: 100vh;
-    justify-content: flex-end;
-    display:flex;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: relative;
-    z-index: 1;
-}
+} */
 
-
-
-/*----------------------------------------------------------
-    [ Login Container & Contents ]
-*/
-.login-container{
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  color:white;
-  padding: 15px;
-  position: relative;
-  z-index: 1;
-}
-
-.login-form{
-  width: 500px;
-  border-radius: 10px;
-  overflow: hidden;
-  padding: 55px 55px 10px 55px;
-  background: linear-gradient(to bottom, #434343 0%, #000000 100%);
-  background: -webkit-linear-gradient(to bottom, #434343 0%, #000000 100%);
-}
-
-.logo img {
-  display: block;
-  margin: 0 auto;
-}
-
-.login-title {
-  font-size: 28px;
-  text-align: center;
-  display: block;
-  padding-bottom: 5%;
-}
-
-.input-container{
-  width: 100%;
-  position: relative;
-  color:white;
-  border-bottom: 2px solid rgba(255,255,255, 1.0);
-  margin-bottom: 30px;
-}
-
-.input-edit{
-  border:none;
-  outline:none;
-  font-size: 16px;
-  color: white;
-  width: 100%;
-  height: 45px;
-  background: transparent;
-  padding: 0 5px 0 5px;
-}
-
-.input-edit::placeholder {
-  color:white;
-}
 /*----------------------------------------------------------
     [ Main Content Styling ]
 */
 
 .main-content {
-  margin-top: 2em;
+  margin: 1em;
 }
 
+footer {
+  text-align: center;
+}
+/*
 .content-container {
     margin: 25px;
     display: flex;
@@ -143,80 +72,12 @@ input.invalid {
     background-color: #ffdddd;
 }
 
-footer {
-  text-align: center;
-  color: white;
-}
+
+
+*/
 /*----------------------------------------------------------
     [ Progress Bar CSS ]
 */
-
-.progressbar-container{
-    width: 100%;
-    margin:auto;
-}
-
-.progressbar {
-    display:flex;
-    position: relative;
-    margin: 0;
-    counter-reset: step;
-    z-index: 1;
-}
-    .progressbar li{
-        list-style-type: none;
-        width: 12.5%;
-        float: left;
-        font-size: 12px;
-        position: relative;
-        text-align: center;
-        text-transform: uppercase;
-        color: #000;
-    }
-        /*CSS for Progress Bar Circles*/
-        .progressbar li:before {
-            position:relative;
-            width: 25px;
-            height: 25px;
-            content: counter(step);
-            counter-increment: step;
-            line-height: 25px;
-            border: 2px solid #7d7d7d;
-            display: block;
-            text-align: center;
-            margin: 0 auto 10px auto;
-            border-radius: 50%;
-            background-color: white;
-            z-index: 1;
-        }
-        /*CSS for Progress Bar Lines*/
-        .progressbar li:after {
-            width: 100%;
-            height: 3px;
-            content: '';
-            position: absolute;
-            background-color: #7d7d7d;
-            transition: width 1s ease-in;
-            top: 12px;
-            left: -50%;
-            z-index: 0;
-        }
-
-        .progressbar li:first-child:after {
-            content: none;
-        }
-
-        .progressbar li.active {
-            color: green;
-        }
-
-            .progressbar li.active:before, .progressbar li.active:after {
-                border-color: #55b776;
-            }
-
-            .progressbar li.active + li:after {
-                background-color: #55b776;
-            }
 
 /*----------------------------------------------------------
     [ Scroll Bar Styling ]

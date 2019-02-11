@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using PAM.Models;
 
 namespace PAM.Data
@@ -9,50 +10,71 @@ namespace PAM.Data
     public class RequestService
     {
         private readonly AppDbContext _dbContext;
-        private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public RequestService(AppDbContext dbContext, ILogger<RequestService> logger)
+        public RequestService(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public Request GetRequest(int id){
-            return _dbContext.Requests
-                .Include(r => r.RequestType)
-                .Include(r => r.RequestedFor)
-                .Where(r => r.RequestId.Equals(id)).FirstOrDefault();
+        public IList<RequestType> GetRequestTypes()
+        {
+            return _dbContext.RequestTypes.Where(t => t.Enabled).OrderBy(t => t.DisplayOrder).ToList();
+        }
+
+        public IList<RequestType> GetAllRequestTypes()
+        {
+            return _dbContext.RequestTypes.OrderBy(t => t.RequestTypeId).ToList();
+        }
+
+        public Request CreateRequest(Request request)
+        {
+            request.CreatedOn = DateTime.Now;
+            _dbContext.Add(request);
+            _dbContext.SaveChanges();
+            return request;
+        }
+
+        public Request UpdateRequest(Request update)
+        {
+            var request = _dbContext.Requests.Find(update.RequestId);
+            _mapper.Map(update, request);
+            _dbContext.SaveChanges();
+            return request;
+        }
+
+        public Request GetRequest(int id)
+        {
+            return _dbContext.Requests.Include(r => r.RequestType).Include(r => r.RequestedBy).Include(r => r.RequestedFor)
+                .Include(r => r.Systems).ThenInclude(rs => rs.System)
+                .Where(r => r.RequestId == id).FirstOrDefault();
+        }
+
+        public void RemoveRequest(int id)
+        {
+            var request = _dbContext.Requests.Find(id);
+            request.Deleted = true;
+            _dbContext.SaveChanges();
         }
 
         public ICollection<Request> GetRequestsByUsername(string username)
         {
             return _dbContext.Requests
                 .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
-                .Where(r => r.RequestedBy.Username == username || r.RequestedFor.Username == username)
+                .Where(r => r.RequestedBy.Username == username)
                 .ToList();
         }
 
-        public ICollection<Request> GetRequests(){
+        public ICollection<Request> GetRequests()
+        {
             return _dbContext.Requests
                 .Include(r => r.RequestedBy).Include(r => r.RequestedFor).Include(r => r.RequestType)
                 .ToList();
-        } 
-
-        public Request SaveRequest(Request request)
-        {
-            if (request.RequestId == 0) _dbContext.Add(request);
-            _dbContext.SaveChanges();
-            return request;
         }
 
-        public void UpdateRequest (Request request){
-            _dbContext.Update(request);
-            _dbContext.SaveChanges();
-        }
-
-        public void RemoveRequest(Request request)
+        public void SaveChanges()
         {
-            _dbContext.Remove(request);
             _dbContext.SaveChanges();
         }
     }

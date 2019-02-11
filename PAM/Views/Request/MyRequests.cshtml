@@ -1,0 +1,155 @@
+﻿@{
+  ViewData["Title"] = "My Requests";
+  var allRequests = (List<Request>)ViewData["allRequests"];
+  var underReviewRequests = (List<Request>)ViewData["underReviewRequests"];
+  var completedRequests = (List<Request>)ViewData["completedRequests"];
+  var draftRequests = (List<Request>)ViewData["draftRequests"];
+}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">My Requests</li>
+  </ol>
+</nav>
+<div>&nbsp;<a asp-controller="NewRequest" asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a></div>
+
+@if (!allRequests.Any())
+{
+  <p>You have not created any registration request yet.</p>
+}
+
+@if (allRequests.Any())
+{
+  <ul class="nav nav-tabs">
+    @if (underReviewRequests.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#review">Under Review</a>
+      </li>
+    }
+    @if (completedRequests.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#completed">Completed</a>
+      </li>
+    }
+    @if (draftRequests.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#drafts">Drafts</a>
+      </li>
+    }
+  </ul>
+}
+
+@if (allRequests.Any())
+{
+  <div id="myTabContent" class="tab-content">
+
+    @if (underReviewRequests.Any())
+    {
+      <div id="review" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Type</th>
+              <th scope="col">Submitted On</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in underReviewRequests)
+            {
+              <tr>
+                <td>@request.RequestId</td>
+                <td>@request.RequestType.DisplayCode</td>
+                <td>@request.SubmittedOn</td>
+                <td>
+                  <a asp-action="View">View</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (completedRequests.Any())
+    {
+      <div id="completed" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Type</th>
+              <th scope="col">Submitted On</th>
+              <th scope="col">Completed On</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in completedRequests)
+            {
+              <tr>
+                <td>@request.RequestId</td>
+                <td>@request.RequestType.DisplayCode</td>
+                <td>@request.SubmittedOn</td>
+                <td>@request.CompletedOn</td>
+                <td>
+                  <a asp-action="View">View</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (draftRequests.Any())
+    {
+      <div id="drafts" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Type</th>
+              <th scope="col">Requested For</th>
+              <th scope="col">Created By</th>
+              <th scope="col">Created On</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in draftRequests)
+            {
+            <tr>
+              <td>@request.RequestId</td>
+              <td>@request.RequestType.DisplayCode</td>
+              <td>@request.RequestedFor.Name</td>
+              <td>@request.RequestedBy.Name</td>
+              <td>@request.CreatedOn</td>
+              <td>
+                <a asp-action="View">View</a> |
+                <a asp-controller="EditRequest" asp-action="Index" asp-route-id="@request.RequestId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+
+  @section Scripts{
+    <script>
+      $(function () {
+        var tabTitle = $("ul.nav>li:first-child>a");
+        tabTitle.addClass("active");
+        var tab = $(tabTitle.attr("href"));
+        tab.addClass("active show");
+      });
+    </script>
+  }
+}

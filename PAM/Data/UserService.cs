@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using AutoMapper;
 using PAM.Models;
 
 namespace PAM.Data
@@ -11,15 +8,37 @@ namespace PAM.Data
     public class UserService
     {
         private readonly AppDbContext _dbContext;
-        private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public UserService(AppDbContext dbContext, ILogger<UserService> logger)
+        public UserService(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public Employee GetEmployee(string username)
+        public bool HasEmployee(string username)
+        {
+            return _dbContext.Employees.Any(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Employee CreateEmployee(Employee employee)
+        {
+            _dbContext.Add(employee);
+            _dbContext.SaveChanges();
+            return employee;
+        }
+
+        public Employee UpdateEmployee(Employee update)
+        {
+            var employee = update.EmployeeId > 0 ?
+                _dbContext.Employees.Find(update.EmployeeId) :
+                _dbContext.Employees.Where(e => e.Username == update.Username).FirstOrDefault();
+            _mapper.Map(update, employee);
+            _dbContext.SaveChanges();
+            return employee;
+        }
+
+        public Employee GetEmployeeByUsername(string username)
         {
             return _dbContext.Employees
                 .Where(e => e.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
@@ -33,23 +52,24 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
-        public Employee SaveEmployee(Employee employee)
+        public Requester CreateRequester(Requester requester)
         {
-            if (employee.EmployeeId == 0) _dbContext.Add(employee);
-            _dbContext.SaveChanges();
-            return employee;
-        }
-        
-        public Requester SaveRequester(Requester requester)
-        {
-            if (requester.RequesterId == 0) _dbContext.Add(requester);
+            _dbContext.Add(requester);
             _dbContext.SaveChanges();
             return requester;
         }
 
-        public void UpdateRequester(Requester requester){
-            _dbContext.Update(requester);
+        public Requester UpdateRequester(Requester update)
+        {
+            var requester = _dbContext.Requesters.Find(update.RequesterId);
+            _mapper.Map(update, requester);
             _dbContext.SaveChanges();
+            return requester;
+        }
+
+        public Requester GetRequester(int id)
+        {
+            return _dbContext.Requesters.Find(id);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,12 +19,21 @@ namespace PAM.Data
 
         public ICollection<Bureau> GetBureaus()
         {
-            return _dbContext.Bureaus.ToList();
+            return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code).
+                AsNoTracking().ToList();
         }
 
         public ICollection<Unit> GetUnits()
         {
-            return _dbContext.Units.ToList();
+            return _dbContext.Units.OrderBy(u => u.BureauId).ThenBy(u => u.ParentId).ThenBy(u => u.DisplayOrder).ThenBy(u => u.Name).
+                AsNoTracking().ToList();
+        }
+
+        public Unit GetUnit(int id)
+        {
+            return _dbContext.Units.Where(u => u.UnitId == id)
+                .Include(u => u.Systems).ThenInclude(us => us.System)
+                .FirstOrDefault();
         }
 
         public ICollection<UnitSystem> GetRelatedSystems(int unitId)

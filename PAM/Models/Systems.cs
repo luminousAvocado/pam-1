@@ -36,18 +36,26 @@ namespace PAM.Models
         public int SystemId { get; set; }
         public System System { get; set; }
 
-        public bool InPortfolio { get; set; }
-        public bool RemoveAccess { get; set; }
+        public bool InPortfolio { get; set; } = true;
+        public bool RemoveAccess { get; set; } = false;
 
         public int? ProcessedById { get; set; }
         [ForeignKey(nameof(ProcessedById))]
         public Employee ProcessedBy { get; set; }
-        public DateTime ProcessedOn { get; set; }
+        public DateTime? ProcessedOn { get; set; }
 
         public int? ConfirmedById { get; set; }
         [ForeignKey(nameof(ConfirmedById))]
         public Employee ConfirmedBy { get; set; }
-        public DateTime ConfirmedOn { get; set; }
+        public DateTime? ConfirmedOn { get; set; }
+
+        public RequestedSystem() { }
+
+        public RequestedSystem(int requestId, int systemId)
+        {
+            RequestId = requestId;
+            SystemId = systemId;
+        }
     }
 
     public enum SystemAccessStatus { Approved, Processed, Confirmed };

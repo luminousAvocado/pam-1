@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PAM.Models
 {
-    public enum RequestStatus { Draft, PendingReview, Approved, Denied };
+    public enum RequestStatus { Draft, UnderReview, Approved, Denied };
 
     public enum CaseloadType { Adult, Juvenile, SchoolBased };
 
@@ -25,7 +25,11 @@ namespace PAM.Models
         [Required]
         public string DisplayCode { get; set; }
 
+        public int? DisplayOrder { get; set; }
+
         public string Description { get; set; }
+
+        public bool Enabled { get; set; }
     }
 
     [Table("Requests")]
@@ -50,36 +54,39 @@ namespace PAM.Models
 
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Draft;
 
-        public DateTime SubmittedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? SubmittedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
 
         public bool IsContractor { get; set; } = false;
         public bool IsHighProfileAccess { get; set; } = false;
         public bool IsGlobalAccess { get; set; } = false;
 
-        public ICollection<RequestedSystem> Systems;
+        public ICollection<RequestedSystem> Systems { get; set; }
 
         public ICollection<Review> Reviews { get; private set; }
 
-        public CaseloadType CaseloadType { get; set; }
-        public CaseloadFunction CaseloadFunction { get; set; }
+        public CaseloadType? CaseloadType { get; set; }
+        public CaseloadFunction? CaseloadFunction { get; set; }
         public string CaseloadNumber { get; set; }
         public string OldCaseloadNumber { get; set; }
 
         public int? TransferredFromUnitId { get; set; }
         public Unit TransferredFromUnit { get; set; }
 
-        public DepartureReason DepartureReason { get; set; }
+        public DepartureReason? DepartureReason { get; set; }
 
         public string IpAddress { get; set; }
 
         public string Notes { get; set; }
 
+        public bool Deleted { get; set; } = false;
+
         [NotMapped]
         public bool IsSelfRequest => RequestedById == RequestedForId;
-        /*
+
         [NotMapped]
         public List<Review> OrderedReviews => Reviews.OrderBy(r => r.ReviewOrder).ToList();
-        */
     }
 
     [Table("Reviews")]

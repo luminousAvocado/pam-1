@@ -21,6 +21,7 @@ namespace PAM.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
+        public DbSet<Requester> Requesters { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +29,7 @@ namespace PAM.Data
             modelBuilder.Entity<Models.System>().HasQueryFilter(s => !s.Retired);
             modelBuilder.Entity<UnitSystem>().HasKey(x => new { x.UnitId, x.SystemId });
 
+            modelBuilder.Entity<Request>().HasQueryFilter(r => !r.Deleted);
             modelBuilder.Entity<Request>().HasOne(r => r.RequestedBy).WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Request>().HasOne(r => r.RequestedFor).WithMany()

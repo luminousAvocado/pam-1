@@ -36,7 +36,7 @@
         <tbody>
           @foreach (var request in (List<Request>)ViewData["requests"])
           {
-            @if (request.RequestStatus == RequestStatus.PendingReview)
+            @if (request.RequestStatus == RequestStatus.UnderReview)
             {
               <tr>
                 <td>@request.RequestId</td>

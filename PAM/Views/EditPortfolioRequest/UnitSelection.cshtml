@@ -1,0 +1,71 @@
+﻿@{
+  ViewData["Title"] = "Unit Selection";
+  Request request = (Request)ViewData["request"];
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+    $('#tree').treeview({
+      data: @Html.Raw(@ViewData["tree"]),
+      levels: 1,
+      onNodeSelected: function (event, node) {
+        $("#unitId").val(node.id);
+        $("#next").prop("disabled", false);
+        $.ajax({
+          url: "/api/portfolio/" + node.id,
+          success: function (data) {
+            $("#systems").empty();
+            data.forEach(function (system) {
+              $("#systems").append("<tr><td>" + system.systemId + "</td><td>"
+                + system.name + "</td><td>"
+                + (system.description ? system.description : '') + "</td></tr>");
+            });
+          }
+        })
+      }
+    });
+  });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
+  </ol>
+</nav>
+
+<partial name="../Shared/_ProgressBar1.cshtml" />
+
+<form asp-action="SelectUnit" method="post">
+  <div class="row">
+    <div class="col-12 col-md-6 mb-3">
+      <p>Please select your unit/job function:</p>
+      <div id="tree"></div>
+    </div>
+    <div class="col-12 col-md-6 mb-3">
+      <p>System Portfolio</p>
+      <table class="table sticky-top">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody id="systems"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <input id="unitId" name="unitId" type="hidden" value="" />
+    <a asp-action="RequesterInfo" asp-route-id="@request.RequestId" class="btn btn-secondary">Previous</a>
+    <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
+  </div>
+</form>
