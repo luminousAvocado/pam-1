@@ -15,21 +15,21 @@
     <div class="alert alert-info">
       Step 6 - Additional Request Information
     </div>
-    <h3> Please select all that apply. </h3>
+    <h4> Please Indicate all that apply. </h4>
     <div class="row shadow-container form-group text-center" style="margin-left: 3px;">
-      <div class="col-4">
+      <div class="col-4 custom-control custom-checkbox">
         <p>Is this Request for a Contractor?</p>
-        <input asp-for="IsContractor" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="contractor" />
+        <input asp-for="IsContractor" type="checkbox" value="1" class="custom-control-input" style="display:inline-block" id="contractor" />
         <label class="custom-control-label" for="contractor"> Contractor </label>
       </div>
-      <div class="col-4">
+      <div class="col-4 custom-control custom-checkbox">
         <p>Does this request require high profile access?</p>
-        <input asp-for="IsHighProfileAccess" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="highProfile" />
+        <input asp-for="IsHighProfileAccess" type="checkbox" value="1" class="custom-control-input" style="display:inline-block" id="highProfile" />
         <label class="custom-control-label" for="highProfile"> High Profile</label>
       </div>
-      <div class="col-4">
+      <div class="col-4 custom-control custom-checkbox">
         <p>Does this request require global access?</p>
-        <input asp-for="IsGlobalAccess" type="radio" value="1" class="custom-control-input" style="display:inline-block" id="globalAccess" />
+        <input asp-for="IsGlobalAccess" type="checkbox" value="1" class="custom-control-input" style="display:inline-block" id="globalAccess" />
         <label class="custom-control-label" for="globalAccess"> Global Access </label>
       </div>
     </div>

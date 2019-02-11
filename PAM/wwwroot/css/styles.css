@@ -6,7 +6,8 @@
     background: linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
     background: -webkit-linear-gradient(to right, #19547b 0%, #E4E5E6 50%, #19547b 100%);
 }
-input[type=radio] + label:before{
+input[type=radio] + label:before,
+input[type=checkbox] + label:before{
     border: 1px solid #777;
 }
 

@@ -32,6 +32,7 @@ namespace PAM.Data
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Request>().HasOne(r => r.RequestedFor).WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Request>().Property(r => r.RequestTypeId).HasDefaultValue(1);
             modelBuilder.Entity<Request>().Property(r => r.RequestStatus).HasConversion(
                 v => v.ToString(),
                 v => (RequestStatus)Enum.Parse(typeof(RequestStatus), v));

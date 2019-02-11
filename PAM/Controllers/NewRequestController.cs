@@ -113,6 +113,7 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult RequestType(){
+            var request = HttpContext.Session.GetObject<Request>("Request");
             return View();
         }
 
@@ -120,6 +121,7 @@ namespace PAM.Controllers
         public IActionResult RequestType(Request req)
         {
             var update = HttpContext.Session.GetObject<Request>("Request");
+            Console.WriteLine("ASASIODJASIODJASIODJ" + req.RequestTypeId);
             update.RequestTypeId = req.RequestTypeId;
             update = _reqService.SaveRequest(update);
             //_reqService.UpdateRequest(update);

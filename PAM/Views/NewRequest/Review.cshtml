@@ -9,7 +9,7 @@
     ViewData["Title"] = "Review";
 }
 
-<body onload="javascript: stepIndicate()">
+<body onload="javascript: stepIndicate(); checkReqType();">
   <partial name="../Shared/_ProgressBar.cshtml" />
   <form asp-controller="NewRequest" asp-action="Review" method="post">
     <div class="alert alert-warning">
@@ -110,33 +110,33 @@
       <a class="float-right" href="/NewRequest/RequestType"> Edit </a>
     </div>
       <div class="custom-control custom-radio">
-        <input value="1" type="radio" class="custom-control-input" id="newReg" disabled>
-        <label class="custom-control-label label-edit" for="newReg"> New Registrations </label>
+        <input value="1" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue"> New Registrations </label>
         <p> -Initiates first time registrations for new users and systems access. </p>
       </div>
       <div class="custom-control custom-radio">
-        <input value="2" type="radio" class="custom-control-input" id="transfer" disabled>
-        <label class="custom-control-label label-edit" for="transfer"> Transfer </label>
+        <input value="2" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue"> Transfer </label>
         <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
       </div>
       <div class="custom-control custom-radio">
-        <input value="4" type="radio" class="custom-control-input" id="portfolio" disabled>
-        <label class="custom-control-label label-edit" for="portfolio"> Portfolio Assignment </label>
+        <input value="4" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue"> Portfolio Assignment </label>
         <p> -Initiates the update of information for the portfolio. </p>
       </div>
       <div class="custom-control custom-radio">
-        <input value="5" type="radio" class="custom-control-input" id="leaving" checked="" disabled>
-        <label class="custom-control-label label-edit" for="leaving"> Leaving Probation </label>
+        <input value="5" type="radio" class="custom-control-input" name="reqTypeValue"  disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue"> Leaving Probation </label>
         <p> -Initiates removal of ALL system(s) access. </p>
       </div>
       <div class="custom-control custom-radio">
-        <input value="11" type="radio" class="custom-control-input" id="addAccess" disabled>
-        <label class="custom-control-label label-edit" for="addAccess">Add Access</label>
+        <input value="11" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue">Add Access</label>
         <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
       </div>
       <div class="custom-control custom-radio">
-        <input value="12" type="radio" class="custom-control-input" id="removeAccess" disabled>
-        <label class="custom-control-label label-edit" for="removeAccess"> Remove Access </label>
+        <input value="12" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+        <label class="custom-control-label label-edit" for="reqTypeValue"> Remove Access </label>
         <p> -Initiates removal access for individual system(s). </p>
       </div>
     <div class="alert alert-success">
@@ -193,8 +193,6 @@
         <label class="control-label" for="readOnlyInput">Departure Reason</label>
         <input value="@request.DepartureReason" class="form-control" id="readOnlyInput" type="text" disabled/>
       </div>
-
-
     <div class="alert alert-success">
       Step 7 - Supervisor's Review
       <a class="float-right" href="/NewRequest/Supervisors"> Edit </a>
@@ -204,4 +202,16 @@
       <button type="submit" class="btn btn-primary">Confirm Submit</button>
     </div>
   </form>
+  <script>
+    function checkReqType() {
+      let radioVal = document.getElementsByName("reqTypeValue");
+      let reqTypeId = @request.RequestTypeId;
+      for (let i = 0; i < radioVal.length; ++i) {
+        if (radioVal[i].value == reqTypeId) {
+          radioVal[i].checked = true;
+          break;
+        }
+      }
+    }
+  </script>
 </body>
