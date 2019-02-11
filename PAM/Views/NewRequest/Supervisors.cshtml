@@ -8,13 +8,18 @@
     <div class="alert alert-info">
       Step 7 - Select the supervisor(s) to review this request.
     </div>
-    <div class="autocomplete" style="width:400px;">
-      <label>Supervisors</label>
-      <input id="adEmployees" name="supervisor" class="form-control" type="text" placeholder="Supervisor" autocomplete="off" value="">
+    <div class="form-row">
+      <div class="autocomplete form-group" style="width:400px;">
+        <label for="supervisor">Supervisors</label>
+        <input id="adEmployees" name="supervisor" class="form-control" type="text" placeholder="Supervisor" autocomplete="off" value="">
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="validateReviewer()"> Next </button>
+    <button type="button" class="btn btn-info float-right m-3" onclick="validateReviewer()"> Next </button>
   </form>
-<script>
+  <form asp-controller="NewRequest" asp-action="RequestInfo" method="get">
+    <button type="submit" class="btn btn-info float-right m-3" style="display:inline-block">Previous</button>
+  </form>
+  <script>
   function validateReviewer() {
     if (!validateSupervisor()) return false;
     else document.getElementById("supervisorReview").submit();
@@ -38,6 +43,6 @@
     return valid;
   }
   var supervisors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["adEmployees"]));
-</script>
+  </script>
 
 </body>

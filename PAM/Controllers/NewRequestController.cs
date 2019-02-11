@@ -210,7 +210,6 @@ namespace PAM.Controllers
             var req = HttpContext.Session.GetObject<Request>("Request");
             var unitId = HttpContext.Session.GetObject<int>("UnitId");
             ViewData["Systems"] = _orgService.GetRelatedSystems(unitId);
-            ViewData["Request"] = _reqService.GetRequest(req.RequestId);
             ViewData["Supervisor"] = supervisor;
 
             return View();

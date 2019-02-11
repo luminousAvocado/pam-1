@@ -1,12 +1,12 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
-    var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
-    var request = (Request)ViewData["Request"];
-    var systems = (List<UnitSystem>)ViewData["Systems"];
-    var supervisor = ViewData["Supervisor"];
-    ViewData["Title"] = "Review";
+     var requester = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("Requester");
+     var requestFor = HttpContextAccessor.HttpContext.Session.GetObject<Requester>("RequestFor");
+     var request = HttpContextAccessor.HttpContext.Session.GetObject<Request>("Request");
+     var systems = (List<UnitSystem>)ViewData["Systems"];
+     var supervisor = ViewData["Supervisor"];
+     ViewData["Title"] = "Review";
 }
 
 <body onload="javascript: stepIndicate(); checkReqType();">
@@ -20,9 +20,9 @@
       <a class="float-right" href="/NewRequest/NewRequest"> Edit </a>
     </div>
     @{
-      var requestForName = "";
-      if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
-      else { requestForName = requestFor.Name; }
+         var requestForName = "";
+         if (request.RequestedById == request.RequestedForId) { requestForName = requester.Name; }
+         else { requestForName = requestFor.Name; }
     }
     <p>This is a request made for <i>@requestForName</i> </p>
     <div class="alert alert-success">
@@ -109,36 +109,36 @@
       Step 3 - Request Type
       <a class="float-right" href="/NewRequest/RequestType"> Edit </a>
     </div>
-      <div class="custom-control custom-radio">
-        <input value="1" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue"> New Registrations </label>
-        <p> -Initiates first time registrations for new users and systems access. </p>
-      </div>
-      <div class="custom-control custom-radio">
-        <input value="2" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue"> Transfer </label>
-        <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
-      </div>
-      <div class="custom-control custom-radio">
-        <input value="4" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue"> Portfolio Assignment </label>
-        <p> -Initiates the update of information for the portfolio. </p>
-      </div>
-      <div class="custom-control custom-radio">
-        <input value="5" type="radio" class="custom-control-input" name="reqTypeValue"  disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue"> Leaving Probation </label>
-        <p> -Initiates removal of ALL system(s) access. </p>
-      </div>
-      <div class="custom-control custom-radio">
-        <input value="11" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue">Add Access</label>
-        <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
-      </div>
-      <div class="custom-control custom-radio">
-        <input value="12" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
-        <label class="custom-control-label label-edit" for="reqTypeValue"> Remove Access </label>
-        <p> -Initiates removal access for individual system(s). </p>
-      </div>
+    <div class="custom-control custom-radio">
+      <input value="1" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue"> New Registrations </label>
+      <p> -Initiates first time registrations for new users and systems access. </p>
+    </div>
+    <div class="custom-control custom-radio">
+      <input value="2" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue"> Transfer </label>
+      <p> -Initiates changes to existing information when transferring caseload, job function and/or work location. </p>
+    </div>
+    <div class="custom-control custom-radio">
+      <input value="4" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue"> Portfolio Assignment </label>
+      <p> -Initiates the update of information for the portfolio. </p>
+    </div>
+    <div class="custom-control custom-radio">
+      <input value="5" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue"> Leaving Probation </label>
+      <p> -Initiates removal of ALL system(s) access. </p>
+    </div>
+    <div class="custom-control custom-radio">
+      <input value="11" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue">Add Access</label>
+      <p> -Initiates additional system(s) access (Bureau Chief's signature required). </p>
+    </div>
+    <div class="custom-control custom-radio">
+      <input value="12" type="radio" class="custom-control-input" name="reqTypeValue" disabled>
+      <label class="custom-control-label label-edit" for="reqTypeValue"> Remove Access </label>
+      <p> -Initiates removal access for individual system(s). </p>
+    </div>
     <div class="alert alert-success">
       Step 4 - Unit Selection
       <a class="float-right" href="/NewRequest/SelectUnit"> Edit </a>
@@ -168,31 +168,50 @@
       Step 6 - Additional Request Information
       <a class="float-right" href="/NewRequest/RequestInfo">Edit</a>
     </div>
-    
+    <div class="row shadow-container form-group text-center" style="margin-left: 3px;">
+      <div class="col-4 custom-control custom-checkbox">
+        <p>Is this Request for a Contractor?</p>
+        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
+               @{if (request.IsContractor) { @Html.Raw("checked=\"\"") } } disabled />
+        <label class="custom-control-label" for="contractor"> Contractor </label>
+      </div>
+      <div class="col-4 custom-control custom-checkbox">
+        <p>Does this request require high profile access?</p>
+        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
+               @{ if (request.IsHighProfileAccess) { @Html.Raw("checked=\"\"") } } disabled />
+        <label class="custom-control-label" for="highProfile"> High Profile</label>
+      </div>
+      <div class="col-4 custom-control custom-checkbox">
+        <p>Does this request require global access?</p>
+        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
+               @{ if (request.IsGlobalAccess) { @Html.Raw("checked\"\"") } } disabled />
+        <label class="custom-control-label" for="globalAccess"> Global Access </label>
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Type</label>
-        <input value="@request.CaseloadType" class="form-control" id="readOnlyInput" type="text" disabled/>
+        <input value="@request.CaseloadType" class="form-control" id="readOnlyInput" type="text" disabled />
       </div>
       <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Function</label>
-        <input value="@request.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" disabled/>
+        <input value="@request.CaseloadFunction" class="form-control" id="readOnlyInput" type="text" disabled />
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Caseload Number</label>
-        <input value="@request.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled/>
+        <input value="@request.CaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled />
       </div>
       <div class="form-group col-xl-6">
         <label class="control-label" for="readOnlyInput">Old Caseload Number</label>
-        <input value="@request.OldCaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled/>
+        <input value="@request.OldCaseloadNumber" class="form-control" id="readOnlyInput" type="text" disabled />
       </div>
     </div>
-      <div class="form-group">
-        <label class="control-label" for="readOnlyInput">Departure Reason</label>
-        <input value="@request.DepartureReason" class="form-control" id="readOnlyInput" type="text" disabled/>
-      </div>
+    <div class="form-group">
+      <label class="control-label" for="readOnlyInput">Departure Reason</label>
+      <input value="@request.DepartureReason" class="form-control" id="readOnlyInput" type="text" disabled />
+    </div>
     <div class="alert alert-success">
       Step 7 - Supervisor's Review
       <a class="float-right" href="/NewRequest/Supervisors"> Edit </a>
