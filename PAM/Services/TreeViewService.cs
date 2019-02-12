@@ -36,7 +36,7 @@ namespace PAM.Services
         {
             List<TreeViewNode> bureauList = new List<TreeViewNode>();
 
-            foreach(Bureau bureau in list.OrderBy(o => o.DisplayOrder))
+            foreach(Bureau bureau in list.OrderByDescending(o => o.DisplayOrder.HasValue).ThenBy(o => o.DisplayOrder))
             {
                 TreeViewNode temp = new TreeViewNode
                 {
