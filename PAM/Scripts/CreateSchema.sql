@@ -104,6 +104,17 @@ CREATE TABLE [Bureaus] (
 
 GO
 
+CREATE TABLE [RequiredSignatures] (
+    [RequiredSignatureId] int NOT NULL IDENTITY,
+    [RequestTypeId] int NOT NULL,
+    [Title] nvarchar(max) NOT NULL,
+    [Order] int NOT NULL,
+    CONSTRAINT [PK_RequiredSignatures] PRIMARY KEY ([RequiredSignatureId]),
+    CONSTRAINT [FK_RequiredSignatures_RequestTypes_RequestTypeId] FOREIGN KEY ([RequestTypeId]) REFERENCES [RequestTypes] ([RequestTypeId]) ON DELETE CASCADE
+);
+
+GO
+
 CREATE TABLE [Units] (
     [UnitId] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NOT NULL,
@@ -158,8 +169,6 @@ GO
 
 CREATE TABLE [Requests] (
     [RequestId] int NOT NULL IDENTITY,
-    [Username] nvarchar(max) NULL,
-    [Name] nvarchar(max) NULL,
     [RequestTypeId] int NOT NULL,
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
@@ -209,7 +218,7 @@ GO
 CREATE TABLE [Reviews] (
     [ReviewId] int NOT NULL IDENTITY,
     [RequestId] int NOT NULL,
-    [ReviewerId] int NOT NULL,
+    [ReviewerId] int NULL,
     [ReviewOrder] int NOT NULL,
     [ReviewerTitle] nvarchar(max) NOT NULL,
     [Approved] bit NULL,
@@ -217,7 +226,7 @@ CREATE TABLE [Reviews] (
     [Timestamp] datetime2 NULL,
     CONSTRAINT [PK_Reviews] PRIMARY KEY ([ReviewId]),
     CONSTRAINT [FK_Reviews_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Reviews_Employees_ReviewerId] FOREIGN KEY ([ReviewerId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE CASCADE
+    CONSTRAINT [FK_Reviews_Employees_ReviewerId] FOREIGN KEY ([ReviewerId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION
 );
 
 GO
@@ -285,6 +294,10 @@ CREATE INDEX [IX_Requests_TransferredFromUnitId] ON [Requests] ([TransferredFrom
 
 GO
 
+CREATE INDEX [IX_RequiredSignatures_RequestTypeId] ON [RequiredSignatures] ([RequestTypeId]);
+
+GO
+
 CREATE INDEX [IX_Reviews_RequestId] ON [Reviews] ([RequestId]);
 
 GO
@@ -318,7 +331,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190212005848_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190212221610_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

@@ -1,6 +1,7 @@
-﻿@{
+﻿@model Request
+@{
   ViewData["Title"] = "Unit Selection";
-  Request request = (Request)ViewData["request"];
+  ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -49,7 +50,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
   </ol>
 </nav>
 
@@ -75,9 +76,14 @@
       </table>
     </div>
   </div>
-  <div class="row">
-    <input id="unitId" name="unitId" type="hidden" value="@request.RequestedFor.UnitId" />
-    <a asp-action="RequesterInfo" asp-route-id="@request.RequestId" class="btn btn-secondary">Previous</a>
-    <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
+  <div class="form-row">
+    <div class="col-4">
+      <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    </div>
+    <div class="col-8 text-right">
+      <a asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
+    </div>
   </div>
+  <input id="unitId" name="unitId" type="hidden" value="@Model.RequestedFor.UnitId" />
 </form>

@@ -12,7 +12,7 @@ namespace PAM.Services
             CreateMap<Requester, Requester>()
                 .ForMember(r => r.RequesterId, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
-            CreateMap<Request, Request>().ForMember(r => r.RequestId, opt => opt.Ignore()); ;
+            CreateMap<Request, Request>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

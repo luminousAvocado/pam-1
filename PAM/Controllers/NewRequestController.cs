@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +64,27 @@ namespace PAM.Controllers
             request.RequestedBy = requestedBy;
             request.RequestedFor = requestedFor;
             request.RequestTypeId = requestTypeId;
+
+            request.Reviews = new List<Review>();
+            var requestType = _requestService.GetRequestType(requestTypeId);
+            var requiredSignatures = requestType.RequiredSignatures.OrderBy(s => s.Order).ToList();
+            for (int i = 0; i < requiredSignatures.Count; ++i)
+            {
+                var review = new Review
+                {
+                    ReviewOrder = i,
+                    ReviewerTitle = requiredSignatures[i].Title
+                };
+                if (review.ReviewerTitle.Equals("Supervisor"))
+                {
+                    Employee supervisor = _adService.GetEmployeeByName(request.RequestedFor.SupervisorName);
+                    supervisor = _userService.HasEmployee(supervisor.Username) ?
+                        _userService.UpdateEmployee(supervisor) : _userService.CreateEmployee(supervisor);
+                    review.ReviewerId = supervisor.EmployeeId;
+                }
+                request.Reviews.Add(review);
+            }
+
             request = _requestService.CreateRequest(request);
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");

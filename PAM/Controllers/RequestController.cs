@@ -52,14 +52,6 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult ProcessRequests()
-        {
-            //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult AllRequests()
         {
             ViewData["Requests"] = _requestService.GetRequests();
@@ -86,7 +78,7 @@ namespace PAM.Controllers
 
             foreach (var request in requests)
             {
-             //   if (request.RequestId == id) _requestService.RemoveRequest(request);
+                //   if (request.RequestId == id) _requestService.RemoveRequest(request);
             }
             return RedirectToAction("MyRequests");
         }

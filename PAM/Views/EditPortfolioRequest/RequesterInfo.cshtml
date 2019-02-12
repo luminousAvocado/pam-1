@@ -2,6 +2,7 @@
 @{
   ViewData["Title"] = "Requester Information";
   Request request = (Request)ViewData["request"];
+  ViewData["id"] = request.RequestId;
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -18,7 +19,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
   </ol>
 </nav>
 
@@ -88,8 +89,11 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col">
-      <button type="submit" class="btn btn-primary">Next</button>
+    <div class="col-4">
+      <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    </div>
+    <div class="col-8 text-right">
+      <button id="next" type="submit" class="btn btn-primary">Next</button>
     </div>
   </div>
 </form>

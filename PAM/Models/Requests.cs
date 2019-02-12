@@ -30,16 +30,27 @@ namespace PAM.Models
         public string Description { get; set; }
 
         public bool Enabled { get; set; }
+
+        public ICollection<RequiredSignature> RequiredSignatures { get; set; }
+    }
+
+    [Table("RequiredSignatures")]
+    public class RequiredSignature
+    {
+        public int RequiredSignatureId { get; set; }
+
+        public int RequestTypeId { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        public int Order { get; set; }
     }
 
     [Table("Requests")]
     public class Request
     {
         public int RequestId { get; set; }
-
-        public string Username { get; set; }
-
-        public string Name { get; set; }
 
         public int RequestTypeId { get; set; }
         public RequestType RequestType { get; set; }
@@ -64,7 +75,7 @@ namespace PAM.Models
 
         public ICollection<RequestedSystem> Systems { get; set; }
 
-        public ICollection<Review> Reviews { get; private set; }
+        public ICollection<Review> Reviews { get; set; }
 
         public CaseloadType? CaseloadType { get; set; }
         public CaseloadFunction? CaseloadFunction { get; set; }
@@ -86,7 +97,7 @@ namespace PAM.Models
         public bool IsSelfRequest => RequestedById == RequestedForId;
 
         [NotMapped]
-        public List<Review> OrderedReviews => Reviews.OrderBy(r => r.ReviewOrder).ToList();
+        public List<Review> OrderedReviews => Reviews != null ? Reviews.OrderBy(r => r.ReviewOrder).ToList() : null;
     }
 
     [Table("Reviews")]
@@ -97,7 +108,7 @@ namespace PAM.Models
         public int RequestId { get; set; }
         public Request Request { get; set; }
 
-        public int ReviewerId { get; set; }
+        public int? ReviewerId { get; set; }
         public Employee Reviewer { get; set; }
 
         public int ReviewOrder { get; set; }
@@ -108,6 +119,9 @@ namespace PAM.Models
         public bool? Approved { get; private set; }
         public string Comments { get; private set; }
         public DateTime? Timestamp { get; private set; }
+
+        [NotMapped]
+        public string ReviewerName { get; set; }
 
         [NotMapped]
         public bool Completed => Approved != null;

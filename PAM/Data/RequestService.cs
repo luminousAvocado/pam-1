@@ -18,6 +18,12 @@ namespace PAM.Data
             _mapper = mapper;
         }
 
+        public RequestType GetRequestType(int id)
+        {
+            return _dbContext.RequestTypes.Include(t => t.RequiredSignatures)
+                .Where(t => t.RequestTypeId == id).FirstOrDefault();
+        }
+
         public IList<RequestType> GetRequestTypes()
         {
             return _dbContext.RequestTypes.Where(t => t.Enabled).OrderBy(t => t.DisplayOrder).ToList();
@@ -31,7 +37,7 @@ namespace PAM.Data
         public Request CreateRequest(Request request)
         {
             request.CreatedOn = DateTime.Now;
-            _dbContext.Add(request);
+            _dbContext.Requests.Add(request);
             _dbContext.SaveChanges();
             return request;
         }
@@ -46,8 +52,10 @@ namespace PAM.Data
 
         public Request GetRequest(int id)
         {
-            return _dbContext.Requests.Include(r => r.RequestType).Include(r => r.RequestedBy).Include(r => r.RequestedFor)
+            return _dbContext.Requests.Include(r => r.RequestType).ThenInclude(rt => rt.RequiredSignatures)
+                .Include(r => r.RequestedBy).Include(r => r.RequestedFor)
                 .Include(r => r.Systems).ThenInclude(rs => rs.System)
+                .Include(r => r.Reviews).ThenInclude(rr => rr.Reviewer)
                 .Where(r => r.RequestId == id).FirstOrDefault();
         }
 
