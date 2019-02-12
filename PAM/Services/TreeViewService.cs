@@ -36,7 +36,7 @@ namespace PAM.Services
         {
             List<TreeViewNode> bureauList = new List<TreeViewNode>();
 
-            foreach(Bureau bureau in list)
+            foreach(Bureau bureau in list.OrderBy(o => o.DisplayOrder))
             {
                 TreeViewNode temp = new TreeViewNode
                 {
@@ -48,7 +48,8 @@ namespace PAM.Services
                 };
                 bureauList.Add(temp);
                 bureauDictionary.Add(temp.id, temp);
-            }            
+            }
+
             return bureauList;
         }
 
