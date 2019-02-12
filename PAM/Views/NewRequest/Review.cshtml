@@ -171,20 +171,20 @@
     <div class="row shadow-container form-group text-center" style="margin-left: 3px;">
       <div class="col-4 custom-control custom-checkbox">
         <p>Is this Request for a Contractor?</p>
-        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
+        <input type="checkbox" class="custom-control-input" style="display:inline-block"
                @{if (request.IsContractor) { @Html.Raw("checked=\"\"") } } disabled />
         <label class="custom-control-label" for="contractor"> Contractor </label>
       </div>
       <div class="col-4 custom-control custom-checkbox">
         <p>Does this request require high profile access?</p>
-        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
+        <input type="checkbox" class="custom-control-input" style="display:inline-block"
                @{ if (request.IsHighProfileAccess) { @Html.Raw("checked=\"\"") } } disabled />
         <label class="custom-control-label" for="highProfile"> High Profile</label>
       </div>
       <div class="col-4 custom-control custom-checkbox">
         <p>Does this request require global access?</p>
-        <input type="checkbox" class="custom-control-input" style="display:inline-block" name="reqInfo"
-               @{ if (request.IsGlobalAccess) { @Html.Raw("checked\"\"") } } disabled />
+        <input type="checkbox" class="custom-control-input" style="display:inline-block"
+               @{ if (request.IsGlobalAccess) { @Html.Raw("checked=\"\"") } } disabled />
         <label class="custom-control-label" for="globalAccess"> Global Access </label>
       </div>
     </div>
