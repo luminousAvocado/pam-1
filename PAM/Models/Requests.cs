@@ -107,7 +107,7 @@ namespace PAM.Models
 
         public bool? Approved { get; private set; }
         public string Comments { get; private set; }
-        public DateTime Timestamp { get; private set; }
+        public DateTime? Timestamp { get; private set; }
 
         [NotMapped]
         public bool Completed => Approved != null;
@@ -115,14 +115,14 @@ namespace PAM.Models
         public void Approve()
         {
             Approved = true;
-            Timestamp = new DateTime();
+            Timestamp = DateTime.Now;
         }
 
         public void Deny(string comments)
         {
             Approved = false;
             Comments = comments;
-            Timestamp = new DateTime();
+            Timestamp = DateTime.Now;
         }
     }
 }

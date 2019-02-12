@@ -30,6 +30,18 @@
         })
       }
     });
+    if ($("#unitId").val()) {
+      var nodeId = 1;
+      var node = $("#tree").treeview("getNode", nodeId);
+      while (node) {
+        if (node.id == $("#unitId").val()) break;
+        node = $("#tree").treeview("getNode", ++nodeId);
+      }
+      if (node) {
+        $("#tree").treeview("selectNode", node);
+        $('#tree').treeview('revealNode', [nodeId, { silent: true }]);
+      }
+    }
   });
   </script>
 }
@@ -64,7 +76,7 @@
     </div>
   </div>
   <div class="row">
-    <input id="unitId" name="unitId" type="hidden" value="" />
+    <input id="unitId" name="unitId" type="hidden" value="@request.RequestedFor.UnitId" />
     <a asp-action="RequesterInfo" asp-route-id="@request.RequestId" class="btn btn-secondary">Previous</a>
     <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
   </div>

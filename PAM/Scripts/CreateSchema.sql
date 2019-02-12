@@ -214,7 +214,7 @@ CREATE TABLE [Reviews] (
     [ReviewerTitle] nvarchar(max) NOT NULL,
     [Approved] bit NULL,
     [Comments] nvarchar(max) NULL,
-    [Timestamp] datetime2 NOT NULL,
+    [Timestamp] datetime2 NULL,
     CONSTRAINT [PK_Reviews] PRIMARY KEY ([ReviewId]),
     CONSTRAINT [FK_Reviews_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE,
     CONSTRAINT [FK_Reviews_Employees_ReviewerId] FOREIGN KEY ([ReviewerId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE CASCADE
@@ -318,7 +318,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190211070024_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190212005848_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 
