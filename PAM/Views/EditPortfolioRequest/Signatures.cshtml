@@ -1,0 +1,50 @@
+﻿@model List<Review>
+@{
+  ViewData["Title"] = "Signatures";
+  var request = (Request)ViewData["request"];
+  ViewData["id"] = request.RequestId;
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+  });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
+
+<partial name="../Shared/_ProgressBar1.cshtml" />
+
+<p>The following signatures will be required for this request:</p>
+<form asp-action="Signatures" method="post">
+  @for (int i = 0; i < Model.Count; ++i)
+  {
+    <div class="form-group row">
+      <label asp-for="@Model[i].Reviewer.Name" class="col-12 col-md-2 col-form-label">@Model[i].ReviewerTitle</label>
+      <div class="col-12 col-md-10">
+        <input asp-for="@Model[i].Reviewer.Name" type="text" class="form-control">
+      </div>
+      <input type="hidden" asp-for="@Model[i].Reviewer.EmployeeId" />
+      <input type="hidden" asp-for="@Model[i].ReviewId" />
+    </div>
+  }
+  <div class="form-row">
+    <div class="col-4">
+      <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    </div>
+    <div class="col-8 text-right">
+      <a asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+    </div>
+  </div>
+</form>

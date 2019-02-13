@@ -48,7 +48,6 @@ namespace PAM.Services
             "mail", "userPrincipalName", // Email
             "title", // Title
             "department", // Department
-            "section", // Section
             "service", // Service
             "streetAddress", // Address
             "l", // City
@@ -77,7 +76,6 @@ namespace PAM.Services
 
             employee.Title = result.GetProperty("title");
             employee.Department = result.GetProperty("department");
-            employee.Section = result.GetProperty("section");
             employee.Service = result.GetProperty("service");
 
             employee.Address = result.GetProperty("streetAddress");
@@ -187,7 +185,7 @@ namespace PAM.Services
                 LastName = "Admin",
                 Email = "pam@localhost.localdomain",
                 Title = "Administrator",
-                Department = "IT Systems",
+                Department = "Probation #640",
                 Phone = "111-222-3333"
             },
             new Employee()
@@ -198,7 +196,8 @@ namespace PAM.Services
                 LastName = "Doe",
                 Email = "jdoe1@localhost.localdomain",
                 Title = "Developer",
-                Department = "IT Systems",
+                Department = "Probation #640",
+                Service = "IT Systems",
                 Phone = "123-456-7890",
                 Address = "123 Main St.",
                 City = "Los Angeles",
@@ -214,7 +213,8 @@ namespace PAM.Services
                 LastName = "Doe",
                 Email = "jdoe2@localhost.localdomain",
                 Title = "Supervisor",
-                Department = "IT Systems",
+                Department = "Probation #640",
+                Service = "IT Systems",
                 Phone = "234-567-8901",
                 SupervisorName = "Tom Smith (e345678)"
             },
@@ -226,7 +226,8 @@ namespace PAM.Services
                 LastName = "Smith",
                 Email = "tsmith@localhost.localdomain",
                 Title = "Director",
-                Department = "IT Systems",
+                Department = "Probation #640",
+                Service = "IT Systems",
                 Phone = "345-678-9012"
             },
         };

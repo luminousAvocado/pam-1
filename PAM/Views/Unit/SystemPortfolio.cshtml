@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PAM.Models.UnitSystem>
+
+@{
+  ViewData["Title"] = "System Selection";
+}
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.13.4/dist/bootstrap-table.min.css">
+  <script src="https://unpkg.com/bootstrap-table@1.13.4/dist/bootstrap-table.min.js"></script>
+</head>
+
+<body onload="javascript: stepIndicate()">
+
+
+  <div class="alert alert-info">
+    Default Systems Associated with Unit
+  </div>
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>
+          @Html.DisplayNameFor(model => model.System.Name)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.System.Description)
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td>
+            @Html.DisplayFor(modelItem => item.System.Name)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.System.Description)
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+
+
+</body>

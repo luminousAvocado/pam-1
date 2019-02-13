@@ -28,9 +28,7 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) RedirectToAction("Self", "Request");
-
-            return View();
+            return User.Identity.IsAuthenticated ? RedirectToAction("Welcome") : (IActionResult)View();
         }
 
         [HttpPost]
@@ -43,19 +41,8 @@ namespace PAM.Controllers
                 });
 
             Employee employee = _adService.GetEmployeeByUsername(username);
-            Employee user = _userService.GetEmployee(username);
-            if (user != null)
-            {
-                user.Name = employee.Name;
-                user.FirstName = employee.FirstName;
-                user.LastName = employee.LastName;
-                user.Email = employee.Email;
-                user.Title = employee.Title;
-                user.Department = employee.Department;
-                user.Phone = employee.Phone;
-                employee = user;
-            }
-            employee = _userService.SaveEmployee(employee);
+            employee = _userService.HasEmployee(username) ?
+                _userService.UpdateEmployee(employee) : _userService.CreateEmployee(employee);
 
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
@@ -63,16 +50,15 @@ namespace PAM.Controllers
                 new AuthenticationProperties());
 
             _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
-            //return RedirectToAction("Self", "Request");
             return RedirectToAction("Welcome");
         }
 
         [HttpGet]
-        public IActionResult Welcome(){
+        public IActionResult Welcome()
+        {
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             _logger.LogInformation($"User {User.Identity.Name} logged out at {DateTime.UtcNow}.");

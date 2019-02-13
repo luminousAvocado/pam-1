@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PAM.Models
 {
-    public enum RequestStatus { Draft, PendingReview, Approved, Denied };
+    public enum RequestStatus { Draft, UnderReview, Approved, Denied };
 
     public enum CaseloadType { Adult, Juvenile, SchoolBased };
 
@@ -25,17 +25,32 @@ namespace PAM.Models
         [Required]
         public string DisplayCode { get; set; }
 
+        public int? DisplayOrder { get; set; }
+
         public string Description { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public ICollection<RequiredSignature> RequiredSignatures { get; set; }
+    }
+
+    [Table("RequiredSignatures")]
+    public class RequiredSignature
+    {
+        public int RequiredSignatureId { get; set; }
+
+        public int RequestTypeId { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        public int Order { get; set; }
     }
 
     [Table("Requests")]
     public class Request
     {
         public int RequestId { get; set; }
-
-        public string Username { get; set; }
-
-        public string Name { get; set; }
 
         public int RequestTypeId { get; set; }
         public RequestType RequestType { get; set; }
@@ -50,36 +65,39 @@ namespace PAM.Models
 
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Draft;
 
-        public DateTime SubmittedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? SubmittedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
 
         public bool IsContractor { get; set; } = false;
         public bool IsHighProfileAccess { get; set; } = false;
         public bool IsGlobalAccess { get; set; } = false;
 
-        public ICollection<RequestedSystem> Systems { get; private set; }
+        public ICollection<RequestedSystem> Systems { get; set; }
 
-        public ICollection<Review> Reviews { get; private set; }
+        public ICollection<Review> Reviews { get; set; }
 
-        public CaseloadType CaseloadType { get; set; }
-        public CaseloadFunction CaseloadFunction { get; set; }
+        public CaseloadType? CaseloadType { get; set; }
+        public CaseloadFunction? CaseloadFunction { get; set; }
         public string CaseloadNumber { get; set; }
         public string OldCaseloadNumber { get; set; }
 
         public int? TransferredFromUnitId { get; set; }
         public Unit TransferredFromUnit { get; set; }
 
-        public DepartureReason DepartureReason { get; set; }
+        public DepartureReason? DepartureReason { get; set; }
 
         public string IpAddress { get; set; }
 
         public string Notes { get; set; }
 
+        public bool Deleted { get; set; } = false;
+
         [NotMapped]
         public bool IsSelfRequest => RequestedById == RequestedForId;
-        /*
+
         [NotMapped]
-        public List<Review> OrderedReviews => Reviews.OrderBy(r => r.ReviewOrder).ToList();
-        */
+        public List<Review> OrderedReviews => Reviews != null ? Reviews.OrderBy(r => r.ReviewOrder).ToList() : null;
     }
 
     [Table("Reviews")]
@@ -90,7 +108,7 @@ namespace PAM.Models
         public int RequestId { get; set; }
         public Request Request { get; set; }
 
-        public int ReviewerId { get; set; }
+        public int? ReviewerId { get; set; }
         public Employee Reviewer { get; set; }
 
         public int ReviewOrder { get; set; }
@@ -99,24 +117,27 @@ namespace PAM.Models
         public string ReviewerTitle { get; set; }
 
         public bool? Approved { get; private set; }
-
         public string Comments { get; private set; }
-        public DateTime Timestamp { get; private set; }
+        public DateTime? Timestamp { get; private set; }
+
+        [NotMapped]
+        public string ReviewerName { get; set; }
 
         [NotMapped]
         public bool Completed => Approved != null;
 
-        public void Approve()
+        public void Approve(string comments)
         {
             Approved = true;
-            Timestamp = new DateTime();
+            Comments = comments;
+            Timestamp = DateTime.Now;
         }
 
         public void Deny(string comments)
         {
             Approved = false;
             Comments = comments;
-            Timestamp = new DateTime();
+            Timestamp = DateTime.Now;
         }
     }
 }

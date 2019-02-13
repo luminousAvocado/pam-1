@@ -1,0 +1,97 @@
+﻿@{
+  ViewData["Title"] = "New Request";
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+
+    $("#hasid,#askid").hide();
+    $("input[name='forSelf']").click(function () {
+      if ($(this).val() == "no")
+        $("#hasid").show();
+      else {
+        $("#hasid,#askid").hide();
+        $("#requestedForUsername").prop("required", false);
+      }
+    });
+    $("input[name='hasId']").click(function () {
+      console.log($(this).val());
+      if ($(this).val() == "yes") {
+        $("#askid").show();
+        $("#requestedForUsername").prop("required", true);
+      }
+      else {
+        $("#askid").hide();
+        $("#requestedForUsername").prop("required", false);
+      }
+    });
+    $("input.type-selection:first").prop("checked", true);
+    $("input.type-selection:not(:first)").prop("disabled", true);
+  });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New Request</li>
+  </ol>
+</nav>
+
+<form asp-controller="NewRequest" asp-action="NewRequest" method="post">
+
+  <p>Is this request for yourself?</p>
+  <div class="form-group">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" id="selfyes" name="forSelf" value="yes" checked>
+      <label class="form-check-label" for="selfyes">Yes</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" id="selfno" name="forSelf" value="no">
+      <label class="form-check-label" for="selfno">No</label>
+    </div>
+  </div>
+
+  <div id="hasid">
+    <p>Does the person have an Employee Id (i.e. an e# or c#)?</p>
+    <div class="form-group">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="idyes" name="hasId" value="yes">
+        <label class="form-check-label" for="idyes">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="idno" name="hasId" value="no" checked>
+        <label class="form-check-label" for="idno">No</label>
+      </div>
+    </div>
+  </div>
+
+  <div id="askid">
+    <p>Please enter the Employee Id of the person:</p>
+    <div class="form-group">
+      <input type="text" class="form-control" id="requestedForUsername" name="requestedForUsername">
+    </div>
+  </div>
+
+  <p>Please select a request type:</p>
+    <div class="form-group">
+      @foreach (var requestType in Model)
+      {
+        <div class="form-check">
+          <input name="requestTypeId" value="@requestType.RequestTypeId" type="radio" class="form-check-input type-selection" id="@requestType.Code" />
+          <label class="form-check-label" for="@requestType.Code">@requestType.DisplayCode</label>
+          <p class="form-text text-muted">@requestType.Description</p>
+        </div>
+      }
+    </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Create Reqeust</button>
+  </div>
+
+</form>

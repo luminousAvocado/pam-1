@@ -1,0 +1,236 @@
+﻿@model Review
+@{
+  ViewData["Title"] = "Review";
+  var request = (Request)ViewData["request"];
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Review" asp-action="MyReviews">Review Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
+  </ol>
+</nav>
+
+<div class="card">
+  <div class="card-header">Request Information</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Request Id</label>
+        <span class="form-control">@request.RequestId</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Request Type</label>
+        <span class="form-control">@request.RequestType.DisplayCode</span>
+      </div>
+    </div>
+    @if (!request.IsSelfRequest)
+    {
+      <div class="row">
+        <div class="form-group">
+          <label>Prepared By</label>
+          <span class="form-control">@request.RequestedBy.Name</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Requester Information</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>First Name</label>
+        <span class="form-control">@request.RequestedFor.FirstName</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Last Name</label>
+        <span class="form-control">@request.RequestedFor.LastName</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Department</label>
+        <span class="form-control">@request.RequestedFor.Department</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Service</label>
+        <span class="form-control">@request.RequestedFor.Service</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Title</label>
+        <span class="form-control">@request.RequestedFor.Title</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Email</label>
+        <span class="form-control">@request.RequestedFor.Email</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Address</label>
+        <span class="form-control">@request.RequestedFor.Address</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>City</label>
+        <span class="form-control">@request.RequestedFor.City</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>State</label>
+        <span class="form-control">@request.RequestedFor.State</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Zip Code</label>
+        <span class="form-control">@request.RequestedFor.Zip</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Phone</label>
+        <span class="form-control">@request.RequestedFor.Phone</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Cell Phone</label>
+        <span class="form-control">@request.RequestedFor.CellPhone</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Systems Requested</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Bureau</label>
+        <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Unit / Job Function</label>
+        <span class="form-control">@request.RequestedFor.Unit.Name</span>
+      </div>
+    </div>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="d-none d-md-table-cell">Description</th>
+            <th scope="col" class="nowrap">In Portfolio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in request.Systems)
+          {
+            <tr>
+              <td>@requestedSystem.System.SystemId</td>
+              <td>@requestedSystem.System.Name</td>
+              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+              <td>@requestedSystem.InPortfolio</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Additional Information</div>
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-4">
+        @if (request.IsContractor)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Contractor
+      </div>
+      <div class="col-md-4">
+        @if (request.IsHighProfileAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        High Profile
+      </div>
+      <div class="col-md-4">
+        @if (request.IsGlobalAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Global Access
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Caseload Type</label>
+        <span class="form-control">@request.CaseloadType</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Function</label>
+        <span class="form-control">@request.CaseloadFunction</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Number</label>
+        <span class="form-control">@request.CaseloadNumber</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form id="decision" method="post">
+  <div class="card mt-5">
+    <div class="card-header">Your Decision</div>
+    <div class="card-body">
+      <div class="form-group">
+        <label for="comments">Comments (required for denying a request)</label>
+        <textarea class="form-control" id="comments" name="comments" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="signature">Signature (Your password serves as your digital signature)</label>
+        <input type="password" class="form-control" id="signature" name="signature" required>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-4">
+      <a asp-action="MyReviews" class="btn btn-secondary">Cancel</a>
+    </div>
+    <div class="col-8 text-right">
+      <button id="deny" class="btn btn-danger">Deny</button>
+      <button id="approve" class="btn btn-success ml-3">Approve</button>
+    </div>
+  </div>
+</form>
+
+@section Scripts{
+  <script>
+    $(function () {
+      $("#deny").click(function () {
+        $("#decision").attr("action", "/Review/Deny/@Model.ReviewId");
+      });
+      $("#approve").click(function () {
+        $("#comments").prop("required", false);
+        $("#decision").attr("action", "/Review/Approve/@Model.ReviewId");
+      });
+    });
+  </script>
+}

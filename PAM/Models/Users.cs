@@ -32,7 +32,6 @@ namespace PAM.Models
 
         public string Title { get; set; } // e.g. INFORMATION SYSTEMS ANALYST II
         public string Department { get; set; } // e.g. Probation #640
-        public string Section { get; set; } // e.g. Information Services Bureau-Admin
         public string Service { get; set; } // e.g. Probation - Support Services
 
         public string Address { get; set; }
@@ -65,7 +64,6 @@ namespace PAM.Models
 
             Title = identity.GetClaim("Title");
             Department = identity.GetClaim("Department");
-            Section = identity.GetClaim("Section");
             Service = identity.GetClaim("Service");
 
             Address = identity.GetClaim(ClaimTypes.StreetAddress);
@@ -98,7 +96,6 @@ namespace PAM.Models
             if (MiddleName != null) claims.Add(new Claim("MiddleName", MiddleName));
             if (Title != null) claims.Add(new Claim("Title", Title));
             if (Department != null) claims.Add(new Claim("Department", Department));
-            if (Section != null) claims.Add(new Claim("Section", Section));
             if (Service != null) claims.Add(new Claim("Service", Service));
             if (Address != null) claims.Add(new Claim(ClaimTypes.StreetAddress, Address));
             if (City != null) claims.Add(new Claim(ClaimTypes.Locality, City));
@@ -147,7 +144,6 @@ namespace PAM.Models
 
         public string Title { get; set; }
         public string Department { get; set; }
-        public string Section { get; set; }
         public string Service { get; set; }
 
         public string Address { get; set; }

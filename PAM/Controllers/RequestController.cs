@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using AutoMapper;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
@@ -14,137 +17,172 @@ namespace PAM.Controllers
     [Authorize]
     public class RequestController : Controller
     {
+        private readonly IADService _adService;
+        private readonly UserService _userService;
         private readonly RequestService _requestService;
-        private readonly OrganizationService _orgService;
-        private readonly EmailHelper _emailHelper;
         private readonly IFluentEmail _email;
+        private readonly EmailHelper _emailHelper;
+        private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public RequestController(RequestService requestService, OrganizationService orgService, EmailHelper emailHelper, IFluentEmail email)
+        public RequestController(IADService adService, UserService userService, RequestService requestService,
+            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
         {
+            _adService = adService;
+            _userService = userService;
             _requestService = requestService;
-            _orgService = orgService;
-            _emailHelper = emailHelper;
             _email = email;
+            _emailHelper = emailHelper;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult Self()
+        public ActionResult CreateRequest()
         {
-            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            ViewData["Requests"] = _requestService.GetRequestsByUsername(username);
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult ReviewRequests()
-        {
-            int supervisorId = int.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
-            var requestsForReview = _requestService.GetRequestsForReview(supervisorId);
-
-            ViewData["RequestsForReview"] = requestsForReview;
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult RequestForReview(int reqId)
-        {
-            var request = _requestService.GetRequestedSystemsByRequestId(reqId);
-            TempData["RequestId"] = reqId;
-            ViewData["RequestForReview"] = request;
-            var requestedSystems = request.Systems;
-            ViewData["RelatedSystems"] = requestedSystems;
-            //List<RequestedSystem> tempReqSys = (List<RequestedSystem>)requestedSystems;
-            //ViewData["Unit"] = _orgService.GetUnitSystemBySystemId(tempSystem.)
-
-            return View();
+            return View(_requestService.GetRequestTypes());
         }
 
         [HttpPost]
-        public IActionResult RequestForReview(string submitValue, string comment)
+        public IActionResult CreateRequest(string forSelf, string requestedForUsername, int requestTypeId)
         {
-            var request = _requestService.GetRequestedSystemsByRequestId((int)TempData["RequestId"]);
-            var review = _requestService.GetReviewByRequestId(request.RequestId);
-            
-            switch (submitValue)
+            Employee employee = new Employee((ClaimsIdentity)User.Identity);
+            Requester requestedBy = _mapper.Map<Requester>(employee);
+            requestedBy = _userService.CreateRequester(requestedBy);
+
+            Requester requestedFor;
+            if (forSelf.Equals("yes"))
             {
-                case "approve":
-                    request.RequestStatus = RequestStatus.Approved;
-                    _requestService.UpdateRequest(request);
-                    review.Approve();
-                    _requestService.UpdateReview(review);
-                    SendReviewResultEmail(request);
-                    break;
-                case "reject":
-                    request.RequestStatus = RequestStatus.Denied;
-                    _requestService.UpdateRequest(request);
-                    review.Deny(comment);
-                    SendReviewResultEmail(request);
-                    break;
+                requestedFor = requestedBy;
+            }
+            else if (requestedForUsername != null)
+            {
+                employee = _adService.GetEmployeeByUsername(requestedForUsername);
+                employee = _userService.HasEmployee(requestedForUsername) ?
+                    _userService.UpdateEmployee(employee) : _userService.CreateEmployee(employee);
+                requestedFor = _mapper.Map<Requester>(employee);
+                requestedFor = _userService.CreateRequester(requestedFor);
+            }
+            else
+                requestedFor = _userService.CreateRequester(new Requester());
+
+            Request request = new Request();
+            request.RequestedBy = requestedBy;
+            request.RequestedFor = requestedFor;
+            request.RequestTypeId = requestTypeId;
+
+            request.Reviews = new List<Review>();
+            var requestType = _requestService.GetRequestType(requestTypeId);
+            var requiredSignatures = requestType.RequiredSignatures.OrderBy(s => s.Order).ToList();
+            for (int i = 0; i < requiredSignatures.Count; ++i)
+            {
+                var review = new Review
+                {
+                    ReviewOrder = i,
+                    ReviewerTitle = requiredSignatures[i].Title
+                };
+                if (review.ReviewerTitle.Equals("Supervisor"))
+                {
+                    Employee supervisor = _adService.GetEmployeeByName(request.RequestedFor.SupervisorName);
+                    supervisor = _userService.HasEmployee(supervisor.Username) ?
+                        _userService.UpdateEmployee(supervisor) : _userService.CreateEmployee(supervisor);
+                    review.ReviewerId = supervisor.EmployeeId;
+                }
+                request.Reviews.Add(review);
             }
 
-            return RedirectToAction("ReviewRequests");
-        }
+            request = _requestService.CreateRequest(request);
 
-        [HttpGet]
-        public IActionResult ProcessRequests(){
-            //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
-            return View();
-        }
+            _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
-        [HttpGet]
-        public IActionResult AllRequests(){
-            ViewData["Requests"] = _requestService.GetRequests();
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            var requests = _requestService.GetRequestsByUsername(username);
-            if (requests == null) return RedirectToAction("Self");
-            else return View();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirm(int id)
-        {
-            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            var requests = _requestService.GetRequestsByUsername(username);
-
-            foreach(var request in requests)
+            switch (request.RequestTypeId)
             {
-                if (request.RequestId == id) _requestService.RemoveRequest(request);
+                default:
+                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id = request.RequestId });
             }
-            return RedirectToAction("Self");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult EditRequest(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var request = _requestService.GetRequest(id);
+            switch (request.RequestTypeId)
+            {
+                default:
+                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id });
+            }
         }
 
-        public void SendReviewResultEmail(Request Request)
+        public IActionResult SubmitRequest(int id)
         {
-            string receipient = Request.RequestedFor.Email;
-            string emailName = "ReviewResult";
+            var request = _requestService.GetRequest(id);
+            if (request.RequestStatus != RequestStatus.Draft)
+                throw new InvalidOperationException();
 
-            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request };
+            request.RequestStatus = RequestStatus.UnderReview;
+            request.SubmittedOn = DateTime.Now;
+            _requestService.SaveChanges();
 
+            Employee reviewer = request.OrderedReviews[0].Reviewer;
+            string receipient = reviewer.Email;
+            string emailName = "ReviewRequest";
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
             _email.To(receipient)
                 .Subject(subject)
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
 
-            ViewData["Receipient"] = receipient;
-            ViewData["Subject"] = subject;
+            return RedirectToAction("MyRequests");
+        }
+
+        public IActionResult DeleteRequest(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            if (request.RequestStatus != RequestStatus.Draft)
+                throw new InvalidOperationException();
+
+            request.Deleted = true;
+            _requestService.SaveChanges();
+            return RedirectToAction("MyRequests");
+        }
+
+        [HttpGet]
+        public IActionResult MyRequests()
+        {
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var allRequests = _requestService.GetRequestsByUsername(username);
+            List<Request> underReviewRequests = new List<Request>();
+            List<Request> completedRequests = new List<Request>();
+            List<Request> draftRequests = new List<Request>();
+            foreach (var request in allRequests)
+            {
+                if (request.RequestStatus == RequestStatus.Draft)
+                    draftRequests.Add(request);
+                else if (request.RequestStatus == RequestStatus.UnderReview)
+                    underReviewRequests.Add(request);
+                else
+                    completedRequests.Add(request);
+            }
+            ViewData["allRequests"] = allRequests;
+            ViewData["underReviewRequests"] = underReviewRequests;
+            ViewData["completedRequests"] = completedRequests;
+            ViewData["draftRequests"] = draftRequests;
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ReviewRequests()
+        {
+            //-----TODO-----
+            ViewData["Requests"] = _requestService.GetRequests();
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AllRequests()
+        {
+            ViewData["Requests"] = _requestService.GetRequests();
+            return View();
         }
     }
 }
