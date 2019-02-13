@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="~/lib/bootswatch/cerulean/bootstrap.min.css">
-  <link rel="stylesheet" href="~/lib/font-awesome-5-css/css/all.min.css">
+  <link rel="stylesheet" href="~/lib/fontawesome-free-5.7.2-web/css/all.min.css">
   <link rel="stylesheet" href="~/css/styles.css">
   @RenderSection("StyleSheets", required: false)
   <title>PAM - @ViewData["Title"]</title>
@@ -26,7 +26,7 @@
             <a class="dropdown-item" asp-controller="Request" asp-action="ReviewRequests">Review Requests</a>
             <a class="dropdown-item" asp-controller="Request" asp-action="ProcessRequests">Process Requests</a>
             <a class="dropdown-item" asp-controller="Request" asp-action="AllRequests">All Requests</a>
-            <a class="dropdown-item" asp-controller="NewRequest" asp-action="CreateRequest">New Request</a>
+            <a class="dropdown-item" asp-controller="Request" asp-action="CreateRequest">New Request</a>
           </div>
         </li>
         <li class="nav-item">

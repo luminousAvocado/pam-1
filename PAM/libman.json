@@ -42,23 +42,6 @@
     {
       "library": "bootstrap-table@1.13.4",
       "destination": "wwwroot/lib/bootstrap-table/"
-    },
-    {
-      "provider": "unpkg",
-      "library": "font-awesome-5-css@5.4.1",
-      "destination": "wwwroot/lib/font-awesome-5-css/",
-      "files": [
-        "css/all.css",
-        "css/all.min.css",
-        "css/brands.css",
-        "css/brands.min.css",
-        "css/fa-brands.css",
-        "css/fa-brands.min.css",
-        "css/fa-regular.css",
-        "css/fa-regular.min.css",
-        "css/fa-solid.css",
-        "css/fa-solid.min.css"
-      ]
     }
   ]
 }

@@ -5,12 +5,14 @@
   var completedRequests = (List<Request>)ViewData["completedRequests"];
   var draftRequests = (List<Request>)ViewData["draftRequests"];
 }
+
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item active" aria-current="page">My Requests</li>
   </ol>
 </nav>
-<div>&nbsp;<a asp-controller="NewRequest" asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a></div>
+
+<div><a asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a></div>
 
 @if (!allRequests.Any())
 {
@@ -113,27 +115,30 @@
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Type</th>
-              <th scope="col">Requested For</th>
-              <th scope="col">Created By</th>
-              <th scope="col">Created On</th>
+              <th scope="col" class="text-nowrap">Requested For</th>
+              <th scope="col" class="text-nowrap d-none d-md-table-cell">Created On</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             @foreach (var request in draftRequests)
             {
-            <tr>
-              <td>@request.RequestId</td>
-              <td>@request.RequestType.DisplayCode</td>
-              <td>@request.RequestedFor.Name</td>
-              <td>@request.RequestedBy.Name</td>
-              <td>@request.CreatedOn</td>
-              <td>
-                <a asp-action="View">View</a> |
-                <a asp-controller="EditRequest" asp-action="Index" asp-route-id="@request.RequestId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@request.RequestId">Delete</a>
-              </td>
-            </tr>
+              <tr>
+                <td>@request.RequestId</td>
+                <td>@request.RequestType.DisplayCode</td>
+                <td>@request.RequestedFor.Name</td>
+                <td class=" d-none d-md-table-cell">@request.CreatedOn.Value.ToString("MM/dd/yyyy")</td>
+                <td>
+                  <a asp-action="EditRequest" asp-route-id="@request.RequestId" class="ml-2">
+                    <i class="fas fa-edit"></i>
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+                  <a href="javascript:deleteRequest(@request.RequestId)" class="ml-2">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="d-none d-md-inline">Delete</span>
+                  </a>
+                </td>
+              </tr>
             }
           </tbody>
         </table>
@@ -150,6 +155,11 @@
         var tab = $(tabTitle.attr("href"));
         tab.addClass("active show");
       });
+      function deleteRequest(id) {
+        var msg = "Are you sure you want to delete this request?";
+        if (confirm(msg))
+          window.location.href = "/Request/DeleteRequest/" + id;
+      }
     </script>
   }
 }
