@@ -82,6 +82,18 @@ namespace PAM.Data
                 .ToList();
         }
 
+        public ICollection<Review> GetReviewsByReviewerId(int reviewerId)
+        {
+            return _dbContext.Reviews.Include(r => r.Request).ThenInclude(rr => rr.RequestedFor)
+                .Include(r => r.Request).ThenInclude(rr => rr.RequestType)
+                .Where(r => r.ReviewerId == reviewerId && r.Request.RequestStatus != RequestStatus.Draft).ToList();
+        }
+
+        public Review GetReview(int id)
+        {
+            return _dbContext.Reviews.Find(id);
+        }
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();

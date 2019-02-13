@@ -1,0 +1,125 @@
+﻿@{
+  ViewData["Title"] = "My Reviews";
+  var allReviews = (List<Review>)ViewData["allReviews"];
+  var currentReviews = (List<Review>)ViewData["currentReviews"];
+  var completedReviews = (List<Review>)ViewData["completedReviews"];
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Review Requests</li>
+  </ol>
+</nav>
+
+@if (!allReviews.Any())
+{
+  <p>There are no requests for you to review.</p>
+}
+
+@if (allReviews.Any())
+{
+  <ul class="nav nav-tabs">
+    @if (currentReviews.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#review">To Be Reviewed</a>
+      </li>
+    }
+    @if (completedReviews.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#completed">Completed</a>
+      </li>
+    }
+  </ul>
+}
+
+@if (allReviews.Any())
+{
+  <div id="myTabContent" class="tab-content">
+
+    @if (currentReviews.Any())
+    {
+      <div id="review" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Type</th>
+              <th scope="col">Requester</th>
+              <th scope="col">Submitted</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var review in currentReviews)
+            {
+              <tr>
+                <td>@review.Request.RequestId</td>
+                <td>@review.Request.RequestType.DisplayCode</td>
+                <td>@review.Request.RequestedFor.Name</td>
+                <td>@review.Request.SubmittedOn.Value.ToString("MM/dd/yyyy")</td>
+                <td>
+                  <a asp-action="EditReview" asp-route-id="@review.ReviewId">
+                    <i class="fas fa-edit"></i>
+                    <span class="d-none d-md-inline">Review</span>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (completedReviews.Any())
+    {
+      <div id="completed" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Type</th>
+              <th scope="col">Requester</th>
+              <th scope="col">Status</th>
+              <th scope="col">Submitted</th>
+              <th scope="col">Completed</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var review in completedReviews)
+            {
+              <tr>
+                <td>@review.Request.RequestId</td>
+                <td>@review.Request.RequestType.DisplayCode</td>
+                <td>@review.Request.RequestedFor.Name</td>
+                <td>@review.Request.RequestStatus</td>
+                <td>@review.Request.SubmittedOn.Value.ToString("MM/dd/yyyy")</td>
+                <td>@review.Timestamp.Value.ToString("MM/dd/yyyy")</td>
+                <td>
+                  <a asp-action="EditReview" asp-route-id="@review.ReviewId">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  </div>
+
+  @section Scripts{
+    <script>
+      $(function () {
+        var tabTitle = $("ul.nav>li:first-child>a");
+        tabTitle.addClass("active");
+        var tab = $(tabTitle.attr("href"));
+        tab.addClass("active show");
+      });
+    </script>
+  }
+}

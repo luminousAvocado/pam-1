@@ -126,9 +126,10 @@ namespace PAM.Models
         [NotMapped]
         public bool Completed => Approved != null;
 
-        public void Approve()
+        public void Approve(string comments)
         {
             Approved = true;
+            Comments = comments;
             Timestamp = DateTime.Now;
         }
 
