@@ -6,6 +6,7 @@ footer {
   text-align: center;
 }
 
+/*
 .glyphicon-minus:before {
   content: "\2212";
 }
@@ -14,7 +15,6 @@ footer {
   content: "\002b";
 }
 
-/*
 body {
   background-repeat: no-repeat;
   background-position: center;
