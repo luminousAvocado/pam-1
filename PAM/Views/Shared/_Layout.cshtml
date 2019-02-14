@@ -44,9 +44,11 @@
             <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
           </div>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:confirmLogout()"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+        </li>
       </ul>
       <span style="color:white;" class="d-none d-lg-inline">Welcome, @identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)!</span>
-          <a class="ml-3" href="javascript:confirmLogout()"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
     </div>
   </nav>
   <!-- Main Content -->
@@ -56,7 +58,7 @@
     </div>
   </div>
   <!-- Footer -->
-  <footer >&copy; Copyright 2018-2019. Los Angeles County. </footer>
+  <footer>&copy; Copyright 2018-2019. Los Angeles County. </footer>
   <!-- Scripts -->
   <script src="~/lib/jquery/jquery.min.js"></script>
   <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
