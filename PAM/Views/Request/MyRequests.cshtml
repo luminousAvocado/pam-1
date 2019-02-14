@@ -7,12 +7,12 @@
 }
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page">My Requests</li>
+  <ol class="breadcrumb bg-info ">
+    <li class="breadcrumb-item active text-white" aria-current="page">My Requests</li>
   </ol>
 </nav>
 
-<div><a asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a></div>
+<div><a asp-action="CreateRequest" class="btn btn-primary float-right"><span><i class="fas fa-plus"></i></span> New Request</a></div>
 
 @if (!allRequests.Any())
 {
