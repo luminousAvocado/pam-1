@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------
     [ Background for Login ]
 */
-body {
-  background: linear-gradient(to right, #19447b 0%, #9da0a4 50%, #19447b 100%);
-  background: -webkit-linear-gradient(to right, #19447b 0%, #9da0a4 50%, #19447b 100%);
+body{
+  background-color: #19547b;
 }
 
 .bg-display {
+  background-image: url("../Images/losangeles.jpg");
   width: 100%;
   min-height: 100vh;
   justify-content: flex-end;
