@@ -102,6 +102,12 @@ namespace PAM.Controllers
             }
         }
 
+        public IActionResult ViewRequest(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            return View(request);
+        }
+
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
