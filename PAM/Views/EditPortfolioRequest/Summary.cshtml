@@ -16,9 +16,9 @@
 }
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+  <ol class="breadcrumb bg-info ">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+    <li class="breadcrumb-item active text-white" aria-current="page">Request #@ViewData["id"]</li>
   </ol>
 </nav>
 
@@ -34,7 +34,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header">Request Information</div>
+  <div class="card-header bg-info text-white">Request Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -59,7 +59,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header bg-info text-white">
     Requester Information
     <a class="float-right" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]">Edit</a>
   </div>
@@ -128,7 +128,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header bg-info text-white">
     Systems Requested
     <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]">Edit</a>
   </div>
@@ -170,7 +170,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header bg-info text-white">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]">Edit</a>
   </div>
@@ -228,7 +228,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header bg-info text-white">
     Signature(s) Required
     <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]">Edit</a>
   </div>

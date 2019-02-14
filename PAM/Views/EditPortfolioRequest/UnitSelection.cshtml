@@ -48,9 +48,9 @@
 }
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+  <ol class="breadcrumb bg-info">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+    <li class="breadcrumb-item active text-white" aria-current="page">Request #@ViewData["id"]</li>
   </ol>
 </nav>
 
@@ -64,7 +64,7 @@
     </div>
     <div class="col-12 col-md-6 mb-3">
       <p>System Portfolio</p>
-      <table class="table sticky-top">
+      <table class="table sticky-top" style="top:56px;">
         <thead>
           <tr>
             <th scope="col">Id</th>
