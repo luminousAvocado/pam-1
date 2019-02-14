@@ -1,4 +1,20 @@
-﻿/*
+﻿.main-content {
+  margin: 1em;
+}
+
+footer {
+  text-align: center;
+}
+
+.glyphicon-minus:before {
+  content: "\2212";
+}
+
+.glyphicon-plus:before {
+  content: "\002b";
+}
+
+/*
 body {
   background-repeat: no-repeat;
   background-position: center;
@@ -25,14 +41,6 @@ background-color: yellow;
 /*----------------------------------------------------------
     [ Main Content Styling ]
 */
-
-.main-content {
-  margin: 1em;
-}
-
-footer {
-  text-align: center;
-}
 
 /*
 .content-container {
