@@ -3,35 +3,37 @@
 @{
   ViewData["Title"] = "Index";
 }
-
+<!doctype html>
+<html lang="en">
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.13.3/dist/bootstrap-table.min.css">
-  
+
 </head>
+<body>
 
   <h2>Bureaus</h2>
 
   <p>
     <a asp-action="CreateBureau">Create New</a>
   </p>
-  <table class="table table-hover">
+  <table class="table table-hover" data-toggle="table" data-pagination="true" data-search="true">
     <thead class="thead-dark">
       <tr>
-        <th>
+        <th data-sortable="true">
           @Html.DisplayNameFor(model => model.Code)
         </th>
         <th>
           @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
+        <th data-sortable="true">
           @Html.DisplayNameFor(model => model.BureauType)
         </th>
-        <th>
+        <th data-sortable="true">
           @Html.DisplayNameFor(model => model.DisplayOrder)
         </th>
-        <th></th>
+        <th>Options</th>
       </tr>
     </thead>
     <tbody>
@@ -51,12 +53,23 @@
             @Html.DisplayFor(modelItem => item.DisplayOrder)
           </td>
           <td>
-            <a asp-action="EditBureau" asp-route-id="@item.BureauId">Edit</a> |
-            <a asp-action="DetailsBureau" asp-route-id="@item.BureauId">Details</a> |
-            <a asp-action="DeleteBureau" asp-route-id="@item.BureauId">Delete</a>
+            <a asp-action="EditBureau" asp-route-id="@item.BureauId"><i class="fas fa-edit"></i></a> |
+            <a asp-action="DetailsBureau" asp-route-id="@item.BureauId"><i class="fas fa-info-circle"></i></a> |
+            <a asp-action="DeleteBureau" asp-route-id="@item.BureauId"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
       }
     </tbody>
   </table>
 
+  <!-- jQuery first, then Popper.js, then Bootstrap JS, and then Bootstrap Table JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.2/core.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.13.4/dist/bootstrap-table.min.js"></script>
+
+</body>
+
+
+</html>

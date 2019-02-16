@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using PAM.Services;
-using System.Diagnostics;
 
 namespace PAM.Controllers
 {
@@ -23,7 +24,7 @@ namespace PAM.Controllers
             _context = context;
         }
 
-        
+
         public IActionResult SelectUnit()
         {
             var myTree = _treeService.GenerateTree();
@@ -33,16 +34,16 @@ namespace PAM.Controllers
             //return View("../UnitSelection/UnitSelection");
         }
 
-        
-        
+
+
         public async Task<IActionResult> DetailsUnit(int? selectedUnit)
         {
-            Debug.WriteLine(selectedUnit + "************************");
+
             if (selectedUnit == null)
             {
                 return NotFound();
             }
-            Debug.WriteLine(selectedUnit + "************************");
+           ;
 
             var unit = await _context.Units
                 .Include(u => u.Bureau)
@@ -180,12 +181,166 @@ namespace PAM.Controllers
             return _context.Units.Any(e => e.UnitId == id);
         }
 
-        public async Task<IActionResult> SystemPortfolio(int? id)
+        [HttpGet]
+        public IActionResult SystemPortfolio(int? id)
         {
-            //get related data
-            var systemPortfolio = _context.UnitSystems.Include(u => u.System).Where(u => u.UnitId == id).ToListAsync();
+            //fix naming convention
 
-            return View(await systemPortfolio);
+            TempData["UnitId"] = id;
+            ViewData["SystemPortfolio"] = _context.UnitSystems.Include(u => u.System).Where(u => u.UnitId == id).ToList();
+            var employees = _context.Systems.ToList();
+            List<String> employeeName = new List<string>();
+            foreach (var employee in employees)
+            {
+                employeeName.Add(employee.Name);
+            }
+            ViewData["adEmployees"] = employeeName;
+
+
+            return View();
         }
+
+
+        [HttpPost]
+        public IActionResult SystemPortfolio(string adEmployees)
+        {
+            //this allows us to keep systems in display fixthis to keep in session
+            var employees = _context.Systems.ToList();
+            List<String> employeeName = new List<string>();
+            foreach (var employee in employees)
+            {
+                employeeName.Add(employee.Name);
+            }
+            ViewData["adEmployees"] = employeeName;
+            //--------------------------------------
+
+            int unitId = (int)TempData["UnitId"];
+
+            ViewData["SystemPortfolio"] = _context.UnitSystems.Include(u => u.System).Where(u => u.UnitId == unitId).ToList();
+
+            //this is th esytem we want to update
+            var unitSystem = _context.UnitSystems.FirstOrDefault(b => b.System.Name.Equals(adEmployees));
+            Debug.WriteLine(unitSystem.UnitId);
+            if (unitSystem != null)
+            {
+                unitSystem.UnitId = unitId;
+                Debug.WriteLine(unitSystem.UnitId);
+                //_context.Update(unitSystem);
+                //_context.SaveChangesAsync();
+
+                _context.Update(unitSystem);
+                _context.SaveChanges();
+
+
+
+            }
+
+            return View();
+        }
+
+        //-------------------------------------------------------------
+        // GET: Systems1/Details/5
+        public async Task<IActionResult> DetailsSystem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var system = await _context.Systems
+                .FirstOrDefaultAsync(m => m.SystemId == id);
+            if (system == null)
+            {
+                return NotFound();
+            }
+
+            return View(system);
+        }
+
+        // GET: Systems1/Edit/5
+        public async Task<IActionResult> EditSystem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var system = await _context.Systems.FindAsync(id);
+            if (system == null)
+            {
+                return NotFound();
+            }
+            return View(system);
+        }
+
+        // POST: Systems1/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSystem(int id, [Bind("SystemId,Name,Description,Owner,Retired")] Models.System system)
+        {
+            if (id != system.SystemId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(system);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SystemExists(system.SystemId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+            }
+            return View(system);
+        }
+
+        // GET: Systems1/Delete/5
+        public async Task<IActionResult> DeleteSystem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var system = await _context.Systems
+                .FirstOrDefaultAsync(m => m.SystemId == id);
+            if (system == null)
+            {
+                return NotFound();
+            }
+
+            return View(system);
+        }
+
+        // POST: Systems1/Delete/5
+        [HttpPost, ActionName("DeleteSystem")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmedSystem(int id)
+        {
+            var system = await _context.Systems.FindAsync(id);
+            _context.Systems.Remove(system);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(SystemPortfolio));
+        }
+
+        private bool SystemExists(int id)
+        {
+            return _context.Systems.Any(e => e.SystemId == id);
+        }
+
     }
 }
