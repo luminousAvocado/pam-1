@@ -12,7 +12,7 @@
   </ol>
 </nav>
 
-<div><a asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a></div>
+<div><a asp-action="CreateRequest" class="btn btn-primary float-right"><span><i class="fas fa-plus"></i></span> New Request</a></div>
 
 @if (!allRequests.Any())
 {
@@ -67,7 +67,10 @@
                 <td>@request.RequestType.DisplayCode</td>
                 <td>@request.SubmittedOn</td>
                 <td>
-                  <a asp-action="View">View</a>
+                  <a asp-action="ViewRequest" asp-route-id="@request.RequestId">
+                    <i class="fas fa-eye"></i>
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
                 </td>
               </tr>
             }
@@ -98,7 +101,10 @@
                 <td>@request.SubmittedOn</td>
                 <td>@request.CompletedOn</td>
                 <td>
-                  <a asp-action="View">View</a>
+                  <a asp-action="ViewRequest" asp-route-id="@request.RequestId">
+                    <i class="fas fa-eye"></i>
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
                 </td>
               </tr>
             }

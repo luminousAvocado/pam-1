@@ -102,6 +102,12 @@ namespace PAM.Controllers
             }
         }
 
+        public IActionResult ViewRequest(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            return View(request);
+        }
+
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
@@ -171,16 +177,33 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult ReviewRequests()
+        public IActionResult AllRequests()
         {
-            //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
+            string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
+            var allRequests = _requestService.GetRequests();
+            List<Request> underReviewRequests = new List<Request>();
+            List<Request> completedRequests = new List<Request>();
+            List<Request> draftRequests = new List<Request>();
+            foreach (var request in allRequests)
+            {
+                if (request.RequestStatus == RequestStatus.Draft)
+                    draftRequests.Add(request);
+                else if (request.RequestStatus == RequestStatus.UnderReview)
+                    underReviewRequests.Add(request);
+                else
+                    completedRequests.Add(request);
+            }
+            ViewData["allRequests"] = allRequests;
+            ViewData["underReviewRequests"] = underReviewRequests;
+            ViewData["completedRequests"] = completedRequests;
+            ViewData["draftRequests"] = draftRequests;
             return View();
         }
 
         [HttpGet]
-        public IActionResult AllRequests()
+        public IActionResult ReviewRequests()
         {
+            //-----TODO-----
             ViewData["Requests"] = _requestService.GetRequests();
             return View();
         }
