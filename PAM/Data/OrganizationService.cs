@@ -22,9 +22,9 @@ namespace PAM.Data
             return _dbContext.Locations.OrderBy(l => l.Name).ToList();
         }
 
-        public Location GetLocation(int i)
+        public Location GetLocation(int id)
         {
-            return _dbContext.Locations.Find(i);
+            return _dbContext.Locations.Find(id);
         }
 
         public Location AddLocation(Location location)
@@ -34,10 +34,27 @@ namespace PAM.Data
             return location;
         }
 
+        public ICollection<BureauType> GetBureauTypes()
+        {
+            return _dbContext.BureauTypes.OrderBy(t => t.DisplayCode).ToList();
+        }
+
         public ICollection<Bureau> GetBureaus()
         {
             return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code).
                 AsNoTracking().ToList();
+        }
+
+        public Bureau GetBureau(int id)
+        {
+            return _dbContext.Bureaus.Where(u => u.BureauId == id).Include(u => u.BureauType).FirstOrDefault();
+        }
+
+        public Bureau AddBureau(Bureau bureau)
+        {
+            _dbContext.Bureaus.Add(bureau);
+            _dbContext.SaveChanges();
+            return bureau;
         }
 
         public ICollection<Unit> GetUnits()

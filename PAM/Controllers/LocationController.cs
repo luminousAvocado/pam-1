@@ -53,7 +53,7 @@ namespace PAM.Controllers
             var location = _organizationService.GetLocation(id);
             _mapper.Map(update, location);
             _organizationService.SaveChanges();
-            return RedirectToAction(nameof(ViewLocation), new { id = location.LocationId });
+            return RedirectToAction(nameof(ViewLocation), new { id });
         }
 
         public IActionResult RemoveLocation(int id)

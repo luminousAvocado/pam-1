@@ -1,0 +1,21 @@
+﻿@model Bureau
+@{
+  ViewData["Title"] = "View Bureau";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Bureaus">Bureaus</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.Code</li>
+  </ol>
+</nav>
+
+<p class="text-right"><a asp-action="EditBureau" asp-route-id="@Model.BureauId" class="btn btn-primary">Edit Bureau</a></p>
+
+<table class="table table-bordered">
+  <tr><th>Id</th><td>@Model.BureauId</td></tr>
+  <tr><th>Code</th><td>@Model.Code</td></tr>
+  <tr><th>Description</th><td>@Model.Description</td></tr>
+  <tr><th>Type</th><td>@Model.BureauType?.DisplayCode</td></tr>
+  <tr><th>Display Order</th><td>@Model.DisplayOrder</td></tr>
+</table>

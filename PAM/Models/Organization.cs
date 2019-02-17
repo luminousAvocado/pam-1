@@ -44,7 +44,7 @@ namespace PAM.Models
         public int? BureauTypeId { get; set; }
         public BureauType BureauType { get; set; }
 
-        public int? DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; } = 50;
 
         public bool Deleted { get; set; } = false;
     }

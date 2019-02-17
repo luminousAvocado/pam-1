@@ -15,6 +15,7 @@ namespace PAM.Data
         }
 
         public DbSet<Location> Locations { get; set; }
+        public DbSet<BureauType> BureauTypes { get; set; }
         public DbSet<Bureau> Bureaus { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Models.System> Systems { get; set; }
@@ -30,6 +31,7 @@ namespace PAM.Data
             modelBuilder.Entity<Location>().Property(l => l.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Location>().HasQueryFilter(l => !l.Deleted);
 
+            modelBuilder.Entity<Bureau>().Property(l => l.DisplayOrder).HasDefaultValue(50);
             modelBuilder.Entity<Bureau>().Property(l => l.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Bureau>().HasQueryFilter(l => !l.Deleted);
 

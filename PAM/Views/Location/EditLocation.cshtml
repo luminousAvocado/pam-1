@@ -11,6 +11,7 @@
     }
   </script>
 }
+
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-action="Locations">Locations</a></li>
@@ -21,11 +22,7 @@
 
 <form method="post">
   <div class="form-row">
-    <div class="form-group col-md-6">
-      <label asp-for="LocationId">Id</label>
-      <input asp-for="LocationId" type="text" readonly class="form-control">
-    </div>
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-12">
       <label asp-for="Name">Name</label>
       <input asp-for="Name" type="text" class="form-control" required>
     </div>
