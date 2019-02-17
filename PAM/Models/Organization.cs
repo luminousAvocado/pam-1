@@ -14,6 +14,8 @@ namespace PAM.Models
         public string City { get; set; }
         public string State { get; set; }
         public string Zip { get; set; }
+
+        public bool Deleted { get; set; } = false;
     }
 
     [Table("BureauTypes")]
@@ -43,6 +45,8 @@ namespace PAM.Models
         public BureauType BureauType { get; set; }
 
         public int? DisplayOrder { get; set; }
+
+        public bool Deleted { get; set; } = false;
     }
 
     [Table("UnitTypes")]
@@ -84,5 +88,7 @@ namespace PAM.Models
         public int? DisplayOrder { get; set; }
 
         public ICollection<UnitSystem> Systems { get; set; }
+
+        public bool Deleted { get; set; } = false;
     }
 }

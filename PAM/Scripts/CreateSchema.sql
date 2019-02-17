@@ -53,6 +53,7 @@ CREATE TABLE [Locations] (
     [City] nvarchar(max) NULL,
     [State] nvarchar(max) NULL,
     [Zip] nvarchar(max) NULL,
+    [Deleted] bit NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Locations] PRIMARY KEY ([LocationId])
 );
 
@@ -75,7 +76,7 @@ CREATE TABLE [Systems] (
     [Name] nvarchar(max) NOT NULL,
     [Description] nvarchar(max) NULL,
     [Owner] nvarchar(max) NULL,
-    [Retired] bit NOT NULL,
+    [Retired] bit NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Systems] PRIMARY KEY ([SystemId])
 );
 
@@ -98,6 +99,7 @@ CREATE TABLE [Bureaus] (
     [Description] nvarchar(max) NOT NULL,
     [BureauTypeId] int NULL,
     [DisplayOrder] int NULL,
+    [Deleted] bit NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Bureaus] PRIMARY KEY ([BureauId]),
     CONSTRAINT [FK_Bureaus_BureauTypes_BureauTypeId] FOREIGN KEY ([BureauTypeId]) REFERENCES [BureauTypes] ([BureauTypeId]) ON DELETE NO ACTION
 );
@@ -122,6 +124,7 @@ CREATE TABLE [Units] (
     [UnitTypeId] int NULL,
     [ParentId] int NULL,
     [DisplayOrder] int NULL,
+    [Deleted] bit NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Units] PRIMARY KEY ([UnitId]),
     CONSTRAINT [FK_Units_Bureaus_BureauId] FOREIGN KEY ([BureauId]) REFERENCES [Bureaus] ([BureauId]) ON DELETE CASCADE,
     CONSTRAINT [FK_Units_Units_ParentId] FOREIGN KEY ([ParentId]) REFERENCES [Units] ([UnitId]) ON DELETE NO ACTION,
@@ -331,7 +334,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190212221610_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190216191159_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

@@ -27,6 +27,16 @@ namespace PAM.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Location>().Property(l => l.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Location>().HasQueryFilter(l => !l.Deleted);
+
+            modelBuilder.Entity<Bureau>().Property(l => l.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Bureau>().HasQueryFilter(l => !l.Deleted);
+
+            modelBuilder.Entity<Unit>().Property(l => l.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Unit>().HasQueryFilter(l => !l.Deleted);
+
+            modelBuilder.Entity<Models.System>().Property(s => s.Retired).HasDefaultValue(false);
             modelBuilder.Entity<Models.System>().HasQueryFilter(s => !s.Retired);
             modelBuilder.Entity<UnitSystem>().HasKey(x => new { x.UnitId, x.SystemId });
 

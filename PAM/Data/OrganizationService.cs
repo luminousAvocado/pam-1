@@ -17,6 +17,23 @@ namespace PAM.Data
             _logger = logger;
         }
 
+        public ICollection<Location> GetLocations()
+        {
+            return _dbContext.Locations.OrderBy(l => l.Name).ToList();
+        }
+
+        public Location GetLocation(int i)
+        {
+            return _dbContext.Locations.Find(i);
+        }
+
+        public Location AddLocation(Location location)
+        {
+            _dbContext.Locations.Add(location);
+            _dbContext.SaveChanges();
+            return location;
+        }
+
         public ICollection<Bureau> GetBureaus()
         {
             return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code).
@@ -45,6 +62,11 @@ namespace PAM.Data
                             .ToList();
 
             return unitAndRelatedSystems;
+        }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
         }
     }
 }

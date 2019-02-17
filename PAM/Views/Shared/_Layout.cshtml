@@ -58,17 +58,18 @@
     </div>
   </div>
   <!-- Footer -->
-  <footer>&copy; Copyright 2018-2019. Los Angeles County. </footer>
+  <footer class="bg-dark text-white p-3 text-center">&copy; Copyright 2018-2019. Los Angeles County.</footer>
   <!-- Scripts -->
   <script src="~/lib/jquery/jquery.min.js"></script>
+  <script src="~/lib/popper.js/umd/popper.min.js"></script>
   <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
-    <script>
-      function confirmLogout() {
-        var msg = "Are you sure you want to logout?";
-        if (confirm(msg))
-          window.location.href = "/Account/Logout/";
-      }
-    </script>
+  <script>
+    function confirmLogout() {
+      var msg = "Are you sure you want to logout?";
+      if (confirm(msg))
+        window.location.href = "/Account/Logout/";
+    }
+  </script>
   @RenderSection("Scripts", required: false)
 </body>
 </html>

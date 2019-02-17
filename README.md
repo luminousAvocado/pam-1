@@ -11,8 +11,12 @@ PAM is developed by Jaime Borunda, Kevork Gilabouchian, James Kang, and Brandon 
 ASP.NET Core 2.2 and Microsoft SQL Server are required. As for an IDE, either Visual Studio 2017 or Visual Studio
 Code is fine, though Visual Studio 2017 is preferred as it has better support for coding rules in `.editorconfig`.
 
-*If you installed Visual Studio 2017 before ASP.NET 2.2 was released (12/4/2018), you need to download and install
-the [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2).*
+*Currently the version of .NET Core bundled in Visual Studio 2017 is 2.1. You need to download and install
+[.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2).*
+
+A SMTP server is also needed to send out email notifications. It is possible to use a remote SMTP server like GMail,
+though it would be eaiser, especially for testing during development, if you set up a local email server like
+[hMailServer](https://csns.calstatela.edu/wiki/content/cysun/course_materials/hmailserver).
 
 1. Clone the Git repository.
 2. Copy `appsettings.sample.json` to `appsettings.json`, and edit `appsettings.json` to match your environment.
@@ -22,7 +26,7 @@ the [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2).*
     $ dotnet ef migrations add InitialSchema
     $ dotnet ef database update
 ```
-If you have an old database, you should drop it first using the following command:
+If you have an old database, you should drop it first either manually or using the following command:
 ```
     $ dotnet ef database drop
 ```
