@@ -70,15 +70,14 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
-        public ICollection<UnitSystem> GetRelatedSystems(int unitId)
+        public ICollection<Unit> GetBureauChildren(int bureauId)
         {
-            // Returns UnitSystem JOIN System. Systems related to the specific unitId
-            var unitAndRelatedSystems = _dbContext.UnitSystems.Include(u => u.System)
-                            .Include(u => u.Unit)
-                            .Where(x => x.UnitId == unitId)
-                            .ToList();
+            return _dbContext.Units.Where(u => u.BureauId == bureauId).ToList();
+        }
 
-            return unitAndRelatedSystems;
+        public ICollection<Unit> GetUnitChildren(int parentId)
+        {
+            return _dbContext.Units.Where(u => u.ParentId == parentId).ToList();
         }
 
         public void SaveChanges()

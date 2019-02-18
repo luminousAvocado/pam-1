@@ -65,8 +65,29 @@ namespace PAM.Controllers
         {
             var bureau = _organizationService.GetBureau(id);
             bureau.Deleted = true;
+            removeChildren(bureau);
             _organizationService.SaveChanges();
             return RedirectToAction(nameof(Bureaus));
+        }
+
+        private void removeChildren(Bureau bureau)
+        {
+            var units = _organizationService.GetBureauChildren(bureau.BureauId);
+            foreach (var unit in units)
+            {
+                unit.Deleted = true;
+                removeChildren(unit);
+            }
+        }
+
+        private void removeChildren(Unit parent)
+        {
+            var units = _organizationService.GetUnitChildren(parent.UnitId);
+            foreach (var unit in units)
+            {
+                unit.Deleted = true;
+                removeChildren(unit);
+            }
         }
     }
 }

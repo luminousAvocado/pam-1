@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
@@ -16,15 +18,27 @@ namespace PAM.Controllers
 {
     public class UnitController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly TreeViewService _treeService;
-        public UnitController(AppDbContext context, TreeViewService treeService)
+        private readonly OrganizationService _organizationService;
+        private readonly TreeViewService _treeViewService;
+        private readonly IMapper _mapper;
+        private readonly ILogger<UnitController> _logger;
+
+        public UnitController(OrganizationService organizationService, TreeViewService treeViewService,
+            IMapper mapper, ILogger<UnitController> logger )
         {
-            _treeService = treeService;
-            _context = context;
+            _organizationService = organizationService;
+            _treeViewService = treeViewService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
+        public IActionResult Units()
+        {
+            ViewData["tree"] = _treeViewService.GenerateTreeInJson();
+            return View();
+        }
 
+        /*
         public IActionResult SelectUnit()
         {
             var myTree = _treeService.GenerateTree();
@@ -342,5 +356,8 @@ namespace PAM.Controllers
             return _context.Systems.Any(e => e.SystemId == id);
         }
 
+    */
     }
+
+
 }

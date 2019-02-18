@@ -31,12 +31,12 @@ namespace PAM.Data
             modelBuilder.Entity<Location>().Property(l => l.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Location>().HasQueryFilter(l => !l.Deleted);
 
-            modelBuilder.Entity<Bureau>().Property(l => l.DisplayOrder).HasDefaultValue(50);
-            modelBuilder.Entity<Bureau>().Property(l => l.Deleted).HasDefaultValue(false);
-            modelBuilder.Entity<Bureau>().HasQueryFilter(l => !l.Deleted);
+            modelBuilder.Entity<Bureau>().Property(b => b.DisplayOrder).HasDefaultValue(50);
+            modelBuilder.Entity<Bureau>().Property(b => b.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Bureau>().HasQueryFilter(b => !b.Deleted);
 
-            modelBuilder.Entity<Unit>().Property(l => l.Deleted).HasDefaultValue(false);
-            modelBuilder.Entity<Unit>().HasQueryFilter(l => !l.Deleted);
+            modelBuilder.Entity<Unit>().Property(u => u.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Unit>().HasQueryFilter(u => !u.Deleted);
 
             modelBuilder.Entity<Models.System>().Property(s => s.Retired).HasDefaultValue(false);
             modelBuilder.Entity<Models.System>().HasQueryFilter(s => !s.Retired);
