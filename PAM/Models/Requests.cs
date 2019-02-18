@@ -65,8 +65,9 @@ namespace PAM.Models
 
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Draft;
 
-        public DateTime? CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
         public DateTime? SubmittedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public DateTime? CompletedOn { get; set; }
 
         public bool IsContractor { get; set; } = false;
@@ -92,6 +93,9 @@ namespace PAM.Models
         public string Notes { get; set; }
 
         public bool Deleted { get; set; } = false;
+
+        [NotMapped]
+        public string DisplayId => SubmittedOn?.Year + "-" + RequestId.ToString("D6");
 
         [NotMapped]
         public bool IsSelfRequest => RequestedById == RequestedForId;

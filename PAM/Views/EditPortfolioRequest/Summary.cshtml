@@ -26,7 +26,7 @@
 
 <div class="row mb-3">
   <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
     <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
@@ -61,7 +61,7 @@
 <div class="card">
   <div class="card-header">
     Requester Information
-    <a class="float-right" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
@@ -130,7 +130,7 @@
 <div class="card">
   <div class="card-header">
     Systems Requested
-    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
@@ -172,7 +172,7 @@
 <div class="card">
   <div class="card-header">
     Additional Information
-    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row mb-2">
@@ -230,7 +230,7 @@
 <div class="card">
   <div class="card-header">
     Signature(s) Required
-    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     @foreach (var review in Model.Reviews)
@@ -247,7 +247,7 @@
 
 <div class="row mt-3">
   <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
     <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>

@@ -36,7 +36,6 @@ namespace PAM.Data
 
         public Request CreateRequest(Request request)
         {
-            request.CreatedOn = DateTime.Now;
             _dbContext.Requests.Add(request);
             _dbContext.SaveChanges();
             return request;

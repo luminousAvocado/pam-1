@@ -22,6 +22,12 @@
 @if (allRequests.Any())
 {
   <ul class="nav nav-tabs">
+    @if (draftRequests.Any())
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#drafts">Drafts</a>
+      </li>
+    }
     @if (underReviewRequests.Any())
     {
       <li class="nav-item">
@@ -34,18 +40,48 @@
         <a class="nav-link" data-toggle="tab" href="#completed">Completed</a>
       </li>
     }
-    @if (draftRequests.Any())
-    {
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#drafts">Drafts</a>
-      </li>
-    }
   </ul>
 }
 
 @if (allRequests.Any())
 {
   <div id="myTabContent" class="tab-content">
+
+    @if (draftRequests.Any())
+    {
+      <div id="drafts" class="tab-pane fade p-2">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col" class="d-none d-sm-table-cell">CreatedOn</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var request in draftRequests)
+            {
+              <tr>
+                <td>
+                  <a asp-action="EditRequest" asp-route-id="@request.RequestId">@request.RequestType.DisplayCode</a>
+                </td>
+                <td class="d-none d-sm-table-cell">@request.CreatedOn.ToString("MM/dd/yyyy")</td>
+                <td class="text-right">
+                  <a asp-action="EditRequest" asp-route-id="@request.RequestId" class="btn btn-primary">
+                    <i class="fas fa-edit"></i>
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+                  <a href="javascript:deleteRequest(@request.RequestId)" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="d-none d-md-inline">Delete</span>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
 
     @if (underReviewRequests.Any())
     {
@@ -55,23 +91,20 @@
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Type</th>
-              <th scope="col">Submitted</th>
-              <th scope="col"></th>
+              <th scope="col">SubmittedOn</th>
+              <th scope="col">UpdatedOn</th>
             </tr>
           </thead>
           <tbody>
             @foreach (var request in underReviewRequests)
             {
               <tr>
-                <td>@request.RequestId</td>
-                <td>@request.RequestType.DisplayCode</td>
-                <td>@request.SubmittedOn</td>
+                <td>@request.DisplayId</td>
                 <td>
-                  <a asp-action="ViewRequest" asp-route-id="@request.RequestId">
-                    <i class="fas fa-eye"></i>
-                    <span class="d-none d-md-inline">View</span>
-                  </a>
+                  <a asp-action="ViewRequest">@request.RequestType.DisplayCode</a>
                 </td>
+                <td>@request.SubmittedOn?.ToString("MM/dd/yyyy")</td>
+                <td>@request.UpdatedOn?.ToString("MM/dd/yyyy")</td>
               </tr>
             }
           </tbody>
@@ -87,63 +120,22 @@
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Type</th>
-              <th scope="col">Submitted</th>
-              <th scope="col">Completed</th>
-              <th scope="col"></th>
+              <th scope="col">Status</th>
+              <th scope="col">SubmittedOn</th>
+              <th scope="col">CompletedOn</th>
             </tr>
           </thead>
           <tbody>
             @foreach (var request in completedRequests)
             {
               <tr>
-                <td>@request.RequestId</td>
-                <td>@request.RequestType.DisplayCode</td>
-                <td>@request.SubmittedOn</td>
-                <td>@request.CompletedOn</td>
+                <td>@request.DisplayId</td>
                 <td>
-                  <a asp-action="ViewRequest" asp-route-id="@request.RequestId">
-                    <i class="fas fa-eye"></i>
-                    <span class="d-none d-md-inline">View</span>
-                  </a>
+                  <a asp-action="ViewRequest">@request.RequestType.DisplayCode</a>
                 </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
-
-    @if (draftRequests.Any())
-    {
-      <div id="drafts" class="tab-pane fade p-2">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Type</th>
-              <th scope="col" class="text-nowrap">Requested For</th>
-              <th scope="col" class="text-nowrap d-none d-md-table-cell">Created On</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var request in draftRequests)
-            {
-              <tr>
-                <td>@request.RequestId</td>
-                <td>@request.RequestType.DisplayCode</td>
-                <td>@request.RequestedFor.Name</td>
-                <td class=" d-none d-md-table-cell">@request.CreatedOn.Value.ToString("MM/dd/yyyy")</td>
-                <td>
-                  <a asp-action="EditRequest" asp-route-id="@request.RequestId" class="ml-2">
-                    <i class="fas fa-edit"></i>
-                    <span class="d-none d-md-inline">Edit</span>
-                  </a>
-                  <a href="javascript:deleteRequest(@request.RequestId)" class="ml-2">
-                    <i class="fas fa-trash-alt"></i>
-                    <span class="d-none d-md-inline">Delete</span>
-                  </a>
-                </td>
+                <td>@request.RequestStatus</td>
+                <td>@request.SubmittedOn?.ToString("MM/dd/yyyy")</td>
+                <td>@request.CompletedOn?.ToString("MM/dd/yyyy")</td>
               </tr>
             }
           </tbody>
