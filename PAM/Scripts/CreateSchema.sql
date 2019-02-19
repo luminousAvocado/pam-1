@@ -135,6 +135,7 @@ GO
 
 CREATE TABLE [Requesters] (
     [RequesterId] int NOT NULL IDENTITY,
+    [EmployeeId] int NOT NULL,
     [Username] nvarchar(max) NOT NULL,
     [Name] nvarchar(max) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
@@ -176,8 +177,9 @@ CREATE TABLE [Requests] (
     [RequestedById] int NOT NULL,
     [RequestedForId] int NOT NULL,
     [RequestStatus] nvarchar(max) NOT NULL,
-    [CreatedOn] datetime2 NULL,
+    [CreatedOn] datetime2 NOT NULL,
     [SubmittedOn] datetime2 NULL,
+    [UpdatedOn] datetime2 NULL,
     [CompletedOn] datetime2 NULL,
     [IsContractor] bit NOT NULL,
     [IsHighProfileAccess] bit NOT NULL,
@@ -204,14 +206,8 @@ CREATE TABLE [RequestedSystems] (
     [RequestId] int NOT NULL,
     [SystemId] int NOT NULL,
     [InPortfolio] bit NOT NULL,
-    [RemoveAccess] bit NOT NULL,
-    [ProcessedById] int NULL,
-    [ProcessedOn] datetime2 NULL,
-    [ConfirmedById] int NULL,
-    [ConfirmedOn] datetime2 NULL,
+    [AccessType] nvarchar(max) NOT NULL,
     CONSTRAINT [PK_RequestedSystems] PRIMARY KEY ([RequestId], [SystemId]),
-    CONSTRAINT [FK_RequestedSystems_Employees_ConfirmedById] FOREIGN KEY ([ConfirmedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_RequestedSystems_Employees_ProcessedById] FOREIGN KEY ([ProcessedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_RequestedSystems_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE,
     CONSTRAINT [FK_RequestedSystems_Systems_SystemId] FOREIGN KEY ([SystemId]) REFERENCES [Systems] ([SystemId]) ON DELETE CASCADE
 );
@@ -235,13 +231,22 @@ CREATE TABLE [Reviews] (
 GO
 
 CREATE TABLE [SystemAccesses] (
+    [SystemAccessId] int NOT NULL IDENTITY,
     [EmployeeId] int NOT NULL,
     [SystemId] int NOT NULL,
     [RequestId] int NOT NULL,
-    [RemoveAccess] bit NOT NULL,
-    [SystemAccessStatus] nvarchar(max) NOT NULL,
-    CONSTRAINT [PK_SystemAccesses] PRIMARY KEY ([EmployeeId], [SystemId]),
+    [ApprovedOn] datetime2 NOT NULL,
+    [InPortfolio] bit NOT NULL,
+    [AccessType] nvarchar(max) NOT NULL,
+    [ProcessedById] int NULL,
+    [ProcessedOn] datetime2 NULL,
+    [ConfirmedById] int NULL,
+    [ConfirmedOn] datetime2 NULL,
+    CONSTRAINT [PK_SystemAccesses] PRIMARY KEY ([SystemAccessId]),
+    CONSTRAINT [AK_SystemAccesses_RequestId_SystemId] UNIQUE ([RequestId], [SystemId]),
+    CONSTRAINT [FK_SystemAccesses_Employees_ConfirmedById] FOREIGN KEY ([ConfirmedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_SystemAccesses_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_SystemAccesses_Employees_ProcessedById] FOREIGN KEY ([ProcessedById]) REFERENCES [Employees] ([EmployeeId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_SystemAccesses_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE,
     CONSTRAINT [FK_SystemAccesses_Systems_SystemId] FOREIGN KEY ([SystemId]) REFERENCES [Systems] ([SystemId]) ON DELETE CASCADE
 );
@@ -258,14 +263,6 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId'
 GO
 
 CREATE INDEX [IX_Bureaus_BureauTypeId] ON [Bureaus] ([BureauTypeId]);
-
-GO
-
-CREATE INDEX [IX_RequestedSystems_ConfirmedById] ON [RequestedSystems] ([ConfirmedById]);
-
-GO
-
-CREATE INDEX [IX_RequestedSystems_ProcessedById] ON [RequestedSystems] ([ProcessedById]);
 
 GO
 
@@ -309,7 +306,15 @@ CREATE INDEX [IX_Reviews_ReviewerId] ON [Reviews] ([ReviewerId]);
 
 GO
 
-CREATE INDEX [IX_SystemAccesses_RequestId] ON [SystemAccesses] ([RequestId]);
+CREATE INDEX [IX_SystemAccesses_ConfirmedById] ON [SystemAccesses] ([ConfirmedById]);
+
+GO
+
+CREATE INDEX [IX_SystemAccesses_EmployeeId] ON [SystemAccesses] ([EmployeeId]);
+
+GO
+
+CREATE INDEX [IX_SystemAccesses_ProcessedById] ON [SystemAccesses] ([ProcessedById]);
 
 GO
 
@@ -334,7 +339,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190217182227_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190219212657_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

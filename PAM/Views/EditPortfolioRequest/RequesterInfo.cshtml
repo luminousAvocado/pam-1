@@ -33,6 +33,7 @@
 <p>Please enter the information of the person this request is for:</p>
 <form asp-action="RequesterInfo" method="post">
   <input asp-for="RequesterId" type="hidden">
+  <input asp-for="EmployeeId" type="hidden">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label asp-for="FirstName">First Name</label>

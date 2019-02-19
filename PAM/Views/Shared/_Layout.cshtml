@@ -30,7 +30,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">Users</a>
+          <a class="nav-link" href="#">Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Reports</a>
@@ -45,10 +45,12 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="javascript:confirmLogout()"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+          <a class="nav-link" asp-controller="User" asp-action="Profile">@identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)'s Profile</a>
         </li>
       </ul>
-      <span style="color:white;" class="d-none d-lg-inline">Welcome, @identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)!</span>
+      <span class="navbar-text">
+        <a class="nav-link" href="javascript:confirmLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </span>
     </div>
   </nav>
   <!-- Main Content -->

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PAM.Models
 {
-    public enum RequestStatus { Draft, UnderReview, Approved, Denied };
+    public enum RequestStatus { Draft, UnderReview, Approved, Denied, Processed, Confirmed };
 
     public enum CaseloadType { Adult, Juvenile, SchoolBased };
 

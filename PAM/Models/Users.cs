@@ -48,8 +48,6 @@ namespace PAM.Models
         public bool IsApprover { get; set; } = false;
         public bool IsProcessor { get; set; } = false;
 
-        public ICollection<SystemAccess> SystemAccesses { get; set; }
-
         public Employee() { }
 
         public Employee(ClaimsIdentity identity)
@@ -118,6 +116,9 @@ namespace PAM.Models
     public class Requester
     {
         public int RequesterId { get; set; }
+
+        [Required]
+        public int EmployeeId { get; set; }
 
         [Required]
         public string Username { get; set; }

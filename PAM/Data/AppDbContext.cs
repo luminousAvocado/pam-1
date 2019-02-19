@@ -23,6 +23,7 @@ namespace PAM.Data
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<Requester> Requesters { get; set; }
+        public DbSet<SystemAccess> SystemAccesses { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
@@ -60,7 +61,10 @@ namespace PAM.Data
                 v => v.ToString(),
                 v => (DepartureReason)Enum.Parse(typeof(DepartureReason), v));
 
-            modelBuilder.Entity<RequestedSystem>().HasKey(x => new { x.RequestId, x.SystemId });
+            modelBuilder.Entity<RequestedSystem>().HasKey(s => new { s.RequestId, s.SystemId });
+            modelBuilder.Entity<RequestedSystem>().Property(s => s.AccessType).HasConversion(
+                v => v.ToString(),
+                v => (SystemAccessType)Enum.Parse(typeof(SystemAccessType), v));
 
             modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Username);
             modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Email);
@@ -75,10 +79,10 @@ namespace PAM.Data
                 IsAdmin = true
             });
 
-            modelBuilder.Entity<SystemAccess>().HasKey(x => new { x.EmployeeId, x.SystemId });
-            modelBuilder.Entity<SystemAccess>().Property(r => r.SystemAccessStatus).HasConversion(
+            modelBuilder.Entity<SystemAccess>().HasAlternateKey(s => new { s.RequestId, s.SystemId });
+            modelBuilder.Entity<SystemAccess>().Property(s => s.AccessType).HasConversion(
                 v => v.ToString(),
-                v => (SystemAccessStatus)Enum.Parse(typeof(SystemAccessStatus), v));
+                v => (SystemAccessType)Enum.Parse(typeof(SystemAccessType), v));
         }
     }
 }
