@@ -2,21 +2,11 @@
 @{
   ViewData["Title"] = "Add Bureau";
 }
-@section Scripts{
-  <script>
-    function confirmRemoval() {
-      var msg = "Are you sure you want to remove this bureau?";
-      if (confirm(msg))
-        window.location.href = "/Bureau/RemoveBureau/@Model.BureauId";
-    }
-  </script>
-}
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-action="Bureaus">Bureaus</a></li>
-    <li class="breadcrumb-item"><a asp-action="ViewBureau" asp-route-id="@Model.BureauId">@Model.Code</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    <li class="breadcrumb-item active" aria-current="page">Add Bureau</li>
   </ol>
 </nav>
 
@@ -44,11 +34,8 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="col-6">
-      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Bureau</a>
-    </div>
-    <div class="col-6 text-right">
-      <button type="submit" class="btn btn-primary">Save</button>
+    <div class="col-12 text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
     </div>
   </div>
 </form>

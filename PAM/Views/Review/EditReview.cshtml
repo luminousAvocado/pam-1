@@ -1,19 +1,18 @@
 ﻿@model Review
-
 @{
   ViewData["Title"] = "Review";
   var request = (Request)ViewData["request"];
 }
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-info">
+  <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-controller="Review" asp-action="MyReviews">Review Requests</a></li>
-    <li class="breadcrumb-item active text-white" aria-current="page">Request #@request.RequestId</li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
   </ol>
 </nav>
 
 <div class="card">
-  <div class="card-header bg-info text-white">Request Information</div>
+  <div class="card-header">Request Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -38,7 +37,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">Requester Information</div>
+  <div class="card-header">Requester Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -72,28 +71,20 @@
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Department</label>
-        <span class="form-control">@request.RequestedFor.Department</span>
-      </div>
-      <div class="form-group col-md-5">
-        <label>Service</label>
-        <span class="form-control">@request.RequestedFor.Service</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-sm-5">
         <label>Address</label>
         <span class="form-control">@request.RequestedFor.Address</span>
       </div>
-      <div class="form-group col-sm-4">
+      <div class="form-group col-md-6">
         <label>City</label>
         <span class="form-control">@request.RequestedFor.City</span>
       </div>
-      <div class="form-group col-xl-1">
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
         <label>State</label>
         <span class="form-control">@request.RequestedFor.State</span>
       </div>
-      <div class="form-group col-xl-2">
+      <div class="form-group col-md-6">
         <label>Zip Code</label>
         <span class="form-control">@request.RequestedFor.Zip</span>
       </div>
@@ -112,7 +103,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">Systems Requested</div>
+  <div class="card-header">Systems Requested</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -151,7 +142,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">Additional Information</div>
+  <div class="card-header">Additional Information</div>
   <div class="card-body">
     <div class="row mb-2">
       <div class="col-md-4">
@@ -207,7 +198,7 @@
 
 <form id="decision" method="post">
   <div class="card mt-5">
-    <div class="card-header bg-info text-white">Your Decision</div>
+    <div class="card-header">Your Decision</div>
     <div class="card-body">
       <div class="form-group">
         <label for="comments">Comments (required for denying a request)</label>

@@ -16,9 +16,9 @@
 }
 
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-info ">
+  <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active text-white" aria-current="page">Request #@ViewData["id"]</li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
   </ol>
 </nav>
 
@@ -26,7 +26,7 @@
 
 <div class="row mb-3">
   <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
     <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
@@ -34,7 +34,7 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">Request Information</div>
+  <div class="card-header">Request Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -59,27 +59,33 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">
+  <div class="card-header">
     Requester Information
-    <a class="float-right" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label>First Name</label>
         <span class="form-control">@Model.RequestedFor.FirstName</span>
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label>Last Name</label>
         <span class="form-control">@Model.RequestedFor.LastName</span>
       </div>
-      <div class="form-group col-md-2">
-        <label>Middle Name</label>
-        <span class="form-control">@Model.RequestedFor.MiddleName</span>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Department</label>
+        <span class="form-control">@Model.RequestedFor.Department</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Service</label>
+        <span class="form-control">@Model.RequestedFor.Service</span>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label>Title</label>
         <span class="form-control">@Model.RequestedFor.Title</span>
       </div>
@@ -90,38 +96,30 @@
     </div>
     <div class="row">
       <div class="form-group col-md-6">
-        <label>Department</label>
-        <span class="form-control">@Model.RequestedFor.Department</span>
-      </div>
-      <div class="form-group col-md-5">
-        <label>Service</label>
-        <span class="form-control">@Model.RequestedFor.Service</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-5">
         <label>Address</label>
         <span class="form-control">@Model.RequestedFor.Address</span>
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
         <label>City</label>
         <span class="form-control">@Model.RequestedFor.City</span>
       </div>
-      <div class="form-group col-md-1">
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
         <label>State</label>
         <span class="form-control">@Model.RequestedFor.State</span>
       </div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-6">
         <label>Zip Code</label>
         <span class="form-control">@Model.RequestedFor.Zip</span>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-6">
         <label>Phone</label>
         <span class="form-control">@Model.RequestedFor.Phone</span>
       </div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-6">
         <label>Cell Phone</label>
         <span class="form-control">@Model.RequestedFor.CellPhone</span>
       </div>
@@ -130,9 +128,9 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">
+  <div class="card-header">
     Systems Requested
-    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
@@ -172,9 +170,9 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">
+  <div class="card-header">
     Additional Information
-    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row mb-2">
@@ -230,9 +228,9 @@
 </div>
 
 <div class="card">
-  <div class="card-header bg-info text-white">
+  <div class="card-header">
     Signature(s) Required
-    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]">Edit</a>
+    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     @foreach (var review in Model.Reviews)
@@ -249,7 +247,7 @@
 
 <div class="row mt-3">
   <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
     <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>

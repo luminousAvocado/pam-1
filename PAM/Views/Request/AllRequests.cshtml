@@ -133,7 +133,7 @@
                 <td>@request.RequestId</td>
                 <td>@request.RequestType.DisplayCode</td>
                 <td>@request.RequestedFor.Name</td>
-                <td class=" d-none d-md-table-cell">@request.CreatedOn.Value.ToString("MM/dd/yyyy")</td>
+                <td class=" d-none d-md-table-cell">@request.CreatedOn.ToString("MM/dd/yyyy")</td>
                 <td>
                   <a asp-action="EditRequest" asp-route-id="@request.RequestId" class="ml-2">
                     <i class="fas fa-edit"></i>

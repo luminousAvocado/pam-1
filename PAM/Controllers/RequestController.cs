@@ -64,7 +64,11 @@ namespace PAM.Controllers
                 requestedFor = _userService.CreateRequester(requestedFor);
             }
             else
-                requestedFor = _userService.CreateRequester(new Requester());
+            {
+                // If RequestedFor doesn't have an AD account, we need their username, email, etc.
+                // to create a PAM Employee record for them. This function is not implemented yet.
+                throw new NotImplementedException();
+            }
 
             Request request = new Request();
             request.RequestedBy = requestedBy;

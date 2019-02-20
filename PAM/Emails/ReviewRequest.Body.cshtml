@@ -1,11 +1,12 @@
 ﻿<p>A system registration request is waiting for your review:</p>
 
 <table>
+    <tr><th>Request Id</th><td>@Model.Request.DisplayId</td></tr>
     <tr><th>Request Type</th><td>@Model.Request.RequestType.DisplayCode</td></tr>
     <tr><th>Requested For</th><td>@Model.Request.RequestedFor.Name</td></tr>
-    <tr><th>Submitted On</th><td>@Model.Request.SubmittedOn</td></tr>
+    <tr><th>Submitted On</th><td>@Model.Request.SubmittedOn.ToString("MM/dd/yyyy")</td></tr>
 </table>
 
-<p>You may access the details of the request at @Model.AppUrl/Review/EditReview?id=@Model.Request.RequestId</p>
+<p>You may access the details of the request at @Model.AppUrl/Review/EditReview/@Model.Request.RequestId</p>
 
-PAM Admin
+<p>PAM Admin</p>
