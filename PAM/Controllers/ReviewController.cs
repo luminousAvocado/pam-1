@@ -18,16 +18,18 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly SystemService _systemService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
         public ReviewController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
+            SystemService systemService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
+            _systemService = systemService;
             _email = email;
             _emailHelper = emailHelper;
             _logger = logger;
@@ -69,19 +71,54 @@ namespace PAM.Controllers
                 RedirectToAction(nameof(EditReview), new { id });
 
             Review review = _requestService.GetReview(id);
+            Request request = _requestService.GetRequest(review.RequestId);
             review.Approve(comments);
+            request.UpdatedOn = DateTime.Now;
             _requestService.SaveChanges();
 
-            Request request = _requestService.GetRequest(review.RequestId);
-            if (review.ReviewOrder == request.Reviews.Count - 1) // last review
+            if (review.ReviewOrder < request.Reviews.Count - 1)
+            {
+                Review nextReview = request.OrderedReviews[review.ReviewOrder + 1];
+                string emailName = "ReviewRequest";
+                var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
+                string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+                string receipient = nextReview.Reviewer.Email;
+                _email.To(receipient)
+                    .Subject(subject)
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                    .Send();
+
+                emailName = "RequestUpdated";
+                subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+                receipient = request.RequestedBy.Email;
+                _email.To(receipient)
+                    .Subject(subject)
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                    .Send();
+            }
+            else // last review
             {
                 request.RequestStatus = RequestStatus.Approved;
+                request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
-                // send approval email to requester
-            }
-            else
-            {
-                // send notifcation email to the next reviewer
+
+                foreach (var requestedSystem in request.Systems)
+                {
+                    var systemAccess = new SystemAccess(request, requestedSystem);
+                    _systemService.AddSystemAccess(systemAccess);
+                }
+
+                string emailName = "RequestApproved";
+                var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
+                string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+                string receipient = request.RequestedBy.Email;
+                _email.To(receipient)
+                    .Subject(subject)
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                    .SendAsync();
+
+                // send email notification to processing units
+                // ...
             }
 
             return RedirectToAction(nameof(MyReviews));
@@ -98,9 +135,18 @@ namespace PAM.Controllers
             review.Deny(comments);
             Request request = _requestService.GetRequest(review.RequestId);
             request.RequestStatus = RequestStatus.Denied;
+            request.UpdatedOn = DateTime.Now;
+            request.CompletedOn = DateTime.Now;
             _requestService.SaveChanges();
 
-            // send denial email to requester
+            string emailName = "RequestDenied";
+            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request, Review = review };
+            string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+            string receipient = request.RequestedBy.Email;
+            _email.To(receipient)
+                .Subject(subject)
+                .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                .SendAsync();
 
             return RedirectToAction(nameof(MyReviews));
         }

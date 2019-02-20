@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +35,6 @@ namespace PAM.Data
 
         public Request CreateRequest(Request request)
         {
-            request.CreatedOn = DateTime.Now;
             _dbContext.Requests.Add(request);
             _dbContext.SaveChanges();
             return request;
@@ -84,7 +82,8 @@ namespace PAM.Data
 
         public ICollection<Review> GetReviewsByReviewerId(int reviewerId)
         {
-            return _dbContext.Reviews.Include(r => r.Request).ThenInclude(rr => rr.RequestedFor)
+            return _dbContext.Reviews.Include(r => r.Reviewer)
+                .Include(r => r.Request).ThenInclude(rr => rr.RequestedFor)
                 .Include(r => r.Request).ThenInclude(rr => rr.RequestType)
                 .Where(r => r.ReviewerId == reviewerId && r.Request.RequestStatus != RequestStatus.Draft).ToList();
         }

@@ -30,7 +30,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">Users</a>
+          <a class="nav-link" href="#">Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Reports</a>
@@ -40,33 +40,38 @@
           <div class="dropdown-menu" aria-labeledby="navDropDownMenu">
             <a class="dropdown-item" asp-controller="Location" asp-action="Locations">Locations</a>
             <a class="dropdown-item" asp-controller="Bureau" asp-action="Bureaus">Bureaus</a>
-            <a class="dropdown-item" asp-controller="Unit" asp-action="SelectUnit">Units</a>
+            <a class="dropdown-item" asp-controller="Unit" asp-action="Units">Units</a>
             <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
           </div>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" asp-controller="User" asp-action="Profile">@identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)'s Profile</a>
+        </li>
       </ul>
-      <span style="color:white;" class="d-none d-lg-inline">Welcome, @identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)!</span>
-          <a class="ml-3" href="javascript:confirmLogout()"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+      <span class="navbar-text">
+        <a class="nav-link" href="javascript:confirmLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </span>
     </div>
   </nav>
   <!-- Main Content -->
   <div class="container">
-    <div class="main-content">
+    <div class="main-content m-3">
       @RenderBody()
     </div>
   </div>
   <!-- Footer -->
-  <footer >&copy; Copyright 2018-2019. Los Angeles County. </footer>
+  <footer class="p-3 text-center">&copy; Copyright 2018-2019. Los Angeles County.</footer>
   <!-- Scripts -->
   <script src="~/lib/jquery/jquery.min.js"></script>
+  <script src="~/lib/popper.js/umd/popper.min.js"></script>
   <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
-    <script>
-      function confirmLogout() {
-        var msg = "Are you sure you want to logout?";
-        if (confirm(msg))
-          window.location.href = "/Account/Logout/";
-      }
-    </script>
+  <script>
+    function confirmLogout() {
+      var msg = "Are you sure you want to logout?";
+      if (confirm(msg))
+        window.location.href = "/Account/Logout/";
+    }
+  </script>
   @RenderSection("Scripts", required: false)
 </body>
 </html>

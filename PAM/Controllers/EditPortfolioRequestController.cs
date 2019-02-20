@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,10 +42,11 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequesterInfo(int id, Requester requester)
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
         {
             _userService.UpdateRequester(requester);
-            return RedirectToAction(nameof(UnitSelection), new { id });
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
         }
 
         [HttpGet]
@@ -58,7 +58,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnitSelection(int id, int unitId)
+        public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
@@ -69,7 +69,9 @@ namespace PAM.Controllers
             foreach (var us in unit.Systems)
                 request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
             _requestService.SaveChanges();
-            return RedirectToAction("AdditionalInfo", new { id });
+
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("AdditionalInfo", new { id });
         }
 
         [HttpGet]
@@ -79,7 +81,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdditionalInfo(int id, Request update)
+        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
             request.IsContractor = update.IsContractor;
@@ -89,7 +91,8 @@ namespace PAM.Controllers
             request.CaseloadFunction = update.CaseloadFunction;
             request.CaseloadNumber = update.CaseloadNumber;
             _requestService.SaveChanges();
-            return RedirectToAction("Signatures", new { id });
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Signatures", new { id });
         }
 
 
@@ -103,11 +106,12 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signatures(int id, List<Review> reviews)
+        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
         {
             var request = _requestService.GetRequest(id);
             request.Reviews = reviews;
-            return RedirectToAction("Summary", new { id });
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Summary", new { id });
         }
 
         public IActionResult Summary(int id)

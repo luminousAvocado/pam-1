@@ -1,22 +1,12 @@
 ﻿@model Location
 @{
-  ViewData["Title"] = "Edit Location";
-}
-@section Scripts{
-  <script>
-    function confirmRemoval() {
-      var msg = "Are you sure you want to remove this location?";
-      if (confirm(msg))
-        window.location.href = "/Location/RemoveLocation/@Model.LocationId";
-    }
-  </script>
+  ViewData["Title"] = "Add Location";
 }
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-action="Locations">Locations</a></li>
-    <li class="breadcrumb-item"><a asp-action="ViewLocation" asp-route-id="@Model.LocationId">@Model.Name</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    <li class="breadcrumb-item active" aria-current="page">Add Location</li>
   </ol>
 </nav>
 
@@ -48,11 +38,8 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="col-6">
-      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Location</a>
-    </div>
-    <div class="col-6 text-right">
-      <button type="submit" class="btn btn-primary">Save</button>
+    <div class="col-12 text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
     </div>
   </div>
 </form>

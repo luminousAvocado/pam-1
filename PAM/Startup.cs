@@ -74,6 +74,7 @@ namespace PAM
             services.AddScoped<OrganizationService>();
             services.AddScoped<UserService>();
             services.AddScoped<RequestService>();
+            services.AddScoped<SystemService>();
             services.AddScoped<TreeViewService>();
         }
 

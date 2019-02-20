@@ -1,10 +1,9 @@
 ﻿/*----------------------------------------------------------
     [ Background for Login ]
 */
-body{
+body {
   background-color: #19547b;
 }
-
 .bg-display {
   background-image: url("../Images/losangeles.jpg");
   width: 100%;
@@ -74,6 +73,6 @@ body{
   padding: 0 5px 0 5px;
 }
 
-  .input-edit::placeholder {
-    color: white;
-  }
+.input-edit::placeholder {
+  color: white;
+}

@@ -27,6 +27,8 @@ namespace PAM.Models
         public System System { get; set; }
     }
 
+    public enum SystemAccessType { Add, Remove, Update };
+
     [Table("RequestedSystems")]
     public class RequestedSystem
     {
@@ -37,7 +39,37 @@ namespace PAM.Models
         public System System { get; set; }
 
         public bool InPortfolio { get; set; } = true;
-        public bool RemoveAccess { get; set; } = false;
+        public SystemAccessType AccessType { get; set; } = SystemAccessType.Add;
+
+        public RequestedSystem() { }
+
+        public RequestedSystem(int requestId, int systemId)
+        {
+            RequestId = requestId;
+            SystemId = systemId;
+        }
+    }
+
+    // After a request is approved, each RequestedSystem becomes a SystemAccess
+    // associated with an Employee instead of a Requester. 
+    [Table("SystemAccesses")]
+    public class SystemAccess
+    {
+        public int SystemAccessId { get; set; }
+
+        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; }
+
+        public int SystemId { get; set; }
+        public System System { get; set; }
+
+        public int RequestId { get; set; }
+        public Request Request { get; set; }
+
+        public DateTime ApprovedOn { get; set; }
+
+        public bool InPortfolio { get; set; }
+        public SystemAccessType AccessType { get; set; }
 
         public int? ProcessedById { get; set; }
         [ForeignKey(nameof(ProcessedById))]
@@ -49,31 +81,22 @@ namespace PAM.Models
         public Employee ConfirmedBy { get; set; }
         public DateTime? ConfirmedOn { get; set; }
 
-        public RequestedSystem() { }
+        [NotMapped]
+        public bool IsProcessed => ProcessedById != null && ProcessedOn != null;
 
-        public RequestedSystem(int requestId, int systemId)
+        [NotMapped]
+        public bool IsConfirmed => ConfirmedById != null && ConfirmedOn != null;
+
+        public SystemAccess() { }
+
+        public SystemAccess(Request request, RequestedSystem requestedSystem)
         {
-            RequestId = requestId;
-            SystemId = systemId;
+            EmployeeId = request.RequestedFor.EmployeeId;
+            SystemId = requestedSystem.SystemId;
+            RequestId = request.RequestId;
+            ApprovedOn = (DateTime)request.CompletedOn;
+            InPortfolio = requestedSystem.InPortfolio;
+            AccessType = requestedSystem.AccessType;
         }
-    }
-
-    public enum SystemAccessStatus { Approved, Processed, Confirmed };
-
-    [Table("SystemAccesses")]
-    public class SystemAccess
-    {
-        public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
-
-        public int SystemId { get; set; }
-        public System System { get; set; }
-
-        public int RequestId { get; set; }
-        public Request Request { get; set; }
-
-        public bool RemoveAccess { get; set; }
-
-        public SystemAccessStatus SystemAccessStatus { get; set; }
     }
 }

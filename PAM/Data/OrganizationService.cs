@@ -17,10 +17,44 @@ namespace PAM.Data
             _logger = logger;
         }
 
+        public ICollection<Location> GetLocations()
+        {
+            return _dbContext.Locations.OrderBy(l => l.Name).ToList();
+        }
+
+        public Location GetLocation(int id)
+        {
+            return _dbContext.Locations.Find(id);
+        }
+
+        public Location AddLocation(Location location)
+        {
+            _dbContext.Locations.Add(location);
+            _dbContext.SaveChanges();
+            return location;
+        }
+
+        public ICollection<BureauType> GetBureauTypes()
+        {
+            return _dbContext.BureauTypes.OrderBy(t => t.DisplayCode).ToList();
+        }
+
         public ICollection<Bureau> GetBureaus()
         {
             return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code).
                 AsNoTracking().ToList();
+        }
+
+        public Bureau GetBureau(int id)
+        {
+            return _dbContext.Bureaus.Where(u => u.BureauId == id).Include(u => u.BureauType).FirstOrDefault();
+        }
+
+        public Bureau AddBureau(Bureau bureau)
+        {
+            _dbContext.Bureaus.Add(bureau);
+            _dbContext.SaveChanges();
+            return bureau;
         }
 
         public ICollection<Unit> GetUnits()
@@ -36,15 +70,19 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
-        public ICollection<UnitSystem> GetRelatedSystems(int unitId)
+        public ICollection<Unit> GetBureauChildren(int bureauId)
         {
-            // Returns UnitSystem JOIN System. Systems related to the specific unitId
-            var unitAndRelatedSystems = _dbContext.UnitSystems.Include(u => u.System)
-                            .Include(u => u.Unit)
-                            .Where(x => x.UnitId == unitId)
-                            .ToList();
+            return _dbContext.Units.Where(u => u.BureauId == bureauId).ToList();
+        }
 
-            return unitAndRelatedSystems;
+        public ICollection<Unit> GetUnitChildren(int parentId)
+        {
+            return _dbContext.Units.Where(u => u.ParentId == parentId).ToList();
+        }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
         }
     }
 }

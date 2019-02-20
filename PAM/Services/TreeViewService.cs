@@ -35,28 +35,14 @@ namespace PAM.Services
                 foreach (var unit in unitList)
                 {
                     if (unit.UnitId < 0) continue;
-                    if (unit.ParentId == null)
-                    {
-                        var node = new TreeViewNode(unit);
-                        nodeDictionary["b" + unit.BureauId].nodes.Add(node);
-                        nodeDictionary.Add("u" + node.id, node);
-                        unit.UnitId = -1;
-                        ++unitsProcessed;
-                    }
-                    else
-                    {
-                        var parentKey = "u" + unit.ParentId;
-                        if (nodeDictionary.ContainsKey(parentKey))
-                        {
-                            var node = new TreeViewNode(unit);
-                            var parent = nodeDictionary[parentKey];
-                            parent.nodes.Add(node);
-                            parent.selectable = false;
-                            nodeDictionary.Add("u" + node.id, node);
-                            unit.UnitId = -1;
-                            ++unitsProcessed;
-                        }
-                    }
+                    var node = new TreeViewNode(unit);
+                    var parentKey = unit.ParentId == null ? "b" + unit.BureauId : "u" + unit.ParentId;
+                    var parent = nodeDictionary[parentKey];
+                    if (parent.nodes == null) parent.nodes = new List<TreeViewNode>();
+                    parent.nodes.Add(node);
+                    nodeDictionary.Add("u" + node.id, node);
+                    unit.UnitId = -1;
+                    ++unitsProcessed;
                 }
             }
 
@@ -75,7 +61,7 @@ namespace PAM.Services
         public int id { get; set; }
         public string type { get; set; }
         public string text { get; set; }
-        public bool selectable { get; set; }
+        public bool selectable { get; set; } = true;
         public List<TreeViewNode> nodes { get; set; }
 
         public TreeViewNode(Bureau bureau)
@@ -83,8 +69,6 @@ namespace PAM.Services
             id = bureau.BureauId;
             type = "Bureau";
             text = $"{bureau.Description} ({bureau.Code})";
-            selectable = false;
-            nodes = new List<TreeViewNode>();
         }
 
         public TreeViewNode(Unit unit)
@@ -92,8 +76,6 @@ namespace PAM.Services
             id = unit.UnitId;
             type = "Unit";
             text = unit.Name;
-            selectable = true;
-            nodes = new List<TreeViewNode>();
         }
     }
 }
