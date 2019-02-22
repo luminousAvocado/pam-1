@@ -1,4 +1,6 @@
-﻿using PAM.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PAM.Models;
 
 namespace PAM.Data
 {
@@ -16,6 +18,11 @@ namespace PAM.Data
             _dbContext.SystemAccesses.Add(systemAccess);
             _dbContext.SaveChanges();
             return systemAccess;
+        }
+
+        public ICollection<Models.System> GetSystems()
+        {
+            return _dbContext.Systems.OrderBy(s => s.SystemId).ToList();
         }
 
         public void SaveChanges()

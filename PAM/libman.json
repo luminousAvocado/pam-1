@@ -42,6 +42,14 @@
     {
       "library": "bootstrap-table@1.13.4",
       "destination": "wwwroot/lib/bootstrap-table/"
+    },
+    {
+      "library": "typeahead.js@0.11.1",
+      "destination": "wwwroot/lib/typeahead.js/"
+    },
+    {
+      "library": "bootstrap-3-typeahead@4.0.2",
+      "destination": "wwwroot/lib/bootstrap-3-typeahead/"
     }
   ]
 }

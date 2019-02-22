@@ -62,13 +62,18 @@ namespace PAM.Services
         public string type { get; set; }
         public string text { get; set; }
         public bool selectable { get; set; } = true;
+
+        public int? displayOrder { get; set; }
+        public int bureauId { get; set; }
+        public string bureauName { get; set; }
+
         public List<TreeViewNode> nodes { get; set; }
 
         public TreeViewNode(Bureau bureau)
         {
             id = bureau.BureauId;
             type = "Bureau";
-            text = $"{bureau.Description} ({bureau.Code})";
+            text = bureau.Name;
         }
 
         public TreeViewNode(Unit unit)
@@ -76,6 +81,9 @@ namespace PAM.Services
             id = unit.UnitId;
             type = "Unit";
             text = unit.Name;
+            displayOrder = unit.DisplayOrder;
+            bureauId = unit.BureauId;
+            bureauName = unit.Bureau.Name;
         }
     }
 }

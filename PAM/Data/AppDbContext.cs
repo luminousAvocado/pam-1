@@ -17,6 +17,7 @@ namespace PAM.Data
         public DbSet<Location> Locations { get; set; }
         public DbSet<BureauType> BureauTypes { get; set; }
         public DbSet<Bureau> Bureaus { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Models.System> Systems { get; set; }
         public DbSet<Employee> Employees { get; set; }

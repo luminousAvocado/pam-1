@@ -41,8 +41,8 @@ namespace PAM.Data
 
         public ICollection<Bureau> GetBureaus()
         {
-            return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code).
-                AsNoTracking().ToList();
+            return _dbContext.Bureaus.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Code)
+                .AsNoTracking().ToList();
         }
 
         public Bureau GetBureau(int id)
@@ -57,17 +57,30 @@ namespace PAM.Data
             return bureau;
         }
 
+        public ICollection<UnitType> GetUnitTypes()
+        {
+            return _dbContext.UnitTypes.OrderBy(t => t.DisplayOrder).ThenBy(t => t.DisplayCode).ToList();
+        }
+
         public ICollection<Unit> GetUnits()
         {
-            return _dbContext.Units.OrderBy(u => u.BureauId).ThenBy(u => u.ParentId).ThenBy(u => u.DisplayOrder).ThenBy(u => u.Name).
-                AsNoTracking().ToList();
+            return _dbContext.Units.Include(u => u.Bureau)
+                .OrderBy(u => u.BureauId).ThenBy(u => u.ParentId).ThenBy(u => u.DisplayOrder).ThenBy(u => u.Name)
+                .AsNoTracking().ToList();
         }
 
         public Unit GetUnit(int id)
         {
             return _dbContext.Units.Where(u => u.UnitId == id)
-                .Include(u => u.Systems).ThenInclude(us => us.System)
+                .Include(u => u.Bureau).Include(u => u.Parent).Include(u => u.Systems).ThenInclude(us => us.System)
                 .FirstOrDefault();
+        }
+
+        public Unit AddUnit(Unit unit)
+        {
+            _dbContext.Units.Add(unit);
+            _dbContext.SaveChanges();
+            return unit;
         }
 
         public ICollection<Unit> GetBureauChildren(int bureauId)
