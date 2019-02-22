@@ -22,7 +22,19 @@ namespace PAM.Data
 
         public ICollection<Models.System> GetSystems()
         {
-            return _dbContext.Systems.OrderBy(s => s.SystemId).ToList();
+            return _dbContext.Systems.OrderBy(s => s.Name).ToList();
+        }
+
+        public Models.System GetSystem(int id)
+        {
+            return _dbContext.Systems.Find(id);
+        }
+
+        public Models.System AddSystem(Models.System system)
+        {
+            _dbContext.Systems.Add(system);
+            _dbContext.SaveChanges();
+            return system;
         }
 
         public void SaveChanges()

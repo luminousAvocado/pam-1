@@ -9,6 +9,7 @@ namespace PAM.Services
         {
             CreateMap<Location, Location>().ForMember(l => l.LocationId, opt => opt.Ignore());
             CreateMap<Bureau, Bureau>().ForMember(b => b.BureauId, opt => opt.Ignore());
+            CreateMap<Models.System, Models.System>().ForMember(s => s.SystemId, opt => opt.Ignore());
             CreateMap<Employee, Employee>().ForMember(e => e.EmployeeId, opt => opt.Ignore());
             CreateMap<Employee, Requester>();
             CreateMap<Requester, Requester>().ForMember(r => r.RequesterId, opt => opt.Ignore())
