@@ -47,6 +47,9 @@ namespace PAM.Models
         public int DisplayOrder { get; set; } = 50;
 
         public bool Deleted { get; set; } = false;
+
+        [NotMapped]
+        public string Name => $"{Description} ({Code})";
     }
 
     [Table("UnitTypes")]
@@ -63,6 +66,9 @@ namespace PAM.Models
         public string Description { get; set; }
 
         public int? DisplayOrder { get; set; }
+
+        [NotMapped]
+        public string Name => DisplayCode + (Description != null ? $" ({Description})" : "");
     }
 
     [Table("Units")]

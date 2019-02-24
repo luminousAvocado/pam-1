@@ -1,10 +1,13 @@
-﻿@{
+﻿@model  Unit
+@{
   ViewData["Title"] = "Units";
 }
 @section Scripts {
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
   <script>
-  $(function(){
+  $(function () {
+    $("#editBtn").prop("disabled", true);
+    $("#addBtn").prop("disabled", true);
     $('#tree').treeview({
       data: @Html.Raw(@ViewData["tree"]),
       levels: 1,
@@ -12,10 +15,22 @@
       collapseIcon: "fa fa-caret-up",
       onNodeSelected: function (event, node) {
         if (node.type == 'Bureau') {
+          $("#bureau").attr("data-bureau-id", node.id);
+          $("#bureau").html(node.text);
+          $("#unit").attr("data-unit-id", "");
+          $("#unit").html("");
           $("#systems").empty();
+          $("#editBtn").prop("disabled", true);
+          $("#addBtn").prop("disabled", false);
           return;
         }
-        $("#unitId").val(node.id);
+        $("#unit").attr("data-unit-id", node.id);
+        $("#unit").html(node.text);
+        $("#bureau").attr("data-bureau-id", node.bureaId);
+        $("#bureau").html(node.bureauName);
+        $("#displayOrder").html(node.displayOrder);
+        $("#editBtn").prop("disabled", false);
+        $("#addBtn").prop("disabled", false);
         $.ajax({
           url: "/api/portfolio/" + node.id,
           success: function (data) {
@@ -28,6 +43,32 @@
           }
         })
       }
+    });
+    var unitId = $("#unit").attr("data-unit-id");
+    if (unitId) {
+      var nodeId = 1;
+      var node = $("#tree").treeview("getNode", nodeId);
+      while (node) {
+        if (node.type == 'Unit' && node.id == unitId) break;
+        node = $("#tree").treeview("getNode", ++nodeId);
+      }
+      if (node) {
+        $("#tree").treeview("selectNode", node);
+        $('#tree').treeview('revealNode', [nodeId, { silent: true }]);
+        $("#editBtn").prop("disabled", false);
+        $("#addBtn").prop("disabled", false);
+      }
+    }
+    $("#addBtn").click(function () {
+      var unitId = $("#unit").attr("data-unit-id");
+      var bureauId = $("#bureau").attr("data-bureau-id");
+      if (!unitId && !bureauId) return;
+      window.location.href = "/Unit/AddUnit?parentId=" + unitId + "&bureauId=" + bureauId;
+    });
+    $("#editBtn").click(function () {
+      var unitId = $("#unit").attr("data-unit-id");
+      if (!unitId) return;
+      window.location.href = "/Unit/EditUnit/" + unitId;
     });
   });
   </script>
@@ -44,16 +85,21 @@
     <div id="tree"></div>
   </div>
   <div class="col-12 col-md-6 mb-3">
-    <p>System Portfolio</p>
-    <table class="table sticky-top">
-      <thead>
-        <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Name</th>
-          <th scope="col">Description</th>
-        </tr>
-      </thead>
-      <tbody id="systems"></tbody>
-    </table>
+    <p>
+      <button id="addBtn" class="btn btn-primary float-right ml-3">Add Unit</button>
+      <button id="editBtn" class="btn btn-primary float-right">Edit Unit</button>
+    </p>
+    <p class="clearfix">
+      <table class="table">
+        <tr><th>Bureau</th><td id="bureau" data-bureau-id="@Model?.BureauId">@Model?.Bureau.Name</td></tr>
+        <tr><th>Unit</th><td id="unit" data-unit-id="@Model?.UnitId">@Model?.Name</td></tr>
+        <tr><th>Display Order</th><td id="displayOrder">@Model?.DisplayOrder</td></tr>
+        <tr><th colspan="2">System Portfolio</th></tr>
+        <tr></tr>
+      </table>
+      <table id="sysTable" class="table">
+        <tbody id="systems"></tbody>
+      </table>
+    </p>
   </div>
 </div>
