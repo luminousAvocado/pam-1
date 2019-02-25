@@ -26,7 +26,7 @@ namespace PAM.Controllers
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
+            SystemService systemService, IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;

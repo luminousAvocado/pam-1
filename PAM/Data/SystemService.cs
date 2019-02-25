@@ -1,4 +1,7 @@
-﻿using PAM.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using PAM.Models;
 
 namespace PAM.Data
 {
@@ -17,6 +20,10 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return systemAccess;
         }
+
+        public ICollection<Models.System> GetAllSystems(){
+            return _dbContext.Systems.ToList();
+        } 
 
         public void SaveChanges()
         {
