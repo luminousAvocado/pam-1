@@ -1,8 +1,8 @@
 ﻿@model Request
 @{
-     ViewData["Title"] = "Add Systems Selection";
-     ViewData["id"] = Model.RequestId;
-     var systems = (List<PAM.Models.System>)ViewData["systems"];
+  ViewData["Title"] = "Add Systems Selection";
+  ViewData["id"] = Model.RequestId;
+  var systems = (List<PAM.Models.System>)ViewData["systems"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -13,8 +13,7 @@
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
   <script>
   $(function(){
-    $(function() {
-      var defaultSystems = @Model.RequestedFor.UnitId 
+    var defaultSystems = @Model.RequestedFor.UnitId;
         $("#unitId").val(defaultSystems);
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
@@ -23,12 +22,15 @@
           success: function (data) {
             $("#systems").empty();
             data.forEach(function (system) {
+              if (system.systemId) {
+                $("#system" + system.systemId).prop("checked", true);
+                $("#system" + system.systemId).prop("disabled", true);
+              }
               $("#systems").append("<tr><td>"
                 + system.systemId + "</td><td>"
                 + system.name + "</td></tr>");
             });
           }
-        })
     })
     $("#saveDraft").click(function () {
       var form = $(this).parents("form:first");
@@ -52,15 +54,15 @@
       <div class="col-md-3">
         <div class="card">
           <h4 class="card-header">Default Systems</h4>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              <tbody id="systems"></tbody>
-            </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="systems"></tbody>
+          </table>
         </div>
       </div>
       <div class="col-md-9">
@@ -68,27 +70,28 @@
         <table data-toggle="table" data-pagination="true" data-page-size="25" data-search="true" data-search-align="right">
           <thead>
             <tr>
-              <th></th>
+              <th data-maintain-selected="true"></th>
               <th class="d-md-table-cell" data-sortable="true" scope="col">Id</th>
               <th class="d-md-table-cell" data-sortable="true" scope="col">Name</th>
               <th class="d-md-table-cell" scope="col">Description</th>
             </tr>
           </thead>
           <tbody>
-          @foreach (var system in systems)
-          {
-            <tr>
-              <td class="d-none d-md-table-cell">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="systemAdd" />
-                  <label class="custom-control-label" for="systemAdd"></label>
-                </div>
-              </td>
-              <td class="d-none d-md-table-cell">@system.SystemId</td>
-              <td class="d-none d-md-table-cell">@system.Name</td>
-              <td class="d-none d-md-table-cell">@system.Description</td>
-            </tr>
-          }
+            @foreach (var system in systems)
+            {
+              var label = "system" + system.SystemId;
+              <tr>
+                <td class="d-none d-md-table-cell">
+                  <div class="custom-control custom-checkbox" id="selectSystems">
+                    <input type="checkbox" class="custom-control-input" id="@label" />
+                    <label class="custom-control-label" for="@label"></label>
+                  </div>
+                </td>
+                <td class="d-none d-md-table-cell">@system.SystemId</td>
+                <td class="d-none d-md-table-cell">@system.Name</td>
+                <td class="d-none d-md-table-cell">@system.Description</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
