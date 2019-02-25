@@ -1,12 +1,15 @@
 ﻿@model Requester
+
 @{
   ViewData["Title"] = "Requester Information";
   Request request = (Request)ViewData["request"];
   ViewData["id"] = request.RequestId;
 }
+
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
 }
+
 @section Scripts {
   <script>
   $(function(){
@@ -43,8 +46,6 @@
       <label asp-for="LastName">Last Name</label>
       <input asp-for="LastName" type="text" class="form-control" required>
     </div>
-<<<<<<< HEAD
-=======
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
@@ -55,7 +56,6 @@
       <label asp-for="Service">Service</label>
       <input asp-for="Service" type="text" class="form-control">
     </div>
->>>>>>> cysun/master
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
@@ -69,7 +69,6 @@
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
-<<<<<<< HEAD
       <label asp-for="Department">Department</label>
       <input asp-for="Department" type="text" class="form-control">
     </div>
@@ -80,8 +79,6 @@
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
-=======
->>>>>>> cysun/master
       <label asp-for="Address">Address</label>
       <input asp-for="Address" type="text" class="form-control">
     </div>

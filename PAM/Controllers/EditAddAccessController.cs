@@ -10,7 +10,7 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class EditPortfolioRequestController : Controller
+    public class EditAddAccessController: Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
@@ -20,7 +20,7 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public EditPortfolioRequestController(IADService adService, UserService userService, RequestService requestService,
+        public EditAddAccessController(IADService adService, UserService userService, RequestService requestService,
             OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
             ILogger<EditPortfolioRequestController> logger)
         {
