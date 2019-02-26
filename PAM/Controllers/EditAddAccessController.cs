@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
@@ -69,8 +71,12 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSystems(int id, int unitId, bool saveDraft = false){
+        public IActionResult AddSystems(int id, int unitId, int[] addingSystem, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
+
+            foreach(var a in addingSystem){
+                var sys = _systemService.GetSystemById(a);
+            }
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("AdditionalInfo", new { id });

@@ -25,6 +25,11 @@ namespace PAM.Data
             return _dbContext.Systems.ToList();
         } 
 
+        public Models.System GetSystemById(int id){
+            return _dbContext.Systems
+                .Where(s => s.SystemId.Equals(id)).FirstOrDefault();
+        }
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();

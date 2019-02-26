@@ -2,14 +2,17 @@
 @{
   ViewData["Title"] = "Add Systems Selection";
   ViewData["id"] = Model.RequestId;
-  var systems = (List<PAM.Models.System>)ViewData["systems"];
+  var systemsList = (List<PAM.Models.System>)ViewData["systems"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
 }
+
 @section Scripts {
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+  <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
   <script>
   $(function(){
@@ -67,23 +70,26 @@
       </div>
       <div class="col-md-9">
         <p class="float-left mt-2">Please select the system(s) to add:</p>
-        <table data-toggle="table" data-pagination="true" data-page-size="25" data-search="true" data-search-align="right">
+        <table id="table"
+               data-toggle="table"
+               data-search="true"
+               data-search-align="right">
           <thead>
             <tr>
-              <th data-maintain-selected="true"></th>
+              <th data-field="state"></th>
               <th class="d-md-table-cell" data-sortable="true" scope="col">Id</th>
               <th class="d-md-table-cell" data-sortable="true" scope="col">Name</th>
               <th class="d-md-table-cell" scope="col">Description</th>
             </tr>
           </thead>
           <tbody>
-            @foreach (var system in systems)
+            @foreach (var system in systemsList)
             {
               var label = "system" + system.SystemId;
               <tr>
                 <td class="d-none d-md-table-cell">
                   <div class="custom-control custom-checkbox" id="selectSystems">
-                    <input type="checkbox" class="custom-control-input" id="@label" />
+                    <input type="checkbox" class="custom-control-input" name="addingSystem" id="@label" value="@system.SystemId" />
                     <label class="custom-control-label" for="@label"></label>
                   </div>
                 </td>
