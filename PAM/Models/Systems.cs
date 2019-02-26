@@ -38,15 +38,16 @@ namespace PAM.Models
         public int SystemId { get; set; }
         public System System { get; set; }
 
-        public bool InPortfolio { get; set; } = true;
+        public bool InPortfolio { get; set; }
         public SystemAccessType AccessType { get; set; } = SystemAccessType.Add;
 
         public RequestedSystem() { }
 
-        public RequestedSystem(int requestId, int systemId)
+        public RequestedSystem(int requestId, int systemId, bool inPortfolio)
         {
             RequestId = requestId;
             SystemId = systemId;
+            InPortfolio = inPortfolio;
         }
     }
 

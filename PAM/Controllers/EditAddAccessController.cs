@@ -55,7 +55,7 @@ namespace PAM.Controllers
             request.RequestedFor.UnitId = unit.UnitId;
             request.Systems.Clear();
             foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
+                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId, true));
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
@@ -76,7 +76,9 @@ namespace PAM.Controllers
 
             foreach(var a in addingSystem){
                 var sys = _systemService.GetSystemById(a);
+                request.Systems.Add(new RequestedSystem(request.RequestId, a, false));
             }
+            _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("AdditionalInfo", new { id });

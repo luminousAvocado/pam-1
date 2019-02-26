@@ -138,6 +138,7 @@
 </div>
 
 <div class="card">
+  @if(Model.RequestTypeId == 4){
   <div class="card-header">
     Systems Requested
     <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
@@ -166,17 +167,80 @@
         <tbody>
           @foreach (var requestedSystem in Model.Systems)
           {
-            <tr>
-              <td>@requestedSystem.System.SystemId</td>
-              <td>@requestedSystem.System.Name</td>
-              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-              <td>@requestedSystem.InPortfolio</td>
-            </tr>
+          <tr>
+            <td>@requestedSystem.System.SystemId</td>
+            <td>@requestedSystem.System.Name</td>
+            <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+            <td>@requestedSystem.InPortfolio</td>
+          </tr>
           }
         </tbody>
       </table>
     </div>
   </div>
+  }
+  @if(Model.RequestTypeId == 11){
+  <div class="card-header">
+    Systems Requested
+    <a class="float-right" asp-controller="EditAddAccess" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+  </div>
+  <div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <h5 class="card-header text-center">Default Systems</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">In Portfolio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in Model.Systems)
+          {
+            @if (requestedSystem.InPortfolio)
+            {
+              <tr>
+                <td>@requestedSystem.System.SystemId</td>
+                <td>@requestedSystem.System.Name</td>
+                <td>@requestedSystem.InPortfolio</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <h5 class="card-header text-center">Additional Systems</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">In Portfolio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in Model.Systems)
+          {
+            @if (!requestedSystem.InPortfolio)
+            {
+              <tr>
+                <td>@requestedSystem.System.SystemId</td>
+                <td>@requestedSystem.System.Name</td>
+                <td>@requestedSystem.InPortfolio</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+  }
 </div>
 
 <div class="card">
