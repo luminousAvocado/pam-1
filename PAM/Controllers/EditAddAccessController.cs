@@ -10,23 +10,25 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class EditPortfolioRequestController : Controller
+    public class EditAddAccessController: Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public EditPortfolioRequestController(IADService adService, UserService userService, RequestService requestService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
+        public EditAddAccessController(IADService adService, UserService userService, RequestService requestService,
+            SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
             ILogger<EditPortfolioRequestController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
+            _systemService = systemService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
             _mapper = mapper;
@@ -55,8 +57,51 @@ namespace PAM.Controllers
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("AddSystems", new { id });
+        }
+
+        [HttpGet]
+        public IActionResult AddSystems(int id){
+            var request = _requestService.GetRequest(id);
+            var systems = _systemService.GetSystems();
+            ViewData["systems"] = systems;
+            return View(request);
+        }
+
+        [HttpPost]
+        public IActionResult AddSystems(int id, int unitId, int[] addingSystem, bool saveDraft = false){
+            var request = _requestService.GetRequest(id);
+
+            foreach(var a in addingSystem){
+                request.Systems.Add(new RequestedSystem(request.RequestId, a, false));
+            }
+            _requestService.SaveChanges();
+
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
+
+        [HttpGet]
+        public IActionResult AdditionalInfo(int id)
+        {
+            return View(_requestService.GetRequest(id));
+        }
+
+        [HttpPost]
+        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
+        {
+            var request = _requestService.GetRequest(id);
+            request.IsContractor = update.IsContractor;
+            request.IsGlobalAccess = update.IsGlobalAccess;
+            request.IsHighProfileAccess = update.IsHighProfileAccess;
+            request.CaseloadType = update.CaseloadType;
+            request.CaseloadFunction = update.CaseloadFunction;
+            request.CaseloadNumber = update.CaseloadNumber;
+            _requestService.SaveChanges();
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Signatures", new { id });
+        }
+
 
         [HttpGet]
         public IActionResult Signatures(int id)

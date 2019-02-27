@@ -24,6 +24,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
     <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+    <a href="~/Views/Shared/AdditionalInfo.cshtml">~/Views/Shared/AdditionalInfo.cshtml</a>
   </ol>
 </nav>
 
@@ -56,8 +57,14 @@
       <button id="saveDraft" class="btn btn-secondary">Save Draft</button>
     </div>
     <div class="col-8 text-right">
+      @if(Model.RequestTypeId == 4){
       <a asp-action="UnitSelection" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+      }
+      @if(Model.RequestTypeId == 11){
+      <a asp-action="AddSystems" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+      }
     </div>
   </div>
 </form>

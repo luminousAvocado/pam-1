@@ -26,7 +26,7 @@ namespace PAM.Controllers
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
+            SystemService systemService, IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
@@ -44,7 +44,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRequest(string forSelf, string requestedForUsername, int requestTypeId)
+        public IActionResult CreateRequest(string forSelf, string requestedForUsername, int requestTypeId, Requester requester)
         {
             Employee employee = new Employee((ClaimsIdentity)User.Identity);
             Requester requestedBy = _mapper.Map<Requester>(employee);
@@ -78,6 +78,7 @@ namespace PAM.Controllers
             request.Reviews = new List<Review>();
             var requestType = _requestService.GetRequestType(requestTypeId);
             var requiredSignatures = requestType.RequiredSignatures.OrderBy(s => s.Order).ToList();
+            Console.WriteLine("ORDDDRR" + requiredSignatures.Count);
             for (int i = 0; i < requiredSignatures.Count; ++i)
             {
                 var review = new Review
@@ -99,11 +100,34 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
-            switch (request.RequestTypeId)
-            {
-                default:
-                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id = request.RequestId });
+            return RedirectToAction("RequesterInfo", new { id = request.RequestId });
+
+        }
+
+        [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            var request = _requestService.GetRequest(id);
+            if (saveDraft) RedirectToAction("MyRequests", "Request");
+            else{
+                switch (request.RequestTypeId)
+                {
+                    case 11:
+                        return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
+                    default:
+                        return RedirectToAction("UnitSelection", "EditPortfolioRequest", new { id = request.RequestId });
+                }
             }
+            return View();
         }
 
         public IActionResult ViewRequest(int id)
