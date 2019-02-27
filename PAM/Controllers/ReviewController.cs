@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -102,10 +103,28 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                foreach (var requestedSystem in request.Systems)
+                // *** TODO: maybe have switch with RequestType, cause maybe we wanna Add SystemAccess, or Remove SA, etc
+                //foreach (var requestedSystem in request.Systems)
+                //{
+                //    var systemAccess = new SystemAccess(request, requestedSystem);
+                //    _systemService.AddSystemAccess(systemAccess);
+                //}
+
+                switch (request.RequestTypeId)
                 {
-                    var systemAccess = new SystemAccess(request, requestedSystem);
-                    _systemService.AddSystemAccess(systemAccess);
+                    case 4:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    case 12:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                        }
+                        break;
                 }
 
                 string emailName = "RequestApproved";
