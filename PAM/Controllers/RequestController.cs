@@ -121,6 +121,8 @@ namespace PAM.Controllers
             else{
                 switch (request.RequestTypeId)
                 {
+                    case 6:
+                        return RedirectToAction("ReasonForLeaving", "LeavingProbationRequest", new { id = request.RequestId });
                     case 11:
                         return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
                     case 12:
