@@ -107,7 +107,7 @@ CREATE TABLE [Bureaus] (
 GO
 
 CREATE TABLE [RequiredSignatures] (
-    [RequiredSignatureId] int NOT NULL IDENTITY,
+    [RequiredSignatureId] int NOT NULL,
     [RequestTypeId] int NOT NULL,
     [Title] nvarchar(max) NOT NULL,
     [Order] int NOT NULL,
