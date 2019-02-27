@@ -53,7 +53,7 @@ namespace PAM.Controllers
             request.RequestedFor.UnitId = unit.UnitId;
             request.Systems.Clear();
             foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId, true));
+                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
@@ -72,9 +72,11 @@ namespace PAM.Controllers
         public IActionResult AddSystems(int id, int unitId, int[] addingSystem, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
 
-            foreach(var a in addingSystem){
-                request.Systems.Add(new RequestedSystem(request.RequestId, a, false));
+            foreach (var a in addingSystem)
+            {
+                request.Systems.Add(new RequestedSystem(request.RequestId, a) { InPortfolio = false });
             }
+
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :

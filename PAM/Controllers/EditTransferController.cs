@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
 
@@ -62,16 +64,10 @@ namespace PAM.Controllers
 
         [HttpGet]
         public IActionResult UnitTransfer(int id){
-            var request = _requestService.GetRequest(1);
-            //Test data for System Access
-            Employee emp = _userService.GetEmployeeByUsername("e123456");
-            var temp = _organizationService.GetUnit(10);
-            foreach(var t in temp.Systems){
-                var v = new RequestedSystem(request.RequestId, t.SystemId, true);
-                //emp.AccessedSystems.Add(new SystemAccess(request, v));
-            }
-            var uhh = _systemService.GetSystemAccess();
-            ViewData["sysA"] = uhh;
+            var request = _requestService.GetRequest(id);
+            var requestFor = _userService.GetRequester(request.RequestedForId);
+            var systemAccess = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
+            ViewData["SystemAccess"] = systemAccess;
             return View(request);
         }
 

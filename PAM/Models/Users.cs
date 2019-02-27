@@ -44,9 +44,6 @@ namespace PAM.Models
 
         public string SupervisorName { get; set; }
 
-        [NotMapped]
-        public ICollection<SystemAccess> AccessedSystems { get; set; }
-
         public bool IsAdmin { get; set; } = false;
         public bool IsApprover { get; set; } = false;
         public bool IsProcessor { get; set; } = false;

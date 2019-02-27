@@ -34,6 +34,21 @@ namespace PAM.Data
             return _dbContext.SystemAccesses.ToList();
         }
 
+        public ICollection<SystemAccess> GetSystemAccessesByEmployeeId(int empId)
+        {
+            return _dbContext.SystemAccesses
+                .Include(e => e.System)
+                .Where(e => e.EmployeeId == empId).ToList();
+        }
+
+        public void RemoveSystemAccess(int systemId)
+        {
+            var systemAccess = _dbContext.SystemAccesses
+                .Where(sa => sa.SystemId == systemId).ToList().FirstOrDefault();
+            _dbContext.SystemAccesses.Remove(systemAccess);
+            _dbContext.SaveChanges();
+        }
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();

@@ -1,16 +1,14 @@
-﻿@model Review
+﻿@model Review 
 @{
-  ViewData["Title"] = "Review";
+  ViewData["Title"] = "Viewing";
   var request = (Request)ViewData["request"];
 }
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a asp-controller="Review" asp-action="MyReviews">Review Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@request.RequestId</li>
-  </ol>
-</nav>
-
+<div class="row mb-3">
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReview" class="btn btn-primary float-right">Return</a>
+  </div>
+</div>
 <div class="card">
   <div class="card-header">Request Information</div>
   <div class="card-body">
@@ -37,7 +35,9 @@
 </div>
 
 <div class="card">
-  <div class="card-header">Requester Information</div>
+  <div class="card-header">
+    Requester Information
+  </div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-sm-6">
+      <div class="form-group col-md-6">
         <label>Address</label>
         <span class="form-control">@request.RequestedFor.Address</span>
       </div>
@@ -113,44 +113,47 @@
 </div>
 
 <div class="card">
-  <div class="card-header">Systems Requested</div>
-  @if (request.RequestTypeId == 4){ 
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+  <div class="card-header">
+    Systems Requested
+  </div>
+  @if (request.RequestTypeId == 4)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
+        </div>
       </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@request.RequestedFor.Unit.Name</span>
-      </div>
-    </div>
-    <div class="row">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col" class="d-none d-md-table-cell">Description</th>
-            <th scope="col" class="nowrap">In Portfolio</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var requestedSystem in request.Systems)
-          {
+      <div class="row">
+        <table class="table">
+          <thead>
             <tr>
-              <td>@requestedSystem.System.SystemId</td>
-              <td>@requestedSystem.System.Name</td>
-              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-              <td>@requestedSystem.InPortfolio</td>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col" class="d-none d-md-table-cell">Description</th>
+              <th scope="col" class="nowrap">In Portfolio</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in request.Systems)
+            {
+              <tr>
+                <td>@requestedSystem.System.SystemId</td>
+                <td>@requestedSystem.System.Name</td>
+                <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+                <td>@requestedSystem.InPortfolio</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-    </div>
-    }
+  }
   @if (request.RequestTypeId == 11)
   {
     <div class="card-body">
@@ -225,7 +228,9 @@
 </div>
 
 <div class="card">
-  <div class="card-header">Additional Information</div>
+  <div class="card-header">
+    Additional Information
+  </div>
   <div class="card-body">
     <div class="row mb-2">
       <div class="col-md-4">
@@ -279,41 +284,8 @@
   </div>
 </div>
 
-<form id="decision" method="post">
-  <div class="card mt-5">
-    <div class="card-header">Your Decision</div>
-    <div class="card-body">
-      <div class="form-group">
-        <label for="comments">Comments (required for denying a request)</label>
-        <textarea class="form-control" id="comments" name="comments" rows="3" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="signature">Signature (Your password serves as your digital signature)</label>
-        <input type="password" class="form-control" id="signature" name="signature" required>
-      </div>
-    </div>
+<div class="row mt-3">
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
   </div>
-  <div class="row mt-3">
-    <div class="col-4">
-      <a asp-action="MyReviews" class="btn btn-secondary">Cancel</a>
-    </div>
-    <div class="col-8 text-right">
-      <button id="deny" class="btn btn-danger">Deny</button>
-      <button id="approve" class="btn btn-success ml-3">Approve</button>
-    </div>
-  </div>
-</form>
-
-@section Scripts{
-  <script>
-    $(function () {
-      $("#deny").click(function () {
-        $("#decision").attr("action", "/Review/Deny/@Model.ReviewId");
-      });
-      $("#approve").click(function () {
-        $("#comments").prop("required", false);
-        $("#decision").attr("action", "/Review/Approve/@Model.ReviewId");
-      });
-    });
-  </script>
-}
+</div>

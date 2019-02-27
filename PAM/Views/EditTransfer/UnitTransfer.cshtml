@@ -2,7 +2,7 @@
 @{
      ViewData["Title"] = "Unit Selection";
      ViewData["id"] = Model.RequestId;
-     var temp = (List<SystemAccess>)ViewData["sysA"];
+     var temp = (List<SystemAccess>)ViewData["SystemAccess"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -50,11 +50,41 @@
 
 <form asp-action="SelectUnit" method="post">
   <div class="row">
+    <p>Please select your unit/job function to transfer from:</p>
     <div class="col-12 col-md-6 mb-3">
-      <p>Please select your unit/job function to transfer from:</p>
-      @foreach(var sa in temp){
-        <p>@sa.System.Name</p>
-      }
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Bureau</label>
+            <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Unit / Job Function</label>
+            <span class="form-control">@Model.RequestedFor.Unit.Name</span>
+          </div>
+        </div>
+        <div class="row">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="nowrap">In Portfolio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var sa in temp)
+              {
+                <tr>
+                  <td>@sa.System.SystemId</td>
+                  <td>@sa.System.Name</td>
+                  <td>@sa.InPortfolio</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-row">

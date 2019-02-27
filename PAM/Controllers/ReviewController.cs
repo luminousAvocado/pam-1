@@ -55,6 +55,12 @@ namespace PAM.Controllers
             return View();
         }
 
+        public IActionResult ViewReview(int id)
+        {
+            var review = _requestService.GetReview(id);
+            return View(review);
+        }
+
         [HttpGet]
         public IActionResult EditReview(int id)
         {
@@ -102,11 +108,32 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                foreach (var requestedSystem in request.Systems)
+                switch (request.RequestTypeId)
                 {
-                    var systemAccess = new SystemAccess(request, requestedSystem);
-                    _systemService.AddSystemAccess(systemAccess);
-                }
+                    case 4:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    case 11:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            if(!requestedSystem.InPortfolio){
+                                requestedSystem.InPortfolio = true;
+                            }
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    case 12:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                        }
+                        break;
+                } 
 
                 string emailName = "RequestApproved";
                 var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
