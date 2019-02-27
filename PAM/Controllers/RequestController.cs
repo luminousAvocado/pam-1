@@ -123,6 +123,8 @@ namespace PAM.Controllers
                 {
                     case 11:
                         return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
+                    case 12:
+                        return RedirectToAction("UnitSelection", "RemoveAccessRequest", new { id = request.RequestId });
                     default:
                         return RedirectToAction("UnitSelection", "EditPortfolioRequest", new { id = request.RequestId });
                 }
