@@ -1,7 +1,8 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Unit Selection";
-  ViewData["id"] = Model.RequestId;
+     ViewData["Title"] = "Unit Selection";
+     ViewData["id"] = Model.RequestId;
+     var temp = (List<SystemAccess>)ViewData["sysA"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -51,6 +52,9 @@
   <div class="row">
     <div class="col-12 col-md-6 mb-3">
       <p>Please select your unit/job function to transfer from:</p>
+      @foreach(var sa in temp){
+        <p>@sa.System.Name</p>
+      }
     </div>
   </div>
   <div class="form-row">

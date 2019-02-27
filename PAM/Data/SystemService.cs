@@ -30,6 +30,10 @@ namespace PAM.Data
                 .Where(s => s.SystemId.Equals(id)).FirstOrDefault();
         }
 
+        public ICollection<SystemAccess> GetSystemAccess(){
+            return _dbContext.SystemAccesses.ToList();
+        }
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();
