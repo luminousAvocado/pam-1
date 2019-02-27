@@ -78,10 +78,10 @@
                data-search-align="right">
           <thead>
             <tr>
-              <th ></th>
-              <th class="d-md-table-cell" data-sortable="true" scope="col">Id</th>
-              <th class="d-md-table-cell" data-sortable="true" scope="col">Name</th>
-              <th class="d-md-table-cell" scope="col">Description</th>
+              <th></th>
+              <th data-sortable="true" scope="col">Id</th>
+              <th data-sortable="true" scope="col">Name</th>
+              <th scope="col">Description</th>
             </tr>
           </thead>
           <tbody>
@@ -89,15 +89,15 @@
             {
               var label = "system" + system.SystemId;
               <tr>
-                <td  class="d-none d-md-table-cell">
+                <td>
                   <div class="custom-control custom-checkbox" id="selectSystems">
                     <input type="checkbox" class="custom-control-input" name="addingSystem" id="@label" value="@system.SystemId" />
                     <label class="custom-control-label" for="@label"></label>
                   </div>
                 </td>
-                <td class="d-none d-md-table-cell">@system.SystemId</td>
-                <td class="d-none d-md-table-cell">@system.Name</td>
-                <td class="d-none d-md-table-cell">@system.Description</td>
+                <td>@system.SystemId</td>
+                <td>@system.Name</td>
+                <td>@system.Description</td>
               </tr>
             }
           </tbody>

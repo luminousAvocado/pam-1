@@ -78,7 +78,6 @@ namespace PAM.Controllers
             request.Reviews = new List<Review>();
             var requestType = _requestService.GetRequestType(requestTypeId);
             var requiredSignatures = requestType.RequiredSignatures.OrderBy(s => s.Order).ToList();
-            Console.WriteLine("ORDDDRR" + requiredSignatures.Count);
             for (int i = 0; i < requiredSignatures.Count; ++i)
             {
                 var review = new Review
@@ -121,6 +120,8 @@ namespace PAM.Controllers
             else{
                 switch (request.RequestTypeId)
                 {
+                    case 2:
+                        return RedirectToAction("UnitSelection", "EditTransfer", new { id = request.RequestId });
                     case 11:
                         return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
                     default:
@@ -139,11 +140,7 @@ namespace PAM.Controllers
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            switch (request.RequestTypeId)
-            {
-                default:
-                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id });
-            }
+            return RedirectToAction("RequesterInfo", new { id });
         }
 
         public IActionResult SubmitRequest(int id)
