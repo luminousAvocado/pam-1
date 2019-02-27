@@ -78,6 +78,7 @@ namespace PAM.Controllers
             request.Reviews = new List<Review>();
             var requestType = _requestService.GetRequestType(requestTypeId);
             var requiredSignatures = requestType.RequiredSignatures.OrderBy(s => s.Order).ToList();
+            Console.WriteLine("ORDDDRR" + requiredSignatures.Count);
             for (int i = 0; i < requiredSignatures.Count; ++i)
             {
                 var review = new Review

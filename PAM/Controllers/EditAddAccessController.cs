@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
@@ -75,13 +73,12 @@ namespace PAM.Controllers
             var request = _requestService.GetRequest(id);
 
             foreach(var a in addingSystem){
-                var sys = _systemService.GetSystemById(a);
                 request.Systems.Add(new RequestedSystem(request.RequestId, a, false));
             }
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("AdditionalInfo", new { id });
+                RedirectToAction("Signatures", new { id });
         }
 
         [HttpGet]
