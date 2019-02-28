@@ -11,32 +11,21 @@
 @section Scripts {
   <script src="~/lib/core-js/core.min.js"></script>
   <script>
-  $(function(){
-    //var defaultSystems = @Model.RequestedFor.UnitId;
-    $("#unitId").val(defaultSystems);
-    $("#next").prop("disabled", false);
-    $("#saveDraft").prop("disabled", false);
-        //$.ajax({
-        //  url: "/api/portfolio/" + defaultSystems,
-        //  success: function (data) {
-        //    $("#systems").empty();
-        //    data.forEach(function (system) {
-        //      if (system.systemId) {
-        //        $("#system" + system.systemId).prop("checked", true);
-        //        $("#system" + system.systemId).prop("disabled", true);
-        //      }
-        //      $("#systems").append("<tr><td>"
-        //        + system.systemId + "</td><td>"
-        //        + system.name + "</td></tr>");
-        //    });
-        //  }
+    $("#checkboxForm input[type=checkbox]").on("change", function () {
+      if ($("input[type=checkbox]").is(":checked")) {
+        $("#next").prop("disabled", false);
+        $("#saveDraft").prop("disabled", false);
+      }
+      else {
+        $("#next").prop("disabled", true);
+        $("#saveDraft").prop("disabled", true);
+      }
     })
     $("#saveDraft").click(function () {
       var form = $(this).parents("form:first");
       form.append("<input type='hidden' name='saveDraft' value='true'>");
       form.submit();
     });
-  });
   </script>
 }
 
@@ -47,7 +36,7 @@
   </ol>
 </nav>
 
-<form asp-action="RemoveSystems" method="post">
+<form asp-action="RemoveSystems" method="post" id="checkboxForm">
   <div class="mb-3">
     <div class="row">
       <h4>Systems You Currently Have Access To</h4>
@@ -109,9 +98,7 @@
     </div>
     <div class="col-8 text-right">
       <a asp-controller="RemoveAccessRequest" asp-action="UnitSelection" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
-      @* *** TODO made disabled *@
-      @*<button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>*@
-      <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+      <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
     </div>
   </div>
 </form>
