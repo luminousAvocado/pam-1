@@ -20,20 +20,25 @@
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
         $.ajax({
-          url: "/api/portfolio/" + defaultSystems,
+          url: "/api/portfolio/",
           success: function (data) {
             $("#systems").empty();
             data.forEach(function (system) {
               if (system.systemId) {
                 $("#system" + system.systemId).prop("checked", true);
                 $("#system" + system.systemId).prop("disabled", true);
-              }
-              $("#systems").append("<tr><td>"
+                $("#systems").append("<tr><td>"
                 + system.systemId + "</td><td>"
-                + system.name + "</td></tr>");
+                + system.name + "</td></tr>")
+              }
+              $("input[type=checkbox").click(function () {
+                $("#selectedSystems").append("<tr><td>"
+                  + "GOT " + "</td><td>"
+                  + system.name + "</td></tr>");
+              });;
             });
           }
-    })
+        })
     $("#saveDraft").click(function () {
       var form = $(this).parents("form:first");
       form.append("<input type='hidden' name='saveDraft' value='true'>");
@@ -51,58 +56,76 @@
 </nav>
 
 <form asp-action="AddSystems" method="post">
-  <div class="mb-3">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card">
-          <h4 class="card-header">Default Systems</h4>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-              </tr>
-            </thead>
-            <tbody id="systems"></tbody>
-          </table>
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <div class="row mb-2">
+        <div class="col-md-12">
+          <div class="card">
+            <h4 class="card-header">Selected Systems</h4>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody id="selectedSystems"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <p class="float-left mt-2">Please select the system(s) to add:</p>
-        <table id="table"
-               data-toggle="table"
-               data-pagination="true"
-               data-page-size="15"
-               data-maintain-selected="true"
-               data-search="true"
-               data-search-align="right">
-          <thead>
-            <tr>
-              <th></th>
-              <th data-sortable="true" scope="col">Id</th>
-              <th data-sortable="true" scope="col">Name</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var system in systemsList)
-            {
-              var label = "system" + system.SystemId;
-              <tr>
-                <td>
-                  <div class="custom-control custom-checkbox" id="selectSystems">
-                    <input type="checkbox" class="custom-control-input" name="addingSystem" id="@label" value="@system.SystemId" />
-                    <label class="custom-control-label" for="@label"></label>
-                  </div>
-                </td>
-                <td>@system.SystemId</td>
-                <td>@system.Name</td>
-                <td>@system.Description</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <h4 class="card-header">Default Systems</h4>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody id="systems"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="col-md-9">
+      <p class="float-left mt-2">Please select the system(s) to add:</p>
+      <table id="table"
+             data-toggle="table"
+             data-pagination="true"
+             data-page-size="15"
+             data-maintain-selected="true"
+             data-search="true"
+             data-search-align="right">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-sortable="true" scope="col">Id</th>
+            <th data-sortable="true" scope="col">Name</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var system in systemsList)
+          {
+            var label = "system" + system.SystemId;
+            <tr>
+              <td>
+                <div class="custom-control custom-checkbox" id="selectSystems">
+                  <input type="checkbox" class="custom-control-input" name="addingSystem" id="@label" value="@system.SystemId" />
+                  <label class="custom-control-label" for="@label"></label>
+                </div>
+              </td>
+              <td>@system.SystemId</td>
+              <td>@system.Name</td>
+              <td>@system.Description</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="form-row">
