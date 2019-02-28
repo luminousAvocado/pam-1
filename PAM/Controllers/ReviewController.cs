@@ -122,7 +122,10 @@ namespace PAM.Controllers
                     case 12:
                         foreach (var requestedSystem in request.Systems)
                         {
-                            _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                            //_systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            systemAccess.AccessType = SystemAccessType.Remove;
+                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                 }

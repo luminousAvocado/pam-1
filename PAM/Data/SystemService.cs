@@ -22,14 +22,6 @@ namespace PAM.Data
             return systemAccess;
         }
 
-        public void RemoveSystemAccess(int systemId)
-        {
-            var systemAccess = _dbContext.SystemAccesses
-                .Where(sa => sa.SystemId == systemId).ToList().FirstOrDefault();
-            _dbContext.SystemAccesses.Remove(systemAccess);
-            _dbContext.SaveChanges();
-        }
-
         public ICollection<Models.SystemAccess> GetSystemAccessesByEmployeeId(int empId)
         {
             return _dbContext.SystemAccesses

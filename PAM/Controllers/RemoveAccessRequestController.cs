@@ -19,7 +19,7 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
-        private readonly TreeViewService _treeViewService;  
+        private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
