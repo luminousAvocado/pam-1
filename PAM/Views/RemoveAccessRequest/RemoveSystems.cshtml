@@ -6,10 +6,12 @@
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
 }
 
 @section Scripts {
   <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
   <script>
     $("#checkboxForm input[type=checkbox]").on("change", function () {
       if ($("input[type=checkbox]").is(":checked")) {
@@ -36,33 +38,16 @@
   </ol>
 </nav>
 
+@* *** TODO ***: Need to fix progress bar since different per request *@
+<partial name="../Shared/_ProgressBar1.cshtml" />
+
 <form asp-action="RemoveSystems" method="post" id="checkboxForm">
   <div class="mb-3">
     <div class="row">
-      <h4>Systems You Currently Have Access To</h4>
-      @*<div class="col-md-3">
-        <div class="card">
-          <h4 class="card-header">Default Systems</h4>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-              </tr>
-            </thead>
-            <tbody id="systems"></tbody>
-          </table>
-        </div>
-      </div>*@
       <div class="col-md-9">
-        <p class="float-left mt-2">Please select the system(s) to remove:</p>
+        <p class="float-left mt-2">Please select system(s) you currently have access to, to remove:</p>
         <table id="table"
                data-toggle="table"
-               data-pagination="true"
-               data-page-size="15"
-               data-maintain-selected="true"
-               data-search="true"
-               data-search-align="right">
           <thead>
             <tr>
               <th></th>
