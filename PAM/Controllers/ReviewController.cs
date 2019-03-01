@@ -56,6 +56,12 @@ namespace PAM.Controllers
             return View();
         }
 
+        public IActionResult ViewReview(int id)
+        {
+            var review = _requestService.GetReview(id);
+            return View(review);
+        }
+
         [HttpGet]
         public IActionResult EditReview(int id)
         {
@@ -103,13 +109,6 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                // *** TODO: maybe have switch with RequestType, cause maybe we wanna Add SystemAccess, or Remove SA, etc
-                //foreach (var requestedSystem in request.Systems)
-                //{
-                //    var systemAccess = new SystemAccess(request, requestedSystem);
-                //    _systemService.AddSystemAccess(systemAccess);
-                //}
-
                 switch (request.RequestTypeId)
                 {
                     case 4:
@@ -119,16 +118,25 @@ namespace PAM.Controllers
                             _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
+                    case 11:
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            if(!requestedSystem.InPortfolio){
+                                requestedSystem.InPortfolio = true;
+                            }
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
                     case 12:
                         foreach (var requestedSystem in request.Systems)
                         {
-                            //_systemService.RemoveSystemAccess(requestedSystem.SystemId);
                             var systemAccess = new SystemAccess(request, requestedSystem);
                             systemAccess.AccessType = SystemAccessType.Remove;
                             _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
-                }
+                } 
 
                 string emailName = "RequestApproved";
                 var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
