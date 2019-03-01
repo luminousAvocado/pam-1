@@ -21,7 +21,7 @@ namespace PAM.Controllers
 
         public IActionResult Systems()
         {
-            return View(_systemService.GetSystems());
+            return View(_systemService.GetAllSystems());
         }
 
         public IActionResult ViewSystem(int id)

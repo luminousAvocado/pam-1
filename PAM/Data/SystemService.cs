@@ -32,7 +32,7 @@ namespace PAM.Data
             //allSystemAccesses.
         }
 
-        public ICollection<Models.System> GetSystems()
+        public ICollection<Models.System> GetAllSystems()
         {
             return _dbContext.Systems.OrderBy(s => s.Name).ToList();
         }
@@ -47,6 +47,10 @@ namespace PAM.Data
             _dbContext.Systems.Add(system);
             _dbContext.SaveChanges();
             return system;
+        }
+
+        public ICollection<SystemAccess> GetSystemAccess(){
+            return _dbContext.SystemAccesses.ToList();
         }
 
         public void SaveChanges()

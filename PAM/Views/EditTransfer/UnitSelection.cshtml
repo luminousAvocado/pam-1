@@ -49,6 +49,7 @@
         node = $("#tree").treeview("getNode", ++nodeId);
       }
       if (node) {
+        console.log(node);
         $("#tree").treeview("selectNode", node);
         $('#tree').treeview('revealNode', [nodeId, { silent: true }]);
         $("#next").prop("disabled", false);

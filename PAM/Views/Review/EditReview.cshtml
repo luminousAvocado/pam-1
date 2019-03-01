@@ -84,21 +84,12 @@
         <label>Address</label>
         <span class="form-control">@request.RequestedFor.Address</span>
       </div>
-      <div class="form-group col-sm-6">
-        <label>Address</label>
-        <span class="form-control">@request.RequestedFor.Address</span>
-      </div>
       <div class="form-group col-md-6">
         <label>City</label>
         <span class="form-control">@request.RequestedFor.City</span>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-xl-6">
-        <label>State</label>
-        <span class="form-control">@request.RequestedFor.State</span>
-      </div>
-      <div class="form-group col-xl-6">
       <div class="form-group col-md-6">
         <label>State</label>
         <span class="form-control">@request.RequestedFor.State</span>
@@ -123,6 +114,7 @@
 
 <div class="card">
   <div class="card-header">Systems Requested</div>
+  @if (request.RequestTypeId == 4){ 
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -157,7 +149,79 @@
         </tbody>
       </table>
     </div>
-  </div>
+    </div>
+    }
+  @if (request.RequestTypeId == 11)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Default Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in request.Systems)
+              {
+                @if (requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Additional Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in request.Systems)
+              {
+                @if (!requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
 </div>
 
 <div class="card">

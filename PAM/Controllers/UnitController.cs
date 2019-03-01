@@ -49,7 +49,7 @@ namespace PAM.Controllers
                 ViewData["bureau"] = _organizationService.GetBureau((int)bureauId);
             }
             ViewData["unitTypes"] = new SelectList(_organizationService.GetUnitTypes(), "UnitTypeId", "Name");
-            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystems());
+            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetAllSystems());
             return View(new Unit());
         }
 
@@ -74,7 +74,7 @@ namespace PAM.Controllers
             ViewData["parent"] = unit.Parent;
             ViewData["bureau"] = unit.Bureau;
             ViewData["unitTypes"] = new SelectList(_organizationService.GetUnitTypes(), "UnitTypeId", "Name");
-            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystems());
+            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetAllSystems());
             return View(unit);
         }
 
