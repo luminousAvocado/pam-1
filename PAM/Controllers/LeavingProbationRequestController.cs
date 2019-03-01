@@ -63,5 +63,28 @@ namespace PAM.Controllers
 
             return null;
         }
+
+        [HttpGet]
+        public IActionResult Signatures(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var reviews = request.OrderedReviews;
+            ViewData["request"] = request;
+            return View(reviews);
+        }
+
+        [HttpPost]
+        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
+        {
+            var request = _requestService.GetRequest(id);
+            request.Reviews = reviews;
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Summary", new { id });
+        }
+
+        public IActionResult Summary(int id)
+        {
+            return View(_requestService.GetRequest(id));
+        }
     }
 }
