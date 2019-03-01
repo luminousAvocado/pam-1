@@ -15,6 +15,9 @@ namespace PAM.Models
         public string Description { get; set; }
         public string Owner { get; set; }
         public bool Retired { get; set; }
+
+        public int? ProcessingUnitId { get; set; }
+        public ProcessingUnit ProcessingUnit { get; set; }
     }
 
     [Table("UnitSystems")]

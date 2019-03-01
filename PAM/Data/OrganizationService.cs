@@ -93,6 +93,23 @@ namespace PAM.Data
             return _dbContext.Units.Where(u => u.ParentId == parentId).ToList();
         }
 
+        public ICollection<ProcessingUnit> GetProcessingUnits()
+        {
+            return _dbContext.ProcessingUnits.ToList();
+        }
+
+        public ProcessingUnit GetProcessingUnit(int id)
+        {
+            return _dbContext.ProcessingUnits.Find(id);
+        }
+
+        public ProcessingUnit AddProcessingUnit(ProcessingUnit unit)
+        {
+            _dbContext.ProcessingUnits.Add(unit);
+            _dbContext.SaveChanges();
+            return unit;
+        }
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();

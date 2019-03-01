@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 
@@ -8,12 +9,14 @@ namespace PAM.Controllers
     public class SystemController : Controller
     {
         private readonly SystemService _systemService;
+        private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<SystemController> _logger;
 
-        public SystemController(SystemService systemService, IMapper mapper, ILogger<SystemController> logger)
+        public SystemController(SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger)
         {
             _systemService = systemService;
+            _organizationService = organizationService;
             _mapper = mapper;
             _logger = logger;
         }
@@ -32,6 +35,7 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult AddSystem()
         {
+            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
             return View(new Models.System());
         }
 
@@ -45,6 +49,7 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult EditSystem(int id)
         {
+            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
             return View(_systemService.GetSystem(id));
         }
 
