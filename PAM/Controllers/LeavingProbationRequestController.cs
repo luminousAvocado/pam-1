@@ -49,13 +49,8 @@ namespace PAM.Controllers
         public IActionResult ReasonForLeaving(int id, DepartureReason selectedReason, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-
-            //foreach (var systemId in removeSystems)
-            //{
-            //    request.Systems.Add(new RequestedSystem(request.RequestId, systemId, true, SystemAccessType.Remove));
-            //}
-            //_requestService.SaveChanges();
-
+            request.DepartureReason = selectedReason;
+            _requestService.UpdateRequest(request);
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
