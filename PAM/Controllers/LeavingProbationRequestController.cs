@@ -50,19 +50,19 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.DepartureReason = selectedReason;
-            _requestService.UpdateRequest(request);
+            _requestService.SaveChanges();
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
 
-        //[HttpGet]
-        //public IActionResult Signatures(int id)
-        //{
-        //    var request = _requestService.GetRequest(id);
-        //    var reviews = request.OrderedReviews;
-        //    ViewData["request"] = request;
-        //    return View(reviews);
-        //}
+        [HttpGet]
+        public IActionResult Signatures(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var reviews = request.OrderedReviews;
+            ViewData["request"] = request;
+            return View(reviews);
+        }
 
         //[HttpPost]
         //public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)

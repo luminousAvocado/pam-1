@@ -9,7 +9,7 @@
 }
 @section Scripts {
   <script>
-  $(function(){
+    $(function () {
     var page ='@ViewData["Title"]';
     $("li[data-title='" + page + "']").addClass("active");
     $("#saveDraft").click(function () {
@@ -52,6 +52,9 @@
       {
         case 4:
           <a asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+          break;
+        case 6:
+          <a asp-controller="LeavingProbationRequest" asp-action="ReasonForLeaving" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
           break;
         case 12:
           <a asp-controller="RemoveAccessRequest" asp-action="RemoveSystems" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
