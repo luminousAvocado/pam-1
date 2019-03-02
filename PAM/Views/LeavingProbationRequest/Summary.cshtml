@@ -19,103 +19,29 @@
 
 <div class="card">
   <div class="card-header">
-    Systems
-    @*<a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>*@
-  </div>
-  @*<div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-      </div>
-    </div>
-  </div>*@
-  <div class="row p-2">
-    <div class="col-md-12 ">
-      <div class="card">
-        <h5 class="card-header text-center">Systems With Current Access To</h5>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var requestedSystem in Model.Systems)
-            {
-              <tr>
-                <td>@requestedSystem.System.SystemId</td>
-                <td>@requestedSystem.System.Name</td>
-                <td>@requestedSystem.System.Description</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-header">
-    Additional Information
-    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+    Systems With Current Access To
   </div>
   <div class="card-body">
-    <div class="row mb-2">
-      <div class="col-md-4">
-        @if (Model.IsContractor)
-        {
-          <i class="far fa-check-square"></i>
-        }
-        else
-        {
-          <i class="far fa-square"></i>
-        }
-        Contractor
-      </div>
-      <div class="col-md-4">
-        @if (Model.IsHighProfileAccess)
-        {
-          <i class="far fa-check-square"></i>
-        }
-        else
-        {
-          <i class="far fa-square"></i>
-        }
-        High Profile
-      </div>
-      <div class="col-md-4">
-        @if (Model.IsGlobalAccess)
-        {
-          <i class="far fa-check-square"></i>
-        }
-        else
-        {
-          <i class="far fa-square"></i>
-        }
-        Global Access
-      </div>
-    </div>
     <div class="row">
-      <div class="form-group col-md-4">
-        <label>Caseload Type</label>
-        <span class="form-control">@Model.CaseloadType</span>
-      </div>
-      <div class="form-group col-md-4">
-        <label>Caseload Function</label>
-        <span class="form-control">@Model.CaseloadFunction</span>
-      </div>
-      <div class="form-group col-md-4">
-        <label>Caseload Number</label>
-        <span class="form-control">@Model.CaseloadNumber</span>
-      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in Model.Systems)
+          {
+            <tr>
+              <td>@requestedSystem.System.SystemId</td>
+              <td>@requestedSystem.System.Name</td>
+              <td>@requestedSystem.System.Description</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
