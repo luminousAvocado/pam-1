@@ -75,7 +75,9 @@ namespace PAM.Controllers
 
             foreach (var systemId in removeSystems)
             {
-                request.Systems.Add(new RequestedSystem(request.RequestId, systemId, true, SystemAccessType.Remove));
+                var temp = new RequestedSystem(request.RequestId, systemId);
+                temp.AccessType = SystemAccessType.Remove;
+                request.Systems.Add(temp);
             }
             _requestService.SaveChanges();
 

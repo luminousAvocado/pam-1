@@ -50,6 +50,17 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.DepartureReason = selectedReason;
+
+            // ADD RequestedSystem to request with type remove
+            var requestFor = _userService.GetRequester(request.RequestedForId);
+            var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
+            foreach (var sa in systemAccesses)
+            {
+                var temp = new RequestedSystem(request.RequestId, sa.SystemId);
+                temp.AccessType = SystemAccessType.Remove;
+                request.Systems.Add(temp);
+            }
+
             _requestService.SaveChanges();
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
@@ -64,18 +75,18 @@ namespace PAM.Controllers
             return View(reviews);
         }
 
-        //[HttpPost]
-        //public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
-        //{
-        //    var request = _requestService.GetRequest(id);
-        //    request.Reviews = reviews;
-        //    return saveDraft ? RedirectToAction("MyRequests", "Request") :
-        //        RedirectToAction("Summary", new { id });
-        //}
+        [HttpPost]
+        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
+        {
+            var request = _requestService.GetRequest(id);
+            request.Reviews = reviews;
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Summary", new { id });
+        }
 
-        //public IActionResult Summary(int id)
-        //{
-        //    return View(_requestService.GetRequest(id));
-        //}
+        public IActionResult Summary(int id)
+        {
+            return View(_requestService.GetRequest(id));
+        }
     }
 }

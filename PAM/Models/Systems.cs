@@ -48,14 +48,6 @@ namespace PAM.Models
             RequestId = requestId;
             SystemId = systemId;
         }
-
-        public RequestedSystem(int requestId, int systemId, bool inPortfolio, SystemAccessType accessType)
-        {
-            RequestId = requestId;
-            SystemId = systemId;
-            InPortfolio = inPortfolio;
-            AccessType = accessType;
-        }
     }
 
     // After a request is approved, each RequestedSystem becomes a SystemAccess
