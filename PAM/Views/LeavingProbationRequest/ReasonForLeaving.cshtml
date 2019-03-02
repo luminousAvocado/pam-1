@@ -7,16 +7,16 @@
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
   @*<link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">*@
-  @*<link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />*@
+  <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
 }
 @section Scripts {
   <script src="~/lib/core-js/core.min.js"></script>
-  @*<script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>*@
+  <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
   <script>
     $("#selectReason").change(function () {
-      console.log("WTF");
-        $("#next").prop("disabled", false);
-        $("#saveDraft").prop("disabled", false);
+      console.log($("#selectReason").val());
+      $("#next").prop("disabled", false);
+      $("#saveDraft").prop("disabled", false);
     })
     $("#saveDraft").click(function () {
       var form = $(this).parents("form:first");
@@ -37,8 +37,8 @@
 
 <form asp-action="" method="post">
   <div class="form-group">
-    <p class="float-left mt-2">Please select a departure reason:</p>
-    <select class="form-control" id="selectReason">
+    <p class="float-left mt-2">Departure Reason:</p>
+    <select class="form-control selectpicker" title="Choose one of the following..." id="selectReason">
       @foreach (DepartureReason dr in Enum.GetValues(typeof(DepartureReason)))
       {
         <option>@dr</option>
