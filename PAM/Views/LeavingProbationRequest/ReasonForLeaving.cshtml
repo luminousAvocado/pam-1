@@ -1,7 +1,57 @@
-﻿
+﻿@model Request
 @{
-    ViewData["Title"] = "ReasonForLeaving";
+  ViewData["Title"] = "Departure Reason";
+  ViewData["id"] = Model.RequestId;
+  //var systemAccesses = (List<PAM.Models.SystemAccess>)ViewData["systemAccesses"];
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+  @*<link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">*@
+  @*<link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />*@
+}
+@section Scripts {
+  <script src="~/lib/core-js/core.min.js"></script>
+  @*<script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>*@
+  <script>
+    $("#selectReason").change(function () {
+      console.log("WTF");
+        $("#next").prop("disabled", false);
+        $("#saveDraft").prop("disabled", false);
+    })
+    $("#saveDraft").click(function () {
+      var form = $(this).parents("form:first");
+      form.append("<input type='hidden' name='saveDraft' value='true'>");
+      form.submit();
+    });
+  </script>
 }
 
-<h1>ReasonForLeaving</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
 
+<partial name="../Shared/_ProgressBar1.cshtml" />
+
+<form asp-action="" method="post">
+  <div class="form-group">
+    <p class="float-left mt-2">Please select a departure reason:</p>
+    <select class="form-control" id="selectReason">
+      @foreach (DepartureReason dr in Enum.GetValues(typeof(DepartureReason)))
+      {
+        <option>@dr</option>
+      }
+    </select>
+  </div>
+  <div class="form-row">
+    <div class="col-4">
+      <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
+    </div>
+    <div class="col-8 text-right">
+      <a asp-controller="Request" asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
+    </div>
+  </div>
+</form>

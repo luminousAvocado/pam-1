@@ -50,12 +50,8 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
-
             request.RequestedFor.BureauId = unit.BureauId;
             request.RequestedFor.UnitId = unit.UnitId;
-            //request.Systems.Clear();
-            //foreach (var us in unit.Systems)
-            //    request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId, true));
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :

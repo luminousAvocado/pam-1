@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using PAM.Models;
 using PAM.Services;
 
 namespace PAM.Controllers
@@ -38,13 +41,12 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult ReasonForLeaving(int id)
         {
-            //var request = _requestService.GetRequest(id);
+            var request = _requestService.GetRequest(id);
+            //var departureReasons = Mode
             //var requestFor = _userService.GetRequester(request.RequestedForId);
             //var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
             //ViewData["systemAccesses"] = systemAccesses;
-            //return View(request);
-
-            return null;
+            return View(request);
         }
 
         [HttpPost]
@@ -64,27 +66,27 @@ namespace PAM.Controllers
             return null;
         }
 
-        [HttpGet]
-        public IActionResult Signatures(int id)
-        {
-            var request = _requestService.GetRequest(id);
-            var reviews = request.OrderedReviews;
-            ViewData["request"] = request;
-            return View(reviews);
-        }
+        //[HttpGet]
+        //public IActionResult Signatures(int id)
+        //{
+        //    var request = _requestService.GetRequest(id);
+        //    var reviews = request.OrderedReviews;
+        //    ViewData["request"] = request;
+        //    return View(reviews);
+        //}
 
-        [HttpPost]
-        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
-        {
-            var request = _requestService.GetRequest(id);
-            request.Reviews = reviews;
-            return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("Summary", new { id });
-        }
+        //[HttpPost]
+        //public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
+        //{
+        //    var request = _requestService.GetRequest(id);
+        //    request.Reviews = reviews;
+        //    return saveDraft ? RedirectToAction("MyRequests", "Request") :
+        //        RedirectToAction("Summary", new { id });
+        //}
 
-        public IActionResult Summary(int id)
-        {
-            return View(_requestService.GetRequest(id));
-        }
+        //public IActionResult Summary(int id)
+        //{
+        //    return View(_requestService.GetRequest(id));
+        //}
     }
 }
