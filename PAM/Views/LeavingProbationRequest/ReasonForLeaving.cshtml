@@ -2,11 +2,9 @@
 @{
   ViewData["Title"] = "Departure Reason";
   ViewData["id"] = Model.RequestId;
-  //var systemAccesses = (List<PAM.Models.SystemAccess>)ViewData["systemAccesses"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
-  @*<link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">*@
   <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
 }
 @section Scripts {
@@ -14,7 +12,6 @@
   <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
   <script>
     $("#selectReason").change(function () {
-      console.log($("#selectReason").val());
       $("#next").prop("disabled", false);
       $("#saveDraft").prop("disabled", false);
     })
@@ -35,10 +32,10 @@
 
 <partial name="../Shared/_ProgressBar1.cshtml" />
 
-<form asp-action="" method="post">
+<form asp-action="ReasonForLeaving" method="post">
   <div class="form-group">
     <p class="float-left mt-2">Departure Reason:</p>
-    <select class="form-control selectpicker" title="Choose one of the following..." id="selectReason">
+    <select class="form-control selectpicker" title="Choose one of the following..." id="selectReason" name="selectedReason">
       @foreach (DepartureReason dr in Enum.GetValues(typeof(DepartureReason)))
       {
         <option>@dr</option>

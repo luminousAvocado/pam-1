@@ -42,17 +42,13 @@ namespace PAM.Controllers
         public IActionResult ReasonForLeaving(int id)
         {
             var request = _requestService.GetRequest(id);
-            //var departureReasons = Mode
-            //var requestFor = _userService.GetRequester(request.RequestedForId);
-            //var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
-            //ViewData["systemAccesses"] = systemAccesses;
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult ReasonForLeaving(int id, int[] removeSystems, bool saveDraft = false)
+        public IActionResult ReasonForLeaving(int id, DepartureReason selectedReason, bool saveDraft = false)
         {
-            //var request = _requestService.GetRequest(id);
+            var request = _requestService.GetRequest(id);
 
             //foreach (var systemId in removeSystems)
             //{
@@ -60,10 +56,8 @@ namespace PAM.Controllers
             //}
             //_requestService.SaveChanges();
 
-            //return saveDraft ? RedirectToAction("MyRequests", "Request") :
-            //    RedirectToAction("Signatures", new { id });
-
-            return null;
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Signatures", new { id });
         }
 
         //[HttpGet]
