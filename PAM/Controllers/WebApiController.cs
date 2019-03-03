@@ -19,16 +19,13 @@ namespace PAM.Controllers
             _systemService = systemService;
         }
 
-        [Route("api/portfolio")]
-        public List<PAM.Models.System> GetSystemPortfolio()
+        [Route("api/portfolio/{unitId}")]
+        public List<PAM.Models.System> GetSystemPortfolio(int unitId)
         {
-            /*
-                Unit unit = _organizationSevice.GetUnit(unitId);
-                var systems = new List<PAM.Models.System>();
-                foreach (var unitSystem in unit.Systems)
-                    systems.Add(unitSystem.System);
-                    */
-            var systems = (List<Models.System>)_systemService.GetAllSystems();
+            Unit unit = _organizationSevice.GetUnit(unitId);
+            var systems = new List<PAM.Models.System>();
+            foreach (var unitSystem in unit.Systems)
+                systems.Add(unitSystem.System);
             return systems;
         }
     }

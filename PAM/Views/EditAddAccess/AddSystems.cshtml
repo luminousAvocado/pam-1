@@ -13,6 +13,9 @@
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.13.5/dist/bootstrap-table.min.js"></script>
   <script>
   $(function(){
     var defaultSystems = @Model.RequestedFor.UnitId;
@@ -20,7 +23,7 @@
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
         $.ajax({
-          url: "/api/portfolio/",
+          url: "/api/portfolio/" + defaultSystems,
           success: function (data) {
             $("#systems").empty();
             data.forEach(function (system) {
@@ -33,7 +36,7 @@
               }
               $("input[type=checkbox").click(function () {
                 $("#selectedSystems").append("<tr><td>"
-                  + "GOT " + "</td><td>"
+                  + "Test" + "</td><td>"
                   + system.name + "</td></tr>");
               });;
             });
@@ -44,6 +47,16 @@
       form.append("<input type='hidden' name='saveDraft' value='true'>");
       form.submit();
     });
+    var $table = $('#table')
+     var selections = []
+    $table.on('check.bs.table check-all.bs.table ' +
+      'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
+        var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+          return row.id
+        })
+        var func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference'
+        selections = window._[func](selections, ids)
+      });
   });
   </script>
 }
@@ -94,15 +107,15 @@
     <div class="col-md-9">
       <p class="float-left mt-2">Please select the system(s) to add:</p>
       <table id="table"
-             data-toggle="table"
              data-pagination="true"
+             data-toggle="table"
              data-page-size="15"
              data-maintain-selected="true"
              data-search="true"
              data-search-align="right">
         <thead>
           <tr>
-            <th></th>
+            <th data-checkbox="true"></th>
             <th data-sortable="true" scope="col">Id</th>
             <th data-sortable="true" scope="col">Name</th>
             <th scope="col">Description</th>

@@ -75,5 +75,7 @@
 <partial name="../Shared/_ProgressBar1.cshtml" />
 
 <form asp-action="SelectUnit" method="post">
+    <p>Please select <strong>your</strong> unit/job function:</p>
   <partial name="../Shared/_UnitSystemPortfolio.cshtml" />
+  <input id="unitId" name="unitId" type="hidden" value="@Model.RequestedFor.UnitId" />
 </form>

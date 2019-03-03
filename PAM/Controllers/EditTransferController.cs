@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace PAM.Controllers
 {
@@ -65,15 +67,36 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult UnitTransfer(int id){
             var request = _requestService.GetRequest(id);
+            ViewData["tree"] = _treeViewService.GenerateTreeInJson();
+
+            /*
             var requestFor = _userService.GetRequester(request.RequestedForId);
             var systemAccess = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
             ViewData["SystemAccess"] = systemAccess;
+            */
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult UnitTransfer(int id, bool saveDraft = false){
+        public IActionResult UnitTransfer(int id, int transferUnitId, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
+            var temp = request.Systems;
+            var transferUnit = _organizationService.GetUnit(transferUnitId);
+
+            request.Systems.Clear();
+            foreach(var us in transferUnit.Systems){
+                foreach(var ds in temp){
+                    if (ds.SystemId == us.SystemId) {
+                        request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { InPortfolio = false });
+                        continue; //keep matching ones
+                    }
+                    if(temp.IndexOf(ds) == temp.Count - 1){
+                        request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { AccessType = SystemAccessType.Remove });
+                    }
+                }
+                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId) { InPortfolio = true }); //add new ones
+            }
+
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }

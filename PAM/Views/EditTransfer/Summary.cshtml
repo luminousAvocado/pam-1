@@ -15,7 +15,6 @@
   </script>
 }
 
-
 <partial name="../Shared/_Summary.cshtml" />
 
 <div class="card">
@@ -23,42 +22,95 @@
     Systems Requested
     <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>Bureau</label>
-          <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Unit / Job Function</label>
-          <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-        </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Bureau</label>
+        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
       </div>
-      <div class="row">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col" class="d-none d-md-table-cell">Description</th>
-              <th scope="col" class="nowrap">In Portfolio</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var requestedSystem in Model.Systems)
-            {
-              <tr>
-                <td>@requestedSystem.System.SystemId</td>
-                <td>@requestedSystem.System.Name</td>
-                <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-                <td>@requestedSystem.InPortfolio</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+      <div class="form-group col-md-6">
+        <label>Unit / Job Function</label>
+        <span class="form-control">@Model.RequestedFor.Unit.Name</span>
       </div>
     </div>
-</div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <h5 class="card-header text-center">Added Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in Model.Systems)
+              {
+                @if (requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <h5 class="card-header text-center">Removed Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in Model.Systems)
+              {
+                @if (requestedSystem.AccessType == SystemAccessType.Remove)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <h5 class="card-header text-center">Kept Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in Model.Systems)
+              {
+                @if (!requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="card">

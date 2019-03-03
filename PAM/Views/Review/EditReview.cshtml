@@ -165,62 +165,35 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Default Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in request.Systems)
+  <div class="row p-2">
+    <div class="col-md-12 ">
+      <div class="card">
+        <h5 class="card-header text-center">Requested Additional Systems</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in request.Systems)
+            {
+              if (!requestedSystem.InPortfolio)
               {
-                @if (requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
+                <tr>
+                  <td>@requestedSystem.System.SystemId</td>
+                  <td>@requestedSystem.System.Name</td>
+                  <td>@requestedSystem.System.Description</td>
+                </tr>
               }
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Additional Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in request.Systems)
-              {
-                @if (!requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
   }
 </div>
 

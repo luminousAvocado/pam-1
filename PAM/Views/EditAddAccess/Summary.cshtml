@@ -49,7 +49,7 @@
           <tbody>
             @foreach (var requestedSystem in Model.Systems)
             {
-              @if (!requestedSystem.InPortfolio)
+              if (!requestedSystem.InPortfolio)
               {
                 <tr>
                   <td>@requestedSystem.System.SystemId</td>
