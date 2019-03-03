@@ -14,7 +14,6 @@ namespace PAM.Controllers
 {
     public class RemoveAccessRequestController : Controller
     {
-        private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
@@ -23,11 +22,10 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public RemoveAccessRequestController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
+        public RemoveAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
             OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
             ILogger<EditPortfolioRequestController> logger)
         {
-            _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;

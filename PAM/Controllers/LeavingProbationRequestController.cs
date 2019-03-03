@@ -50,8 +50,6 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.DepartureReason = selectedReason;
-
-            // ADD RequestedSystem to request with type remove
             var requestFor = _userService.GetRequester(request.RequestedForId);
             var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
             foreach (var sa in systemAccesses)
@@ -60,8 +58,8 @@ namespace PAM.Controllers
                 temp.AccessType = SystemAccessType.Remove;
                 request.Systems.Add(temp);
             }
-
             _requestService.SaveChanges();
+
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
