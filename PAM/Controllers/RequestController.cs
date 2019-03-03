@@ -123,6 +123,8 @@ namespace PAM.Controllers
                 {
                     case 2:
                         return RedirectToAction("UnitSelection", "EditTransfer", new { id = request.RequestId });
+                    case 3:
+                        return RedirectToAction("AdditionalInfo", "UpdateInfoRequest", new { id = request.RequestId });
                     case 6:
                         return RedirectToAction("ReasonForLeaving", "LeavingProbationRequest", new { id = request.RequestId });
                     case 11:
