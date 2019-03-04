@@ -50,8 +50,11 @@
     <div class="col-8 text-right">
       @switch (request.RequestTypeId)
       {
+        case 3:
+          <a asp-controller="UpdateInfoRequest" asp-action="SystemsToUpdate" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+          break;
         case 4:
-          <a asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+          <a asp-controller="EditPortfolioRequest" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
           break;
         case 6:
           <a asp-controller="LeavingProbationRequest" asp-action="ReasonForLeaving" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
