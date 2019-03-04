@@ -64,6 +64,7 @@ namespace PAM.Controllers
         public IActionResult SystemsToUpdate(int id, int[] selectedSystems, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
+            request.Systems.Clear();
 
             foreach (var systemId in selectedSystems)
             {

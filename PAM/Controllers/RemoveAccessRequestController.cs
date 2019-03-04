@@ -70,6 +70,7 @@ namespace PAM.Controllers
         public IActionResult RemoveSystems(int id, int[] removeSystems, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
+            request.Systems.Clear();
 
             foreach (var systemId in removeSystems)
             {
