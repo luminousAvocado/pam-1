@@ -10,6 +10,7 @@ using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
 using Microsoft.EntityFrameworkCore.Internal;
+using System;
 
 namespace PAM.Controllers
 {
@@ -69,33 +70,41 @@ namespace PAM.Controllers
             var request = _requestService.GetRequest(id);
             ViewData["tree"] = _treeViewService.GenerateTreeInJson();
 
-            /*
-            var requestFor = _userService.GetRequester(request.RequestedForId);
-            var systemAccess = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
-            ViewData["SystemAccess"] = systemAccess;
-            */
             return View(request);
         }
 
         [HttpPost]
         public IActionResult UnitTransfer(int id, int transferUnitId, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
-            var temp = request.Systems;
+            List<RequestedSystem> temp = new List<RequestedSystem>(request.Systems);
             var transferUnit = _organizationService.GetUnit(transferUnitId);
+            /*
+            Console.WriteLine("SYSTEMS IN REQUEST");
+            foreach(var rs in temp){
+                Console.WriteLine(rs.System.Name);
+            }
+            Console.WriteLine("SYSTEMS IN TRANSFER");
+            foreach(var rst in transferUnit.Systems){
+                Console.WriteLine(rst.System.Name);
+            }
+            */
 
             request.Systems.Clear();
             foreach(var us in transferUnit.Systems){
                 foreach(var ds in temp){
                     if (ds.SystemId == us.SystemId) {
                         request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { InPortfolio = false });
-                        continue; //keep matching ones
+                        goto OUTER; //keep matching ones
                     }
                     if(temp.IndexOf(ds) == temp.Count - 1){
                         request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { AccessType = SystemAccessType.Remove });
+                        goto OUTER;
                     }
                 }
                 request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId) { InPortfolio = true }); //add new ones
+                OUTER:;
             }
+            _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
