@@ -28,6 +28,11 @@ namespace PAM.Controllers
             _logger = logger;
         }
 
-
+        [HttpGet]
+        public IActionResult AdditionalInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            return null;
+        }
     }
 }

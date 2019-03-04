@@ -55,6 +55,27 @@ namespace PAM.Controllers
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("AdditionalInfo", new { id });
+        }
+
+        [HttpGet]
+        public IActionResult AdditionalInfo(int id)
+        {
+            return View(_requestService.GetRequest(id));
+        }
+
+        [HttpPost]
+        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
+        {
+            var request = _requestService.GetRequest(id);
+            request.IsContractor = update.IsContractor;
+            request.IsGlobalAccess = update.IsGlobalAccess;
+            request.IsHighProfileAccess = update.IsHighProfileAccess;
+            request.CaseloadType = update.CaseloadType;
+            request.CaseloadFunction = update.CaseloadFunction;
+            request.CaseloadNumber = update.CaseloadNumber;
+            _requestService.SaveChanges();
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
 
