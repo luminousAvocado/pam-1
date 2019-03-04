@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using PAM.Models;
 
 namespace PAM.Controllers
 {
@@ -18,7 +19,7 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public UpdateInfoRequestController(UserService userService, RequestService requestService, SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger logger)
+        public UpdateInfoRequestController(UserService userService, RequestService requestService, SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<UpdateInfoRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
@@ -31,7 +32,27 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult AdditionalInfo(int id)
         {
+            return View(_requestService.GetRequest(id));
+        }
+
+        [HttpPost]
+        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
+        {
             var request = _requestService.GetRequest(id);
+            request.IsContractor = update.IsContractor;
+            request.IsGlobalAccess = update.IsGlobalAccess;
+            request.IsHighProfileAccess = update.IsHighProfileAccess;
+            request.CaseloadType = update.CaseloadType;
+            request.CaseloadFunction = update.CaseloadFunction;
+            request.CaseloadNumber = update.CaseloadNumber;
+            _requestService.SaveChanges();
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("SystemsForUpdate", new { id });
+        }
+
+        [HttpGet]
+        public IActionResult SystemsForUpdate()
+        {
             return null;
         }
     }

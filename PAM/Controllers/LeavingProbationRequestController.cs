@@ -21,7 +21,7 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public LeavingProbationRequestController(UserService userService, RequestService requestService, SystemService systemService, IMapper mapper, ILogger<EditPortfolioRequestController> logger)
+        public LeavingProbationRequestController(UserService userService, RequestService requestService, SystemService systemService, IMapper mapper, ILogger<LeavingProbationRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;

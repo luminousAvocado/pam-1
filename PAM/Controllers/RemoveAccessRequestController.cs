@@ -24,7 +24,7 @@ namespace PAM.Controllers
 
         public RemoveAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
             OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<EditPortfolioRequestController> logger)
+            ILogger<RemoveAccessRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
