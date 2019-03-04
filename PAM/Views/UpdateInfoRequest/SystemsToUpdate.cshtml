@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Remove Systems";
+  ViewData["Title"] = "Systems To Update";
   ViewData["id"] = Model.RequestId;
   var systemAccesses = (List<PAM.Models.SystemAccess>)ViewData["systemAccesses"];
 }
@@ -41,11 +41,11 @@
 @* *** TODO ***: Need to fix progress bar since different per request *@
 <partial name="../Shared/_ProgressBar1.cshtml" />
 
-<form asp-action="RemoveSystems" method="post" id="checkboxForm">
+<form asp-action="SystemsToUpdate" method="post" id="checkboxForm">
   <div class="mb-3">
     <div class="row">
       <div class="col-md-9">
-        <p class="float-left mt-2">Please select system(s) you currently have access to, to remove:</p>
+        <p class="float-left mt-2">Please select system(s) you currently have access to, to update:</p>
         @* For some odd reason, the script to enable/disable only works when table tag below isnt closed *@
         <table id="table" data-toggle="table"
           <thead>
@@ -63,7 +63,7 @@
               <tr>
                 <td class="d-none d-md-table-cell">
                   <div class="custom-control custom-checkbox" id="selectSystems">
-                    <input type="checkbox" class="custom-control-input" name="removeSystems" id="@label" value="@sa.SystemId" />
+                    <input type="checkbox" class="custom-control-input" name="selectedSystems" id="@label" value="@sa.SystemId" />
                     <label class="custom-control-label" for="@label"></label>
                   </div>
                 </td>
@@ -82,7 +82,7 @@
       <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
     </div>
     <div class="col-8 text-right">
-      <a asp-controller="RemoveAccessRequest" asp-action="UnitSelection" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+      <a asp-controller="UpdateInfoRequest" asp-action="AdditionalInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
     </div>
   </div>

@@ -47,13 +47,57 @@ namespace PAM.Controllers
             request.CaseloadNumber = update.CaseloadNumber;
             _requestService.SaveChanges();
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("SystemsForUpdate", new { id });
+                RedirectToAction("SystemsToUpdate", new { id });
         }
 
         [HttpGet]
-        public IActionResult SystemsForUpdate()
+        public IActionResult SystemsToUpdate(int id)
         {
-            return null;
+            var request = _requestService.GetRequest(id);
+            var requestFor = _userService.GetRequester(request.RequestedForId);
+            var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
+            ViewData["systemAccesses"] = systemAccesses;
+            return View(request);
+        }
+
+        [HttpPost]
+        public IActionResult SystemsToUpdate(int id, int[] selectedSystems, bool saveDraft = false)
+        {
+            var request = _requestService.GetRequest(id);
+
+            foreach (var systemId in selectedSystems)
+            {
+                var temp = new RequestedSystem(request.RequestId, systemId);
+                temp.AccessType = SystemAccessType.Update;
+                request.Systems.Add(temp);
+            }
+            _requestService.SaveChanges();
+
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Signatures", new { id });
+        }
+
+        [HttpGet]
+        public IActionResult Signatures(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var reviews = request.OrderedReviews;
+            ViewData["request"] = request;
+            return View(reviews);
+        }
+
+        [HttpPost]
+        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
+        {
+            var request = _requestService.GetRequest(id);
+            request.Reviews = reviews;
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Summary", new { id });
+        }
+
+        public IActionResult Summary(int id)
+        {
+            return View(_requestService.GetRequest(id));
         }
     }
 }

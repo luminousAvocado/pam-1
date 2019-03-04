@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Remove Access Summary";
+  ViewData["Title"] = "Update Information Summary";
   ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
@@ -19,20 +19,10 @@
 
 <div class="card">
   <div class="card-header">
-    Systems Requested For Removal
-    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+    Systems Requested For Update
+    <a class="float-right" asp-action="SystemsToUpdate" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-      </div>
-    </div>
     <div class="row">
       <table class="table">
         <thead>
