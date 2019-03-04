@@ -75,7 +75,7 @@
 <partial name="../Shared/_ProgressBar1.cshtml" />
 
 <form asp-controller="EditTransfer" asp-action="UnitSelection" method="post">
-    <p>Please select <strong>your</strong> unit/job function:</p>
+    <p>Please select <strong>your current</strong> unit/job function:</p>
   <partial name="../Shared/_UnitSystemPortfolio.cshtml" />
-  <input id="unitId" name="unitId" type="hidden" value="@Model.RequestedFor.UnitId" />
+  <input id="unitId" name="unitId" type="hidden" value="@Model.TransferredFromUnitId" />
 </form>

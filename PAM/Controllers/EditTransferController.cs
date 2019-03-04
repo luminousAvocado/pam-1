@@ -54,12 +54,14 @@ namespace PAM.Controllers
             var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
 
-            request.RequestedFor.BureauId = unit.BureauId;
-            request.RequestedFor.UnitId = unit.UnitId;
+            request.TransferredFromUnitId = unit.UnitId;
+            request.TransferredFromUnit = unit;
+
             request.Systems.Clear();
             foreach (var us in unit.Systems)
                 request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
             _requestService.SaveChanges();
+            Console.WriteLine("HMMMM" + request.TransferredFromUnit.Bureau.Description);
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("UnitTransfer", new { id });
@@ -76,33 +78,36 @@ namespace PAM.Controllers
         [HttpPost]
         public IActionResult UnitTransfer(int id, int transferUnitId, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
-            List<RequestedSystem> temp = new List<RequestedSystem>(request.Systems);
+
+            List<RequestedSystem> currentSystems = new List<RequestedSystem>(request.Systems);
             var transferUnit = _organizationService.GetUnit(transferUnitId);
-            /*
-            Console.WriteLine("SYSTEMS IN REQUEST");
-            foreach(var rs in temp){
-                Console.WriteLine(rs.System.Name);
-            }
-            Console.WriteLine("SYSTEMS IN TRANSFER");
-            foreach(var rst in transferUnit.Systems){
-                Console.WriteLine(rst.System.Name);
-            }
-            */
+
+            request.RequestedFor.BureauId = transferUnit.BureauId;
+            request.RequestedFor.UnitId = transferUnit.UnitId;
 
             request.Systems.Clear();
-            foreach(var us in transferUnit.Systems){
-                foreach(var ds in temp){
-                    if (ds.SystemId == us.SystemId) {
-                        request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { InPortfolio = false });
-                        goto OUTER; //keep matching ones
+            foreach(var cs in currentSystems){
+                foreach(var ts in transferUnit.Systems){
+                    if (ts.SystemId == cs.SystemId) {
+                        //Keep matching systems
+                        request.Systems.Add(new RequestedSystem(request.RequestId, cs.SystemId) { AccessType = SystemAccessType.Update });
+                        break;
                     }
-                    if(temp.IndexOf(ds) == temp.Count - 1){
-                        request.Systems.Add(new RequestedSystem(request.RequestId, ds.SystemId) { AccessType = SystemAccessType.Remove });
-                        goto OUTER;
+                    else if(transferUnit.Systems.IndexOf(ts) == transferUnit.Systems.Count - 1 ){
+                        //Remove system not in new bureau
+                        request.Systems.Add(new RequestedSystem(request.RequestId, cs.SystemId) { AccessType = SystemAccessType.Remove });
                     }
                 }
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId) { InPortfolio = true }); //add new ones
-                OUTER:;
+            }
+            foreach(var ts in transferUnit.Systems){
+                foreach(var cs in currentSystems){
+                    if (cs.SystemId == ts.SystemId) {
+                        break;
+                    }
+                    else if(currentSystems.IndexOf(cs) == currentSystems.Count - 1 ){
+                        request.Systems.Add(new RequestedSystem(request.RequestId, ts.SystemId) { AccessType = SystemAccessType.Add });
+                    }
+                }
             }
             _requestService.SaveChanges();
 
@@ -152,6 +157,10 @@ namespace PAM.Controllers
 
         public IActionResult Summary(int id)
         {
+            var request = _requestService.GetRequest(id);
+            int unitId = request.TransferredFromUnitId ?? default(int);
+            var unit = _organizationService.GetUnit(unitId);
+            request.TransferredFromUnit = unit;
             return View(_requestService.GetRequest(id));
         }
     }

@@ -65,7 +65,7 @@ namespace PAM.Data
 
         public Unit GetUnit(int id)
         {
-            return _dbContext.Units.Where(u => u.UnitId == id)
+            return _dbContext.Units.Where(u => u.UnitId == id).Include(u => u.Bureau)
                 .Include(u => u.Systems).ThenInclude(us => us.System)
                 .FirstOrDefault();
         }
