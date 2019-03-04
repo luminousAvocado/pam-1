@@ -61,6 +61,10 @@
       <a asp-action="UnitSelection" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
       }
+      @if(Model.RequestTypeId == 2){
+      <a asp-action="UnitTransfer" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+      }
       @if(Model.RequestTypeId == 11){
       <a asp-action="AddSystems" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>

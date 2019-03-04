@@ -112,7 +112,7 @@ namespace PAM.Controllers
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("Signatures", new { id });
+                RedirectToAction("AdditionalInfo", new { id });
         }
 
         [HttpGet]
