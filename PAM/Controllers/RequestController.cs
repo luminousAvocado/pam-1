@@ -124,10 +124,12 @@ namespace PAM.Controllers
                 {
                     case 2:
                         return RedirectToAction("UnitSelection", "EditTransfer", new { id = request.RequestId });
+                    case 4:
+                        return RedirectToAction("UnitSelection", "EditPortfolioRequest", new { id = request.RequestId });
                     case 11:
                         return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
                     default:
-                        return RedirectToAction("UnitSelection", "EditPortfolioRequest", new { id = request.RequestId });
+                        return View();
                 }
             }
             return View();
@@ -136,9 +138,11 @@ namespace PAM.Controllers
         public IActionResult ViewRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            int unitId = request.TransferredFromUnitId ?? default(int);
-            var unit = _organizationService.GetUnit(unitId);
-            request.TransferredFromUnit = unit;
+            if (request.RequestTypeId == 2){
+                int unitId = request.TransferredFromUnitId ?? default(int);
+                var unit = _organizationService.GetUnit(unitId);
+                request.TransferredFromUnit = unit;
+            }
             return View(request);
         }
 

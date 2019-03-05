@@ -19,17 +19,19 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
+        private readonly OrganizationService _organizationService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
-        public ReviewController(IADService adService, UserService userService, RequestService requestService,
-            SystemService systemService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
+        public ReviewController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
+            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
+            _organizationService = organizationService;
             _email = email;
             _emailHelper = emailHelper;
             _logger = logger;
@@ -58,6 +60,13 @@ namespace PAM.Controllers
         public IActionResult ViewReview(int id)
         {
             var review = _requestService.GetReview(id);
+            var request = _requestService.GetRequest(review.RequestId);
+            if(request.RequestTypeId == 2){
+                int unitId = request.TransferredFromUnitId ?? default(int);
+                var unit = _organizationService.GetUnit(unitId);
+                request.TransferredFromUnit = unit;
+            }
+            ViewData["request"] = request;
             return View(review);
         }
 
@@ -65,7 +74,13 @@ namespace PAM.Controllers
         public IActionResult EditReview(int id)
         {
             var review = _requestService.GetReview(id);
-            ViewData["request"] = _requestService.GetRequest(review.RequestId);
+            var request = _requestService.GetRequest(review.RequestId);
+            if(request.RequestTypeId == 2){
+                int unitId = request.TransferredFromUnitId ?? default(int);
+                var unit = _organizationService.GetUnit(unitId);
+                request.TransferredFromUnit = unit;
+            }
+            ViewData["request"] = request;
             return View(review);
         }
 
@@ -110,6 +125,16 @@ namespace PAM.Controllers
 
                 switch (request.RequestTypeId)
                 {
+                    //Transfer Request
+                    case 2:
+                        foreach (var requestedSystem in request.Systems){
+                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update){
+                                var systemAccess = new SystemAccess(request, requestedSystem);
+                                _systemService.AddSystemAccess(systemAccess);
+                            }
+                        }
+                        break;
+                    //Portfolio Assignment Request
                     case 4:
                         foreach (var requestedSystem in request.Systems)
                         {
@@ -117,6 +142,7 @@ namespace PAM.Controllers
                             _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
+                    //Add Access Request
                     case 11:
                         foreach (var requestedSystem in request.Systems)
                         {
@@ -127,11 +153,14 @@ namespace PAM.Controllers
                             _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
+                    //Remove Access Request
                     case 12:
                         foreach (var requestedSystem in request.Systems)
                         {
                             _systemService.RemoveSystemAccess(requestedSystem.SystemId);
                         }
+                        break;
+                    default:
                         break;
                 } 
 
