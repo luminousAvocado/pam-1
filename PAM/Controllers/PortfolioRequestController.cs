@@ -85,8 +85,6 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.IsContractor = update.IsContractor;
-            request.IsGlobalAccess = update.IsGlobalAccess;
-            request.IsHighProfileAccess = update.IsHighProfileAccess;
             request.CaseloadType = update.CaseloadType;
             request.CaseloadFunction = update.CaseloadFunction;
             request.CaseloadNumber = update.CaseloadNumber;

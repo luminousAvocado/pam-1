@@ -99,13 +99,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
-            switch (requestType.DisplayCode)
-            {
-                case "Remove Access":
-                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id = request.RequestId });
-                default:
-                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id = request.RequestId });
-            }
+            return RedirectEditRequest(request.RequestId, requestType);
         }
 
         public IActionResult ViewRequest(int id)
@@ -117,13 +111,7 @@ namespace PAM.Controllers
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            switch (request.RequestType.DisplayCode)
-            {
-                case "Remove Access":
-                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id = request.RequestId });
-                default:
-                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id = request.RequestId });
-            }
+            return RedirectEditRequest(id, request.RequestType);
         }
 
         public IActionResult SubmitRequest(int id)
@@ -208,12 +196,23 @@ namespace PAM.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult ReviewRequests()
+        private IActionResult RedirectEditRequest(int id, RequestType requestType)
         {
-            //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
-            return View();
+            switch (requestType.DisplayCode)
+            {
+                case "Add Access":
+                    return RedirectToAction("RequesterInfo", "AddAccessRequest", new { id });
+                case "Remove Access":
+                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id });
+                case "Update Information":
+                    return RedirectToAction("RequesterInfo", "UpdateInfoRequest", new { id });
+                case "Transfer":
+                    return RedirectToAction("RequesterInfo", "TransferRequest", new { id });
+                case "Leaving Probation":
+                    return RedirectToAction("RequesterInfo", "LeavingProbationRequest", new { id });
+                default:
+                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id });
+            }
         }
     }
 }

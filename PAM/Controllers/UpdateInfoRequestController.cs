@@ -6,28 +6,25 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
-using PAM.Services;
 
 namespace PAM.Controllers
 {
-    public class RemoveAccessRequestController : Controller
+    public class UpdateInfoRequestController : Controller
     {
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
-        private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public RemoveAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper, ILogger<RemoveAccessRequestController> logger)
+        public UpdateInfoRequestController(UserService userService, RequestService requestService, SystemService systemService,
+            OrganizationService organizationService, IMapper mapper, ILogger<UpdateInfoRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
-            _treeViewService = treeViewService;
             _mapper = mapper;
             _logger = logger;
         }
@@ -45,32 +42,32 @@ namespace PAM.Controllers
         {
             _userService.UpdateRequester(requester);
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction(nameof(UnitSelection), new { id });
+                RedirectToAction(nameof(AdditionalInfo), new { id });
         }
 
         [HttpGet]
-        public IActionResult UnitSelection(int id)
+        public IActionResult AdditionalInfo(int id)
         {
-            var request = _requestService.GetRequest(id);
-            ViewData["tree"] = _treeViewService.GenerateTreeInJson();
-            return View(request);
+            return View(_requestService.GetRequest(id));
         }
 
         [HttpPost]
-        public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
+        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-            var unit = _organizationService.GetUnit(unitId);
-            request.RequestedFor.BureauId = unit.BureauId;
-            request.RequestedFor.UnitId = unit.UnitId;
+            request.IsContractor = update.IsContractor;
+            request.IsGlobalAccess = update.IsGlobalAccess;
+            request.IsHighProfileAccess = update.IsHighProfileAccess;
+            request.CaseloadType = update.CaseloadType;
+            request.CaseloadFunction = update.CaseloadFunction;
+            request.CaseloadNumber = update.CaseloadNumber;
             _requestService.SaveChanges();
-
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction(nameof(SystemsToRemove), new { id });
+                RedirectToAction("SystemsToUpdate", new { id });
         }
 
         [HttpGet]
-        public IActionResult SystemsToRemove(int id)
+        public IActionResult SystemsToUpdate(int id)
         {
             var request = _requestService.GetRequest(id);
             var systemAccesses = _systemService.GetCurrentSystemAccessesByEmployeeId(request.RequestedFor.EmployeeId);
@@ -83,7 +80,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult SystemsToRemove(int id, List<int> systemIds, bool saveDraft = false)
+        public IActionResult SystemsToUpdate(int id, List<int> systemIds, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
             var requestedSystems = request.Systems.ToDictionary(s => s.SystemId, s => s);
@@ -96,7 +93,7 @@ namespace PAM.Controllers
                 if (!requestedSystems.Keys.Contains(systemId))
                     request.Systems.Add(new RequestedSystem(request.RequestId, systemId)
                     {
-                        AccessType = SystemAccessType.Remove
+                        AccessType = SystemAccessType.Update
                     });
 
             _requestService.SaveChanges();

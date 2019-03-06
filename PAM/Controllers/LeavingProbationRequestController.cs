@@ -15,25 +15,17 @@ namespace PAM.Controllers
 {
     public class LeavingProbationRequestController : Controller
     {
-        private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
-        private readonly OrganizationService _organizationService;
-        private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public LeavingProbationRequestController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<PortfolioRequestController> logger)
+        public LeavingProbationRequestController(UserService userService, RequestService requestService, SystemService systemService, IMapper mapper, ILogger<LeavingProbationRequestController> logger)
         {
-            _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
-            _organizationService = organizationService;
-            _treeViewService = treeViewService;
             _mapper = mapper;
             _logger = logger;
         }
@@ -50,8 +42,6 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.DepartureReason = selectedReason;
-
-            // ADD RequestedSystem to request with type remove
             var requestFor = _userService.GetRequester(request.RequestedForId);
             var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
             foreach (var sa in systemAccesses)
@@ -60,8 +50,8 @@ namespace PAM.Controllers
                 temp.AccessType = SystemAccessType.Remove;
                 request.Systems.Add(temp);
             }
-
             _requestService.SaveChanges();
+
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
