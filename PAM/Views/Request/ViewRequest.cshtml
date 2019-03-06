@@ -319,74 +319,47 @@
   }
   @if (Model.RequestTypeId == 11)
   {
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>Bureau</label>
-          <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Unit / Job Function</label>
-          <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-        </div>
-      </div>
-    </div>
+  <div class="card-body">
     <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Default Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in Model.Systems)
-              {
-                @if (requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
+      <div class="form-group col-md-6">
+        <label>Bureau</label>
+        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Additional Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in Model.Systems)
-              {
-                @if (!requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
+      <div class="form-group col-md-6">
+        <label>Unit / Job Function</label>
+        <span class="form-control">@Model.RequestedFor.Unit.Name</span>
       </div>
     </div>
+  </div>
+  <div class="row p-2">
+    <div class="col-md-12 ">
+      <div class="card border-primary">
+        <h5 class="card-header bg-primary text-white text-center">Requested Additional Systems</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in Model.Systems)
+            {
+              if (!requestedSystem.InPortfolio)
+              {
+                <tr>
+                  <td>@requestedSystem.System.SystemId</td>
+                  <td>@requestedSystem.System.Name</td>
+                  <td>@requestedSystem.System.Description</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   }
 </div>
 

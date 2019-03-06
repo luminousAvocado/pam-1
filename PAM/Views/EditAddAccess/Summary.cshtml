@@ -17,8 +17,8 @@
 
 <partial name="../Shared/_Summary.cshtml" />
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Systems Requested
     <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -36,8 +36,8 @@
   </div>
   <div class="row p-2">
     <div class="col-md-12 ">
-      <div class="card">
-        <h5 class="card-header text-center">Requested Additional Systems</h5>
+      <div class="card border-primary">
+        <h5 class="card-header bg-primary text-white text-center">Requested Additional Systems</h5>
         <table class="table">
           <thead>
             <tr>
@@ -65,8 +65,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -123,8 +123,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Signature(s) Required
     <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>

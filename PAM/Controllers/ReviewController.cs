@@ -147,10 +147,9 @@ namespace PAM.Controllers
                         foreach (var requestedSystem in request.Systems)
                         {
                             if(!requestedSystem.InPortfolio){
-                                requestedSystem.InPortfolio = true;
+                                var systemAccess = new SystemAccess(request, requestedSystem);
+                                _systemService.AddSystemAccess(systemAccess);
                             }
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                     //Remove Access Request
