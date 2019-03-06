@@ -1,0 +1,41 @@
+﻿@model PAM.Models.System
+@{
+  ViewData["Title"] = "Add System";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Systems">Systems</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add System</li>
+  </ol>
+</nav>
+
+<form method="post">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
+    </div>
+    <div class="form-group col-md-8">
+      <label asp-for="Description">Description</label>
+      <input asp-for="Description" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Owner">Owner</label>
+      <input asp-for="Owner" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="ProcessingUnitId" class="form-label">Processing Unit</label>
+      <select asp-for="ProcessingUnitId" class="form-control" asp-items="ViewBag.processingUnits">
+        <option value="">- NONE -</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-12 text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+</form>

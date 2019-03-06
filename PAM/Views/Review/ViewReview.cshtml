@@ -1,4 +1,4 @@
-﻿@model Review 
+﻿@model Review
 @{
   ViewData["Title"] = "Viewing";
   var request = (Request)ViewData["request"];
@@ -9,8 +9,8 @@
     <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
   </div>
 </div>
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">Request Information</div>
+<div class="card">
+  <div class="card-header">Request Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -34,8 +34,10 @@
   </div>
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">Requester Information</div>
+<div class="card">
+  <div class="card-header">
+    Requester Information
+  </div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -78,7 +80,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-sm-6">
+      <div class="form-group col-md-6">
         <label>Address</label>
         <span class="form-control">@request.RequestedFor.Address</span>
       </div>
@@ -110,109 +112,83 @@
   </div>
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">Systems Requested</div>
-  @if (request.RequestTypeId == 2){
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <div class="card border-info">
-          <h5 class="card-header text-center bg-info text-white">Current Bureau & Systems</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-12">
-                <label>Bureau</label>
-                <span class="form-control">@request.TransferredFromUnit.Bureau.Description</span>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label>Unit / Job Function</label>
-                <span class="form-control">@request.TransferredFromUnit.Name</span>
-              </div>
-            </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach (var requestedSystem in request.Systems)
-                {
-                  @if (requestedSystem.AccessType == SystemAccessType.Remove || requestedSystem.AccessType == SystemAccessType.Update)
-                  {
-                    <tr>
-                      <td>@requestedSystem.System.SystemId</td>
-                      <td>@requestedSystem.System.Name</td>
-                    </tr>
-                  }
-                }
-              </tbody>
-            </table>
-          </div>
+<div class="card">
+  <div class="card-header">
+    Systems Requested
+  </div>
+  @if (request.RequestTypeId == 4)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
         </div>
       </div>
-      <div class="form-group col-md-6">
-        <div class="card border-info">
-          <h5 class="card-header text-center bg-info text-white">New Bureau & Systems</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-12">
-                <label>Bureau</label>
-                <span class="form-control">@request.RequestedFor.Bureau.Description</span>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <label>Unit / Job Function</label>
-                <span class="form-control">@request.RequestedFor.Unit.Name</span>
-              </div>
-            </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach (var requestedSystem in request.Systems)
-                {
-                  @if (requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update)
-                  {
-                    <tr>
-                      <td>@requestedSystem.System.SystemId</td>
-                      <td>@requestedSystem.System.Name</td>
-                    </tr>
-                  }
-                }
-              </tbody>
-            </table>
-          </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col" class="d-none d-md-table-cell">Description</th>
+              <th scope="col" class="nowrap">In Portfolio</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in request.Systems)
+            {
+              <tr>
+                <td>@requestedSystem.System.SystemId</td>
+                <td>@requestedSystem.System.Name</td>
+                <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+                <td>@requestedSystem.InPortfolio</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+  @if (request.RequestTypeId == 11)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <div class="card border-success">
-          <h5 class="card-header text-center bg-success text-white">Added Systems</h5>
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Default Systems</h5>
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
               </tr>
             </thead>
             <tbody>
               @foreach (var requestedSystem in request.Systems)
               {
-                @if (requestedSystem.AccessType == SystemAccessType.Add)
+                @if ((bool)requestedSystem.InPortfolio)
                 {
                   <tr>
                     <td>@requestedSystem.System.SystemId</td>
                     <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
                   </tr>
                 }
               }
@@ -220,49 +196,26 @@
           </table>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card border-danger">
-          <h5 class="card-header text-center bg-danger text-white">Removed Systems</h5>
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Additional Systems</h5>
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
               </tr>
             </thead>
             <tbody>
               @foreach (var requestedSystem in request.Systems)
               {
-                @if (requestedSystem.AccessType == SystemAccessType.Remove)
+                @if (!(bool)requestedSystem.InPortfolio)
                 {
                   <tr>
                     <td>@requestedSystem.System.SystemId</td>
                     <td>@requestedSystem.System.Name</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card border-primary">
-          <h5 class="card-header text-center bg-primary text-white">Kept Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in request.Systems)
-              {
-                @if (requestedSystem.AccessType == SystemAccessType.Update)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
                   </tr>
                 }
               }
@@ -271,6 +224,7 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
   </div>
   }
   @if (request.RequestTypeId == 4){ 
@@ -353,11 +307,15 @@
       </div>
     </div>
   </div>
+=======
+>>>>>>> cysun/master
   }
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">Additional Information</div>
+<div class="card">
+  <div class="card-header">
+    Additional Information
+  </div>
   <div class="card-body">
     <div class="row mb-2">
       <div class="col-md-4">

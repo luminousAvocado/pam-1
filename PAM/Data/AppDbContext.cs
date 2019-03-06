@@ -17,7 +17,9 @@ namespace PAM.Data
         public DbSet<Location> Locations { get; set; }
         public DbSet<BureauType> BureauTypes { get; set; }
         public DbSet<Bureau> Bureaus { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<ProcessingUnit> ProcessingUnits { get; set; }
         public DbSet<Models.System> Systems { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
@@ -38,6 +40,9 @@ namespace PAM.Data
 
             modelBuilder.Entity<Unit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Unit>().HasQueryFilter(u => !u.Deleted);
+
+            modelBuilder.Entity<ProcessingUnit>().Property(u => u.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<ProcessingUnit>().HasQueryFilter(u => !u.Deleted);
 
             modelBuilder.Entity<Models.System>().Property(s => s.Retired).HasDefaultValue(false);
             modelBuilder.Entity<Models.System>().HasQueryFilter(s => !s.Retired);

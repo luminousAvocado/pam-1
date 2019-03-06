@@ -1,0 +1,75 @@
+﻿@model Requester
+
+<p>Please enter the information of the person this request is for:</p>
+<form asp-action="RequesterInfo" method="post">
+  <input asp-for="RequesterId" type="hidden">
+  <input asp-for="EmployeeId" type="hidden">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="FirstName">First Name</label>
+      <input asp-for="FirstName" type="text" class="form-control" required>
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="LastName">Last Name</label>
+      <input asp-for="LastName" type="text" class="form-control" required>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Department">Department</label>
+      <input asp-for="Department" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="Service">Service</label>
+      <input asp-for="Service" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Title">Title</label>
+      <input asp-for="Title" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="Email">Email</label>
+      <input asp-for="Email" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Address">Address</label>
+      <input asp-for="Address" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="City">City</label>
+      <input asp-for="City" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="State">State</label>
+      <input asp-for="State" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="Zip">Zip Code</label>
+      <input asp-for="Zip" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Phone">Phone</label>
+      <input asp-for="Phone" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="CellPhone">Cell Phone</label>
+      <input asp-for="CellPhone" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-4">
+      <button id="saveDraft" class="btn btn-secondary">Save Draft</button>
+    </div>
+    <div class="col-8 text-right">
+      <button id="next" type="submit" class="btn btn-primary">Next</button>
+    </div>
+  </div>
+</form>

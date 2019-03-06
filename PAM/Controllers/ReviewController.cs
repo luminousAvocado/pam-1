@@ -146,9 +146,14 @@ namespace PAM.Controllers
                     case 11:
                         foreach (var requestedSystem in request.Systems)
                         {
+<<<<<<< HEAD
                             if(!requestedSystem.InPortfolio){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
                                 _systemService.AddSystemAccess(systemAccess);
+=======
+                            if(!(bool)requestedSystem.InPortfolio){
+                                requestedSystem.InPortfolio = true;
+>>>>>>> cysun/master
                             }
                         }
                         break;
@@ -156,7 +161,7 @@ namespace PAM.Controllers
                     case 12:
                         foreach (var requestedSystem in request.Systems)
                         {
-                            _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                           // _systemService.RemoveSystemAccess(requestedSystem.SystemId);
                         }
                         break;
                     default:

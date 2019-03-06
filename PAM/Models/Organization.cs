@@ -47,6 +47,9 @@ namespace PAM.Models
         public int DisplayOrder { get; set; } = 50;
 
         public bool Deleted { get; set; } = false;
+
+        [NotMapped]
+        public string Name => $"{Description} ({Code})";
     }
 
     [Table("UnitTypes")]
@@ -63,6 +66,9 @@ namespace PAM.Models
         public string Description { get; set; }
 
         public int? DisplayOrder { get; set; }
+
+        [NotMapped]
+        public string Name => DisplayCode + (Description != null ? $" ({Description})" : "");
     }
 
     [Table("Units")]
@@ -88,6 +94,20 @@ namespace PAM.Models
         public int? DisplayOrder { get; set; }
 
         public ICollection<UnitSystem> Systems { get; set; }
+
+        public bool Deleted { get; set; } = false;
+    }
+
+    [Table("ProcessingUnits")]
+    public class ProcessingUnit
+    {
+        public int ProcessingUnitId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Email { get; set; }
 
         public bool Deleted { get; set; } = false;
     }

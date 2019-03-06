@@ -1,157 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PAM.Data;
-using PAM.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using PAM.Data;
 
 namespace PAM.Controllers
 {
     public class SystemController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly SystemService _systemService;
+        private readonly OrganizationService _organizationService;
+        private readonly IMapper _mapper;
+        private readonly ILogger<SystemController> _logger;
 
-        public SystemController(AppDbContext context)
+        public SystemController(SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger)
         {
-            _context = context;
+            _systemService = systemService;
+            _organizationService = organizationService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
 
-        // GET: Systems1
-        public async Task<IActionResult> Systems()
+        public IActionResult Systems()
         {
-            return View(await _context.Systems.ToListAsync());
+            return View(_systemService.GetSystems());
         }
 
-        // GET: Systems1/Details/5
-        public async Task<IActionResult> DetailsSystem(int? id)
+        public IActionResult ViewSystem(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var system = await _context.Systems
-                .FirstOrDefaultAsync(m => m.SystemId == id);
-            if (system == null)
-            {
-                return NotFound();
-            }
-
-            return View(system);
+            return View(_systemService.GetSystem(id));
         }
 
-        // GET: Systems1/Create
-        public IActionResult CreateSystem()
+        [HttpGet]
+        public IActionResult AddSystem()
         {
-            return View();
+            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
+            return View(new Models.System());
         }
 
-        // POST: Systems1/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSystem([Bind("SystemId,Name,Description,Owner,Retired")] Models.System system)
+        public IActionResult AddSystem(Models.System system)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(system);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Systems));
-            }
-            return View(system);
+            system = _systemService.AddSystem(system);
+            return RedirectToAction(nameof(ViewSystem), new { id = system.SystemId });
         }
 
-        // GET: Systems1/Edit/5
-        public async Task<IActionResult> EditSystem(int? id)
+        [HttpGet]
+        public IActionResult EditSystem(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var system = await _context.Systems.FindAsync(id);
-            if (system == null)
-            {
-                return NotFound();
-            }
-            return View(system);
+            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
+            return View(_systemService.GetSystem(id));
         }
 
-        // POST: Systems1/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSystem(int id, [Bind("SystemId,Name,Description,Owner,Retired")] Models.System system)
+        public IActionResult EditSystem(int id, Models.System update)
         {
-            if (id != system.SystemId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(system);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SystemExists(system.SystemId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Systems));
-            }
-            return View(system);
+            var system = _systemService.GetSystem(id);
+            _mapper.Map(update, system);
+            _systemService.SaveChanges();
+            return RedirectToAction(nameof(ViewSystem), new { id });
         }
 
-        // GET: Systems1/Delete/5
-        public async Task<IActionResult> DeleteSystem(int? id)
+        public IActionResult RemoveSystem(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var system = await _context.Systems
-                .FirstOrDefaultAsync(m => m.SystemId == id);
-            if (system == null)
-            {
-                return NotFound();
-            }
-
-            return View(system);
-        }
-
-        // POST: Systems1/Delete/5
-        [HttpPost, ActionName("DeleteSystem")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmedSystem(int id)
-        {
-            var system = await _context.Systems.FindAsync(id);
-            _context.Systems.Remove(system);
-            await _context.SaveChangesAsync();
+            var system = _systemService.GetSystem(id);
+            system.Retired = true;
+            _systemService.SaveChanges();
             return RedirectToAction(nameof(Systems));
         }
-
-        private bool SystemExists(int id)
-        {
-            return _context.Systems.Any(e => e.SystemId == id);
-        }
-
-       
     }
 }

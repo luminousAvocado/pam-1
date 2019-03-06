@@ -1,0 +1,96 @@
+﻿@model Unit
+@{
+  ViewData["Title"] = "Add Unit";
+  var bureau = (Bureau)ViewData["bureau"];
+  var parent = (Unit)ViewData["parent"];
+}
+@section Scripts{
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.min.js"></script>
+  <script>
+    $(function () {
+      var systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["systems"])
+      });
+      systems.initialize();
+      $("#addSystem").typeahead({
+        source: systems.ttAdapter(),
+        displayText: function (item) {
+          return item.Name + (item.Description ? " - " + item.Description : "");
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
+            + (item.Description ? item.Description : "") + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.SystemId + "'>");
+          row.append(cell);
+          $("#systems").append(row);
+          $("#addSystem").val("");
+        }
+      });
+    });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Units">Units</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Unit</li>
+  </ol>
+</nav>
+
+<form method="post">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>Bureau</label>
+      <span class="form-control">@bureau.Name</span>
+    </div>
+    <div class="form-group col-md-6">
+      <label>Parent Unit</label>
+      <span class="form-control">@parent?.Name</span>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="UnitTypeId" class="form-label">Unit Type</label>
+      <select asp-for="UnitTypeId" class="form-control" asp-items="ViewBag.unitTypes">
+        <option value="">- NONE -</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="DisplayOrder">Display Order</label>
+      <input asp-for="DisplayOrder" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="addSystem">Add to System Portfolio</label>
+      <input id="addSystem" type="text" class="form-control" placeholder="Search systems to add to portfolio">
+    </div>
+  </div>
+  <div class="form-row">
+    <table class="table table-hover">
+      <thead><tr><th>Id</th><th>Name</th><th class="d-none d-md-table-cell">Description</th><th></th></tr></thead>
+      <tbody id="systems"></tbody>
+    </table>
+  </div>
+  <div class="form-row">
+    <div class="col-6">
+      <a asp-action="Units" asp-route-id="@parent?.UnitId" class="btn btn-secondary">Cancel</a>
+    </div>
+    <div class="col-6 text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+  <input type="hidden" asp-for="BureauId" value="@bureau.BureauId">
+  <input type="hidden" asp-for="ParentId" value="@parent?.UnitId">
+</form>

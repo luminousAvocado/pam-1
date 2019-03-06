@@ -1,10 +1,9 @@
 ﻿@{
-     ViewData["Title"] = "New Request";
+  ViewData["Title"] = "New Request";
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
 }
-
 @section Scripts {
   <script>
   $(function(){
@@ -33,15 +32,6 @@
     });
     $("input.type-selection:first").prop("checked", true);
   });
-  $(function(){
-    var page ='@ViewData["Title"]';
-    $("li[data-title='" + page + "']").addClass("active");
-    $("#saveDraft").click(function () {
-      var form = $(this).parents("form:first");
-      form.append("<input type='hidden' name='saveDraft' value='true'>");
-      form.submit();
-    });
-  });
   </script>
 }
 
@@ -53,6 +43,7 @@
 </nav>
 
 <form method="post">
+
   <p>Is this request for yourself?</p>
   <div class="form-group">
     <div class="form-check form-check-inline">

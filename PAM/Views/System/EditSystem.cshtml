@@ -1,53 +1,54 @@
 ﻿@model PAM.Models.System
-
 @{
-    ViewData["Title"] = "Edit";
+  ViewData["Title"] = "Edit System";
 }
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.13.3/dist/bootstrap-table.min.css">
+@section Scripts{
+  <script>
+    function confirmRemoval() {
+      var msg = "Are you sure you want to remove this system?";
+      if (confirm(msg))
+        window.location.href = "/System/RemoveSystem/@Model.SystemId";
+    }
+  </script>
+}
 
-</head>
-<h2>Edit</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Systems">Systems</a></li>
+    <li class="breadcrumb-item"><a asp-action="ViewSystem" asp-route-id="@Model.SystemId">@Model.Name</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+  </ol>
+</nav>
 
-<h4>System</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SystemId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Owner" class="control-label"></label>
-                <input asp-for="Owner" class="form-control" />
-                <span asp-validation-for="Owner" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Retired" /> @Html.DisplayNameFor(model => model.Retired)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+<form method="post">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
     </div>
-</div>
-
-<div>
-    <a asp-action="Systems">Back to List</a>
-</div>
-
+    <div class="form-group col-md-8">
+      <label asp-for="Description">Description</label>
+      <input asp-for="Description" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Owner">Owner</label>
+      <input asp-for="Owner" type="text" class="form-control">
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="ProcessingUnitId" class="form-label">Processing Unit</label>
+      <select asp-for="ProcessingUnitId" class="form-control" asp-items="ViewBag.processingUnits">
+        <option value="">- NONE -</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-6">
+      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove System</a>
+    </div>
+    <div class="col-6 text-right">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</form>

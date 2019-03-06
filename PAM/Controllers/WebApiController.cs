@@ -10,13 +10,15 @@ namespace PAM.Controllers
     [Authorize]
     public class WebApiController : ControllerBase
     {
-        private readonly OrganizationService _organizationSevice;
+        private readonly UserService _userService;
         private readonly SystemService _systemService;
+        private readonly OrganizationService _organizationSevice;
 
-        public WebApiController(OrganizationService organizationService, SystemService systemService)
+        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService)
         {
-            _organizationSevice = organizationService;
+            _userService = userService;
             _systemService = systemService;
+            _organizationSevice = organizationService;
         }
 
         [Route("api/portfolio/{unitId}")]
@@ -29,14 +31,36 @@ namespace PAM.Controllers
             return systems;
         }
 
-        [Route("api/portfolio")]
-        public List<Models.System> GetAllSystemPortfolios()
+        [Route("api/employee/search")]
+        public IList<Employee> SearchEmployees(string term)
         {
-            var systems = new List<Models.System>();
-            var allSystems = _organizationSevice.GetAllSystems();
-            foreach (var system in allSystems)
-                systems.Add(system);
-            return systems;
+            return _userService.SearchEmployees(term);
+        }
+
+        [HttpDelete]
+        [Route("api/processingUnit/{unitId}/employees/{employeeId}")]
+        public IActionResult RemoveEmployeeFromProcessingUnit(int unitId, int employeeId)
+        {
+            var employee = _userService.GetEmployee(employeeId);
+            if (employee.ProcessingUnitId == unitId)
+            {
+                employee.ProcessingUnitId = null;
+                _userService.SaveChanges();
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("api/processingUnit/{unitId}/systems/{systemId}")]
+        public IActionResult RemoveSystemFromProcessingUnit(int unitId, int systemId)
+        {
+            var system = _systemService.GetSystem(systemId);
+            if (system.ProcessingUnitId == unitId)
+            {
+                system.ProcessingUnitId = null;
+                _systemService.SaveChanges();
+            }
+            return Ok();
         }
     }
 }
