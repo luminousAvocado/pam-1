@@ -64,6 +64,10 @@ namespace PAM.Controllers
         public IActionResult AddSystems(int id){
             var request = _requestService.GetRequest(id);
             var systems = _systemService.GetAllSystems();
+            var defaultSystems = new List<Models.System>();
+            foreach (var ds in request.Systems)
+                defaultSystems.Add(ds.System);
+            ViewData["defaultSystems"] = defaultSystems;
             ViewData["systems"] = systems;
             return View(request);
         }

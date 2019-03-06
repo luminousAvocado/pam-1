@@ -70,6 +70,11 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
+        public ICollection<Models.System> GetAllSystems()
+        {
+            return _dbContext.Systems.ToList();
+        }
+
         public ICollection<Unit> GetBureauChildren(int bureauId)
         {
             return _dbContext.Units.Where(u => u.BureauId == bureauId).ToList();
