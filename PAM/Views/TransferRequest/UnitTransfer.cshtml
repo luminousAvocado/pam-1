@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Unit Selection";
+  ViewData["Title"] = "Unit Selection Transfer";
   ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
@@ -12,20 +12,20 @@
   $(function(){
     var page ='@ViewData["Title"]';
     $("li[data-title='" + page + "']").addClass("active");
-    $("#tree").treeview({
+    $("#transferTree").treeview({
       data: @Html.Raw(@ViewData["tree"]),
       levels: 1,
       expandIcon: "fa fa-caret-down",
       collapseIcon: "fa fa-caret-up",
       onNodeSelected: function (event, node) {
         if (node.type == "Bureau") {
-          $("#unitId").val("");
+          $("#transferUnitId").val("");
           $("#systems").empty();
           $("#next").prop("disabled", true);
           $("#saveDraft").prop("disabled", true);
           return;
         }
-        $("#unitId").val(node.id);
+        $("#transferUnitId").val(node.id);
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
         $.ajax({
@@ -41,16 +41,17 @@
         })
       }
     });
-    if ($("#unitId").val()) {
+    if ($("#transferUnitId").val()) {
       var nodeId = 1;
-      var node = $("#tree").treeview("getNode", nodeId);
+      var node = $("#transferTree").treeview("getNode", nodeId);
       while (node) {
-        if (node.type == 'Unit' && node.id == $("#unitId").val()) break;
-        node = $("#tree").treeview("getNode", ++nodeId);
+        if (node.type == 'Unit' && node.id == $("#transferUnitId").val()) break;
+        node = $("#transferTree").treeview("getNode", ++nodeId);
       }
       if (node) {
-        $("#tree").treeview("selectNode", node);
-        $('#tree').treeview('revealNode', [nodeId, { silent: true }]);
+        console.log(node);
+        $("#transferTree").treeview("selectNode", node);
+        $('#transferTree').treeview('revealNode', [nodeId, { silent: true }]);
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
       }
@@ -73,6 +74,34 @@
 
 <partial name="../Shared/_ProgressBar1.cshtml" />
 
-<form asp-action="SelectUnit" method="post">
-  <partial name="../Shared/_UnitSystemPortfolio.cshtml" />
+<form asp-controller="EditTransfer" asp-action="UnitTransfer" method="post">
+  <p>Please select the unit/job you wish to <strong>transfer</strong> to:</p>
+<div class="row">
+  <div class="col-12 col-md-6 mb-3">
+    <div id="transferTree"></div>
+  </div>
+  <div class="col-12 col-md-6 mb-3">
+    <p>System Portfolio</p>
+    <table class="table sticky-top">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody id="systems"></tbody>
+    </table>
+  </div>
+</div>
+<div class="form-row">
+  <div class="col-4">
+    <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
+  </div>
+  <div class="col-8 text-right">
+    <a asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+    <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
+  </div>
+</div>
+  <input id="transferUnitId" name="transferUnitId" type="hidden" value="@Model.RequestedFor.UnitId" />
 </form>

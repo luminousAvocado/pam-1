@@ -3,6 +3,7 @@
   ViewData["Title"] = "Additional Systems";
   ViewData["id"] = Model.RequestId;
   var systemsList = (List<PAM.Models.System>)ViewData["systems"];
+  var defaultSystems = (List<PAM.Models.System>)ViewData["defaultSystems"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -13,38 +14,43 @@
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+
   <script>
-  $(function(){
-    var defaultSystems = @Model.RequestedFor.UnitId;
-        $("#unitId").val(defaultSystems);
-        $("#next").prop("disabled", false);
-        $("#saveDraft").prop("disabled", false);
-        $.ajax({
-          url: "/api/portfolio/",
-          success: function (data) {
-            $("#systems").empty();
-            data.forEach(function (system) {
-              if (system.systemId) {
-                $("#system" + system.systemId).prop("checked", true);
-                $("#system" + system.systemId).prop("disabled", true);
-                $("#systems").append("<tr><td>"
-                + system.systemId + "</td><td>"
-                + system.name + "</td></tr>")
+    $(function () {
+      $("#next").prop("disabled", false);
+      $("#saveDraft").prop("disabled", false);
+      /*
+      $.ajax({
+        url: "/api/portfolio",
+        success: function (data) {
+          data.forEach(function (system) {
+            $("#select" + system.systemId).hide();
+            $("input[type='checkbox']").click(function () {
+              if (system.systemId == $(this).val()) {
+                if ($("input[type='checkbox']").is(":checked")) {
+                  $("#select" + $(this).val()).show();
+                }
+                else
+                  $("#select" + $(this).val()).hide();
               }
-              $("input[type=checkbox").click(function () {
-                $("#selectedSystems").append("<tr><td>"
-                  + "GOT " + "</td><td>"
-                  + system.name + "</td></tr>");
-              });;
             });
-          }
-        })
-    $("#saveDraft").click(function () {
-      var form = $(this).parents("form:first");
-      form.append("<input type='hidden' name='saveDraft' value='true'>");
-      form.submit();
+          });
+        }
+      });
+      */
+      $("input[name='addingSystem']").click(function () {
+        var item = $(this).val()
+        if ($("#system"+item).is(":checked"))
+          $("#select" + item).show();
+        else
+          $("#select" + item).hide();
+      });
+      $("#saveDraft").click(function () {
+        var form = $(this).parents("form:first");
+        form.append("<input type='hidden' name='saveDraft' value='true'>");
+        form.submit();
+      });
     });
-  });
   </script>
 }
 
@@ -58,10 +64,10 @@
 <form asp-action="AddSystems" method="post">
   <div class="row mb-3">
     <div class="col-md-3">
-      <div class="row mb-2">
+      <div class="row mb-2" id="systemsCard">
         <div class="col-md-12">
-          <div class="card">
-            <h4 class="card-header">Selected Systems</h4>
+          <div class="card border-info">
+            <h4 class="card-header bg-info text-white">Selected Systems</h4>
             <table class="table">
               <thead>
                 <tr>
@@ -69,15 +75,23 @@
                   <th scope="col">Name</th>
                 </tr>
               </thead>
-              <tbody id="selectedSystems"></tbody>
+              @foreach (var system in systemsList)
+              {
+                var label = "select" + system.SystemId;
+                <tr id="@label" style="display:none;">
+                  <td>@system.SystemId</td>
+                  <td>@system.Name</td>
+                </tr>
+              }
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card">
-            <h4 class="card-header">Default Systems</h4>
+          <div class="card border-info">
+            <h4 class="card-header bg-info text-white">Default Systems</h4>
             <table class="table">
               <thead>
                 <tr>
@@ -85,7 +99,15 @@
                   <th scope="col">Name</th>
                 </tr>
               </thead>
-              <tbody id="systems"></tbody>
+              <tbody>
+                @foreach (var ds in defaultSystems)
+                {
+                  <tr>
+                    <td>@ds.SystemId</td>
+                    <td>@ds.Name</td>
+                  </tr>
+                }
+              </tbody>
             </table>
           </div>
         </div>
@@ -94,9 +116,9 @@
     <div class="col-md-9">
       <p class="float-left mt-2">Please select the system(s) to add:</p>
       <table id="table"
-             data-toggle="table"
              data-pagination="true"
              data-page-size="15"
+             data-toggle="table"
              data-maintain-selected="true"
              data-search="true"
              data-search-align="right">

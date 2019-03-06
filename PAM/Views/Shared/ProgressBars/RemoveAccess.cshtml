@@ -1,5 +1,4 @@
-﻿@* This is the progress bar for portfolio requests.*@
-<div class="progressbar-container">
+﻿<div class="progressbar-container">
   <ul class="progressbar">
     <li class="step" data-title="Requester Information">
       <a class="d-none d-md-inline" asp-action="RequesterInfo" asp-route-id="@ViewData["id"]">Requester Information</a>
@@ -7,8 +6,8 @@
     <li class="step" data-title="Unit Selection">
       <a class="d-none d-md-inline" asp-action="UnitSelection" asp-route-id="@ViewData["id"]">Unit/Job Function Selection</a>
     </li>
-    <li class="step" data-title="Additional Information">
-      <a class="d-none d-md-inline" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]">Additional Information</a>
+    <li class="step" data-title="Systems To Remove">
+      <a class="d-none d-md-inline" asp-action="SystemsToRemove" asp-route-id="@ViewData["id"]">Systems To Remove</a>
     </li>
     <li class="step" data-title="Signatures">
       <a class="d-none d-md-inline" asp-action="Signatures" asp-route-id="@ViewData["id"]">Signature(s) Required</a>

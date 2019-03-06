@@ -48,6 +48,9 @@ namespace PAM.Models
         public bool IsApprover { get; set; } = false;
         public bool IsProcessor { get; set; } = false;
 
+        public int? ProcessingUnitId { get; set; }
+        public ProcessingUnit ProcessingUnit { get; set; }
+
         public Employee() { }
 
         public Employee(ClaimsIdentity identity)

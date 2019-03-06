@@ -1,0 +1,79 @@
+﻿@model PAM.Models.ProcessingUnit
+@{
+  ViewData["Title"] = "View Processing Unit";
+  var employees = (List<Employee>)ViewData["employees"];
+  var systems = (List<PAM.Models.System>)ViewData["systems"];
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
+}
+@section Scripts{
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Processing Units</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+  </ol>
+</nav>
+
+<p class="text-right"><a asp-action="EditProcessingUnit" asp-route-id="@Model.ProcessingUnitId" class="btn btn-primary">Edit Processing Unit</a></p>
+
+<table class="table table-bordered">
+  <tr><th>Id</th><td>@Model.ProcessingUnitId</td></tr>
+  <tr><th>Name</th><td>@Model.Name</td></tr>
+  <tr><th>Email</th><td>@Model.Email</td></tr>
+</table>
+
+<div class="card">
+  <div class="card-header">Employees (@employees.Count)</div>
+  <div class="card-body">
+    @if (employees.Count > 0)
+    {
+      <table class="table">
+        <thead>
+          <tr><th>Name</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+          @foreach (var employee in employees)
+          {
+            <tr>
+              <td>@employee.Name</td>
+              <td>@employee.Email</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header">Systems (@systems.Count)</div>
+  <div class="card-body">
+    @if (systems.Count > 0)
+    {
+      <table data-toggle="table" data-search="true" data-search-align="left" data-classes="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="d-none d-lg-table-cell">Description</th>
+            <th class="d-none d-md-table-cell">Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var system in systems)
+          {
+            <tr>
+              <td>@system.Name</td>
+              <td class="d-none d-lg-table-cell">@system.Description</td>
+              <td class="d-none d-md-table-cell">@system.Owner</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 
@@ -19,7 +18,8 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public UpdateInfoRequestController(UserService userService, RequestService requestService, SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<UpdateInfoRequestController> logger)
+        public UpdateInfoRequestController(UserService userService, RequestService requestService, SystemService systemService,
+            OrganizationService organizationService, IMapper mapper, ILogger<UpdateInfoRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
@@ -27,6 +27,22 @@ namespace PAM.Controllers
             _organizationService = organizationService;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(AdditionalInfo), new { id });
         }
 
         [HttpGet]
@@ -54,24 +70,32 @@ namespace PAM.Controllers
         public IActionResult SystemsToUpdate(int id)
         {
             var request = _requestService.GetRequest(id);
-            var requestFor = _userService.GetRequester(request.RequestedForId);
-            var systemAccesses = _systemService.GetSystemAccessesByEmployeeId(requestFor.EmployeeId);
+            var systemAccesses = _systemService.GetCurrentSystemAccessesByEmployeeId(request.RequestedFor.EmployeeId);
+
             ViewData["systemAccesses"] = systemAccesses;
+            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystems());
+            ViewData["requestedSystemIds"] = JsonConvert.SerializeObject(request.Systems.Select(s => s.SystemId).ToList());
+            ViewData["accessSystemIds"] = JsonConvert.SerializeObject(systemAccesses.Select(s => s.SystemId).ToList());
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult SystemsToUpdate(int id, int[] selectedSystems, bool saveDraft = false)
+        public IActionResult SystemsToUpdate(int id, List<int> systemIds, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-            request.Systems.Clear();
+            var requestedSystems = request.Systems.ToDictionary(s => s.SystemId, s => s);
 
-            foreach (var systemId in selectedSystems)
-            {
-                var temp = new RequestedSystem(request.RequestId, systemId);
-                temp.AccessType = SystemAccessType.Update;
-                request.Systems.Add(temp);
-            }
+            foreach (var requestedSystemId in requestedSystems.Keys)
+                if (!systemIds.Contains(requestedSystemId))
+                    request.Systems.Remove(requestedSystems.GetValueOrDefault(requestedSystemId));
+
+            foreach (var systemId in systemIds)
+                if (!requestedSystems.Keys.Contains(systemId))
+                    request.Systems.Add(new RequestedSystem(request.RequestId, systemId)
+                    {
+                        AccessType = SystemAccessType.Update
+                    });
+
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :

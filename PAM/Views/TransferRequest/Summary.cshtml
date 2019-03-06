@@ -1,162 +1,27 @@
 ﻿@model Request
-
 @{
-  ViewData["Title"] = "Viewing";
-  var request = (Request)ViewData["request"];
+  ViewData["Title"] = "Transfer Summary";
+  ViewData["id"] = Model.RequestId;
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+  });
+  </script>
 }
 
-<div class="row mb-3">
-  <div class="col-12">
-    '
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-primary float-right">Return</a>
-  </div>
-</div>
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">Request Information</div>
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Request Id</label>
-        <span class="form-control">@Model.RequestId</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Request Type</label>
-        <span class="form-control">@Model.RequestType.DisplayCode</span>
-      </div>
-    </div>
-    @if (!Model.IsSelfRequest)
-    {
-      <div class="row">
-        <div class="form-group">
-          <label>Prepared By</label>
-          <span class="form-control">@Model.RequestedBy.Name</span>
-        </div>
-      </div>
-    }
-  </div>
-</div>
-
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
-    Requester Information
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>First Name</label>
-        <span class="form-control">@Model.RequestedFor.FirstName</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Last Name</label>
-        <span class="form-control">@Model.RequestedFor.LastName</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Department</label>
-        <span class="form-control">@Model.RequestedFor.Department</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Service</label>
-        <span class="form-control">@Model.RequestedFor.Service</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Title</label>
-        <span class="form-control">@Model.RequestedFor.Title</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Email</label>
-        <span class="form-control">@Model.RequestedFor.Email</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Department</label>
-        <span class="form-control">@Model.RequestedFor.Department</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Service</label>
-        <span class="form-control">@Model.RequestedFor.Service</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Address</label>
-        <span class="form-control">@Model.RequestedFor.Address</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>City</label>
-        <span class="form-control">@Model.RequestedFor.City</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>State</label>
-        <span class="form-control">@Model.RequestedFor.State</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Zip Code</label>
-        <span class="form-control">@Model.RequestedFor.Zip</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Phone</label>
-        <span class="form-control">@Model.RequestedFor.Phone</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Cell Phone</label>
-        <span class="form-control">@Model.RequestedFor.CellPhone</span>
-      </div>
-    </div>
-  </div>
-</div>
+<partial name="../Shared/_Summary.cshtml" />
 
 <div class="card border-info mb-1">
   <div class="card-header bg-info text-white">
     Systems Requested
+    <a class="float-right" asp-controller="EditTransfer" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
-  @if (Model.RequestTypeId == 4)
-  {
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>Bureau</label>
-          <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Unit / Job Function</label>
-          <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-        </div>
-      </div>
-      <div class="row">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col" class="d-none d-md-table-cell">Description</th>
-              <th scope="col" class="nowrap">In Portfolio</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var requestedSystem in Model.Systems)
-            {
-              <tr>
-                <td>@requestedSystem.System.SystemId</td>
-                <td>@requestedSystem.System.Name</td>
-                <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-                <td>@requestedSystem.InPortfolio</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  }
-  @if (Model.RequestTypeId == 2){
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -316,83 +181,12 @@
       </div>
     </div>
   </div>
-  }
-  @if (Model.RequestTypeId == 11)
-  {
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>Bureau</label>
-          <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Unit / Job Function</label>
-          <span class="form-control">@Model.RequestedFor.Unit.Name</span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Default Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in Model.Systems)
-              {
-                @if ((bool)requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5 class="card-header text-center">Additional Systems</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">In Portfolio</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var requestedSystem in Model.Systems)
-              {
-                @if (!(bool)requestedSystem.InPortfolio)
-                {
-                  <tr>
-                    <td>@requestedSystem.System.SystemId</td>
-                    <td>@requestedSystem.System.Name</td>
-                    <td>@requestedSystem.InPortfolio</td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  }
 </div>
 
 <div class="card border-info mb-1">
   <div class="card-header bg-info text-white">
     Additional Information
+    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row mb-2">
@@ -450,6 +244,7 @@
 <div class="card border-info mb-1">
   <div class="card-header bg-info text-white">
     Signature(s) Required
+    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     @foreach (var review in Model.Reviews)
@@ -465,7 +260,10 @@
 </div>
 
 <div class="row mt-3">
-  <div class="col-12">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-primary float-right">Return</a>
+  <div class="col-6">
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
+  </div>
+  <div class="col-6 text-right">
+    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
   </div>
 </div>

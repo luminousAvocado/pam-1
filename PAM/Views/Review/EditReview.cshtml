@@ -182,7 +182,7 @@
             <tbody>
               @foreach (var requestedSystem in request.Systems)
               {
-                @if (requestedSystem.InPortfolio)
+                @if ((bool)requestedSystem.InPortfolio)
                 {
                   <tr>
                     <td>@requestedSystem.System.SystemId</td>
@@ -209,7 +209,7 @@
             <tbody>
               @foreach (var requestedSystem in request.Systems)
               {
-                @if (!requestedSystem.InPortfolio)
+                @if (! (bool)requestedSystem.InPortfolio)
                 {
                   <tr>
                     <td>@requestedSystem.System.SystemId</td>

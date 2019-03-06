@@ -10,9 +10,8 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class EditPortfolioRequestController : Controller
+    public class PortfolioRequestController : Controller
     {
-        private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly OrganizationService _organizationService;
@@ -20,17 +19,31 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public EditPortfolioRequestController(IADService adService, UserService userService, RequestService requestService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<EditPortfolioRequestController> logger)
+        public PortfolioRequestController(UserService userService, RequestService requestService, OrganizationService organizationService,
+            TreeViewService treeViewService, IMapper mapper, ILogger<PortfolioRequestController> logger)
         {
-            _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
         }
 
         [HttpGet]
@@ -51,7 +64,10 @@ namespace PAM.Controllers
             request.RequestedFor.UnitId = unit.UnitId;
             request.Systems.Clear();
             foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
+                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId)
+                {
+                    InPortfolio = true,
+                });
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
@@ -69,8 +85,6 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.IsContractor = update.IsContractor;
-            request.IsGlobalAccess = update.IsGlobalAccess;
-            request.IsHighProfileAccess = update.IsHighProfileAccess;
             request.CaseloadType = update.CaseloadType;
             request.CaseloadFunction = update.CaseloadFunction;
             request.CaseloadNumber = update.CaseloadNumber;
