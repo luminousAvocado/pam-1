@@ -15,7 +15,7 @@ using System;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class EditTransferController: Controller
+    public class TransferRequestController: Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
@@ -26,7 +26,7 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public EditTransferController(IADService adService, UserService userService, RequestService requestService,
+        public TransferRequestController(IADService adService, UserService userService, RequestService requestService,
             SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
             ILogger<PortfolioRequestController> logger)
         {
@@ -38,6 +38,22 @@ namespace PAM.Controllers
             _treeViewService = treeViewService;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
         }
 
         [HttpGet]
@@ -61,7 +77,6 @@ namespace PAM.Controllers
             foreach (var us in unit.Systems)
                 request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
             _requestService.SaveChanges();
-            Console.WriteLine("HMMMM" + request.TransferredFromUnit.Bureau.Description);
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("UnitTransfer", new { id });

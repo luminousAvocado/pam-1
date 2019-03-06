@@ -224,8 +224,6 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-  </div>
   }
   @if (request.RequestTypeId == 4){ 
   <div class="card-body">
@@ -293,7 +291,7 @@
           <tbody>
             @foreach (var requestedSystem in request.Systems)
             {
-              if (!requestedSystem.InPortfolio)
+              if (!(bool)requestedSystem.InPortfolio)
               {
                 <tr>
                   <td>@requestedSystem.System.SystemId</td>
@@ -307,8 +305,6 @@
       </div>
     </div>
   </div>
-=======
->>>>>>> cysun/master
   }
 </div>
 

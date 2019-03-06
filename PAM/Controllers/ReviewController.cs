@@ -146,14 +146,10 @@ namespace PAM.Controllers
                     case 11:
                         foreach (var requestedSystem in request.Systems)
                         {
-<<<<<<< HEAD
-                            if(!requestedSystem.InPortfolio){
+                            if (!(bool)requestedSystem.InPortfolio)
+                            {
                                 var systemAccess = new SystemAccess(request, requestedSystem);
                                 _systemService.AddSystemAccess(systemAccess);
-=======
-                            if(!(bool)requestedSystem.InPortfolio){
-                                requestedSystem.InPortfolio = true;
->>>>>>> cysun/master
                             }
                         }
                         break;
