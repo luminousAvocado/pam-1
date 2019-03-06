@@ -101,7 +101,7 @@
               <tr>
                 <td>@request.DisplayId</td>
                 <td>
-                  <a asp-action="ViewRequest">@request.RequestType.DisplayCode</a>
+                  <a asp-action="ViewRequest" asp-route-id="@request.RequestId">@request.RequestType.DisplayCode</a>
                 </td>
                 <td class="d-none d-md-table-cell">@request.SubmittedOn?.ToString("MM/dd/yyyy")</td>
                 <td class="d-none d-md-table-cell">@request.UpdatedOn?.ToString("MM/dd/yyyy")</td>

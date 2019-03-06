@@ -25,7 +25,7 @@ namespace PAM.Controllers
         public List<Models.System> GetSystemPortfolio(int unitId)
         {
             Unit unit = _organizationSevice.GetUnit(unitId);
-            var systems = new List<PAM.Models.System>();
+            var systems = new List<Models.System>();
             foreach (var unitSystem in unit.Systems)
                 systems.Add(unitSystem.System);
             return systems;

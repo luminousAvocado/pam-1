@@ -55,6 +55,12 @@ namespace PAM.Controllers
             return View();
         }
 
+        public IActionResult ViewReview(int id)
+        {
+            var review = _requestService.GetReview(id);
+            return View(review);
+        }
+
         [HttpGet]
         public IActionResult EditReview(int id)
         {

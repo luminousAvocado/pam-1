@@ -14,24 +14,22 @@ namespace PAM.Data
             _dbContext = dbContext;
         }
 
-        public SystemAccess AddSystemAccess(SystemAccess systemAccess)
-        {
-            _dbContext.SystemAccesses.Add(systemAccess);
-            _dbContext.SaveChanges();
-            return systemAccess;
-        }
-
-        public ICollection<Models.System> GetSystems()
+        public IList<Models.System> GetSystems()
         {
             return _dbContext.Systems.Include(s => s.ProcessingUnit).OrderBy(s => s.Name).ToList();
         }
 
-        public ICollection<Models.System> GetSystemsWithoutProcessingUnit()
+        public IList<Models.System> GetSystems(List<int> ids)
+        {
+            return _dbContext.Systems.Where(s => ids.Contains(s.SystemId)).ToList();
+        }
+
+        public IList<Models.System> GetSystemsWithoutProcessingUnit()
         {
             return _dbContext.Systems.Where(s => s.ProcessingUnitId == null).OrderBy(s => s.Name).ToList();
         }
 
-        public ICollection<Models.System> GetSystemsOfProcessingUnit(int processingUnitId)
+        public IList<Models.System> GetSystemsOfProcessingUnit(int processingUnitId)
         {
             return _dbContext.Systems.Where(s => s.ProcessingUnitId == processingUnitId).ToList();
         }
@@ -48,9 +46,31 @@ namespace PAM.Data
             return system;
         }
 
-        public IList<Models.System> GetSystems(List<int> ids)
+        public IList<SystemAccess> GetSystemAccessesByEmployeeId(int employeeId)
         {
-            return _dbContext.Systems.Where(s => ids.Contains(s.SystemId)).ToList();
+            return _dbContext.SystemAccesses.Include(s => s.System)
+                .Where(s => s.EmployeeId == employeeId)
+                .OrderBy(s => s.SystemId).OrderByDescending(s => s.ApprovedOn)
+                .ToList();
+        }
+
+        public IList<SystemAccess> GetCurrentSystemAccessesByEmployeeId(int employeeId)
+        {
+            var accesses = GetSystemAccessesByEmployeeId(employeeId);
+            var currentAccesses = new Dictionary<int, SystemAccess>();
+            foreach (var access in accesses)
+                if (!currentAccesses.ContainsKey(access.SystemId))
+                    currentAccesses.Add(access.SystemId, access);
+
+            return currentAccesses.Where(a => a.Value.AccessType == SystemAccessType.Add || a.Value.AccessType == SystemAccessType.Update)
+                .Select(a => a.Value).ToList();
+        }
+
+        public SystemAccess AddSystemAccess(SystemAccess systemAccess)
+        {
+            _dbContext.SystemAccesses.Add(systemAccess);
+            _dbContext.SaveChanges();
+            return systemAccess;
         }
 
         public void SaveChanges()

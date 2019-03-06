@@ -41,7 +41,7 @@ namespace PAM.Models
         public int SystemId { get; set; }
         public System System { get; set; }
 
-        public bool InPortfolio { get; set; } = true;
+        public bool? InPortfolio { get; set; }
         public SystemAccessType AccessType { get; set; } = SystemAccessType.Add;
 
         public RequestedSystem() { }
@@ -71,7 +71,7 @@ namespace PAM.Models
 
         public DateTime ApprovedOn { get; set; }
 
-        public bool InPortfolio { get; set; }
+        public bool? InPortfolio { get; set; }
         public SystemAccessType AccessType { get; set; }
 
         public int? ProcessedById { get; set; }

@@ -219,7 +219,7 @@ GO
 CREATE TABLE [RequestedSystems] (
     [RequestId] int NOT NULL,
     [SystemId] int NOT NULL,
-    [InPortfolio] bit NOT NULL,
+    [InPortfolio] bit NULL,
     [AccessType] nvarchar(max) NOT NULL,
     CONSTRAINT [PK_RequestedSystems] PRIMARY KEY ([RequestId], [SystemId]),
     CONSTRAINT [FK_RequestedSystems_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE,
@@ -250,7 +250,7 @@ CREATE TABLE [SystemAccesses] (
     [SystemId] int NOT NULL,
     [RequestId] int NOT NULL,
     [ApprovedOn] datetime2 NOT NULL,
-    [InPortfolio] bit NOT NULL,
+    [InPortfolio] bit NULL,
     [AccessType] nvarchar(max) NOT NULL,
     [ProcessedById] int NULL,
     [ProcessedOn] datetime2 NULL,
@@ -361,7 +361,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190301174702_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190305183633_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

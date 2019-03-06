@@ -99,10 +99,12 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
-            switch (request.RequestTypeId)
+            switch (requestType.DisplayCode)
             {
+                case "Remove Access":
+                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id = request.RequestId });
                 default:
-                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id = request.RequestId });
+                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id = request.RequestId });
             }
         }
 
@@ -115,10 +117,12 @@ namespace PAM.Controllers
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            switch (request.RequestTypeId)
+            switch (request.RequestType.DisplayCode)
             {
+                case "Remove Access":
+                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id = request.RequestId });
                 default:
-                    return RedirectToAction("RequesterInfo", "EditPortfolioRequest", new { id });
+                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id = request.RequestId });
             }
         }
 
