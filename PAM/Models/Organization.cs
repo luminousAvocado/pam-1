@@ -97,4 +97,18 @@ namespace PAM.Models
 
         public bool Deleted { get; set; } = false;
     }
+
+    [Table("ProcessingUnits")]
+    public class ProcessingUnit
+    {
+        public int ProcessingUnitId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        public bool Deleted { get; set; } = false;
+    }
 }

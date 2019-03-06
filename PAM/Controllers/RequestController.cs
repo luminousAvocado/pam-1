@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using AutoMapper;
@@ -27,7 +26,7 @@ namespace PAM.Controllers
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            SystemService systemService, IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
+            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
@@ -45,7 +44,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRequest(string forSelf, string requestedForUsername, int requestTypeId, Requester requester)
+        public IActionResult CreateRequest(string forSelf, string requestedForUsername, int requestTypeId)
         {
             Employee employee = new Employee((ClaimsIdentity)User.Identity);
             Requester requestedBy = _mapper.Map<Requester>(employee);
@@ -100,42 +99,7 @@ namespace PAM.Controllers
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
-            return RedirectToAction("RequesterInfo", new { id = request.RequestId });
-
-        }
-
-        [HttpGet]
-        public IActionResult RequesterInfo(int id)
-        {
-            var request = _requestService.GetRequest(id);
-            ViewData["request"] = request;
-            return View(request.RequestedFor);
-        }
-
-        [HttpPost]
-        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
-        {
-            _userService.UpdateRequester(requester);
-            var request = _requestService.GetRequest(id);
-            if (saveDraft) RedirectToAction("MyRequests", "Request");
-            else{
-                switch (request.RequestTypeId)
-                {
-                    case 2:
-                        return RedirectToAction("UnitSelection", "EditTransfer", new { id = request.RequestId });
-                    case 3:
-                        return RedirectToAction("AdditionalInfo", "UpdateInfoRequest", new { id = request.RequestId });
-                    case 6:
-                        return RedirectToAction("ReasonForLeaving", "LeavingProbationRequest", new { id = request.RequestId });
-                    case 11:
-                        return RedirectToAction("UnitSelection", "EditAddAccess", new { id = request.RequestId });
-                    case 12:
-                        return RedirectToAction("UnitSelection", "RemoveAccessRequest", new { id = request.RequestId });
-                    default:
-                        return RedirectToAction("UnitSelection", "EditPortfolioRequest", new { id = request.RequestId });
-                }
-            }
-            return View();
+            return RedirectEditRequest(request.RequestId, requestType);
         }
 
         public IActionResult ViewRequest(int id)
@@ -147,7 +111,7 @@ namespace PAM.Controllers
         public IActionResult EditRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            return RedirectToAction("RequesterInfo", new { id });
+            return RedirectEditRequest(id, request.RequestType);
         }
 
         public IActionResult SubmitRequest(int id)
@@ -232,12 +196,23 @@ namespace PAM.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult ReviewRequests()
+        private IActionResult RedirectEditRequest(int id, RequestType requestType)
         {
-            //-----TODO-----
-            ViewData["Requests"] = _requestService.GetRequests();
-            return View();
+            switch (requestType.DisplayCode)
+            {
+                case "Add Access":
+                    return RedirectToAction("RequesterInfo", "AddAccessRequest", new { id });
+                case "Remove Access":
+                    return RedirectToAction("RequesterInfo", "RemoveAccessRequest", new { id });
+                case "Update Information":
+                    return RedirectToAction("RequesterInfo", "UpdateInfoRequest", new { id });
+                case "Transfer":
+                    return RedirectToAction("RequesterInfo", "TransferRequest", new { id });
+                case "Leaving Probation":
+                    return RedirectToAction("RequesterInfo", "LeavingProbationRequest", new { id });
+                default:
+                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id });
+            }
         }
     }
 }

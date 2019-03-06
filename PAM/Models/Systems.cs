@@ -15,6 +15,9 @@ namespace PAM.Models
         public string Description { get; set; }
         public string Owner { get; set; }
         public bool Retired { get; set; }
+
+        public int? ProcessingUnitId { get; set; }
+        public ProcessingUnit ProcessingUnit { get; set; }
     }
 
     [Table("UnitSystems")]
@@ -38,7 +41,7 @@ namespace PAM.Models
         public int SystemId { get; set; }
         public System System { get; set; }
 
-        public bool InPortfolio { get; set; } = true;
+        public bool? InPortfolio { get; set; }
         public SystemAccessType AccessType { get; set; } = SystemAccessType.Add;
 
         public RequestedSystem() { }
@@ -68,7 +71,7 @@ namespace PAM.Models
 
         public DateTime ApprovedOn { get; set; }
 
-        public bool InPortfolio { get; set; }
+        public bool? InPortfolio { get; set; }
         public SystemAccessType AccessType { get; set; }
 
         public int? ProcessedById { get; set; }

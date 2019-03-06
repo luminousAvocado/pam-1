@@ -10,7 +10,7 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class EditAddAccessController: Controller
+    public class AddAccessRequestController: Controller
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
@@ -21,9 +21,9 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public EditAddAccessController(IADService adService, UserService userService, RequestService requestService,
+        public AddAccessRequestController(IADService adService, UserService userService, RequestService requestService,
             SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<EditPortfolioRequestController> logger)
+            ILogger<AddAccessRequestController> logger)
         {
             _adService = adService;
             _userService = userService;
@@ -63,7 +63,11 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult AddSystems(int id){
             var request = _requestService.GetRequest(id);
-            var systems = _systemService.GetAllSystems();
+            var systems = _systemService.GetSystems();
+            var defaultSystems = new List<Models.System>();
+            foreach (var ds in request.Systems)
+                defaultSystems.Add(ds.System);
+            ViewData["defaultSystems"] = defaultSystems;
             ViewData["systems"] = systems;
             return View(request);
         }

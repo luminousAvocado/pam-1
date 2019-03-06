@@ -30,8 +30,11 @@ If you have an old database, you should drop it first either manually or using t
 ```
     $ dotnet ef database drop
 ```
-4. Run the SQL script `Scripts/InsertData.sql` to populate the database. There are various ways to run an SQL
-script, and the easiest is to use the command line tool `sqlcmd`:
+4. Run the following SQL script to populate the database:
+* `Scripts/InsertData.sql` - insert actual data like bureaus, units, and systems.
+* `Scripts/InsertTestData.sql` - insert additional data for testing during development.
+
+There are various ways to run an SQL script, and the easiest is to use the command line tool `sqlcmd`:
 ```
     $ sqlcmd -S <host> -d <database> -U <user> -i <script>
 ```

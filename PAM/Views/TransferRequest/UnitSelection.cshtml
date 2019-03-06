@@ -2,7 +2,6 @@
 @{
   ViewData["Title"] = "Unit Selection";
   ViewData["id"] = Model.RequestId;
-
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -21,6 +20,7 @@
       onNodeSelected: function (event, node) {
         if (node.type == "Bureau") {
           $("#unitId").val("");
+          $("#systems").empty();
           $("#next").prop("disabled", true);
           $("#saveDraft").prop("disabled", true);
           return;
@@ -28,6 +28,17 @@
         $("#unitId").val(node.id);
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
+        $.ajax({
+          url: "/api/portfolio/" + node.id,
+          success: function (data) {
+            $("#systems").empty();
+            data.forEach(function (system) {
+              $("#systems").append("<tr><td>" + system.systemId + "</td><td>"
+                + system.name + "</td><td>"
+                + (system.description ? system.description : '') + "</td></tr>");
+            });
+          }
+        })
       }
     });
     if ($("#unitId").val()) {
@@ -61,23 +72,8 @@
   </ol>
 </nav>
 
-<partial name="/Views/Shared/ProgressBars/RemoveAccess.cshtml" />
+<partial name="../Shared/_ProgressBar1.cshtml" />
 
-<form asp-action="UnitSelection" method="post">
-  <div class="row">
-    <div class="col-12 mb-3">
-      <p>Please select your unit/job function:</p>
-      <div id="tree"></div>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="col-4">
-      <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
-    </div>
-    <div class="col-8 text-right">
-      <a asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
-      <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
-    </div>
-  </div>
-  <input id="unitId" name="unitId" type="hidden" value="@Model.RequestedFor.UnitId" />
+<form asp-controller="EditPortfolioRequest" asp-action="UnitSelection" method="post">
+  <partial name="../Shared/_UnitSystemPortfolio.cshtml" />
 </form>

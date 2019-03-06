@@ -1,0 +1,178 @@
+﻿@model ProcessingUnit
+@{
+  ViewData["Title"] = "Edit Processing Unit";
+  var employees = (List<Employee>)ViewData["employees"];
+  var systems = (List<PAM.Models.System>)ViewData["systems"];
+}
+@section Scripts{
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
+  <script>
+    $(function () {
+      // bootstrap3-typeahead's api is different from the latest typeahead api
+      $("#addEmployee").typeahead({
+        source: function (query, process) {
+          $.ajax({
+            url: '/api/employee/search',
+            data: { term: query },
+            success: function (results) {
+              var employees = [];
+              results.forEach(function (r) {
+                if (!r.processingUnitId) employees.push(r);
+              });
+              return process(employees);
+            }
+          });
+        },
+        displayText: function (item) {
+          return item.name;
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.name + "</td><td class='d-none d-md-table-cell'>" + item.email + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='employeeIds' value='" + item.employeeId + "'>");
+          row.append(cell);
+          $("#employees").append(row);
+          $("#addEmployee").val("");
+        }
+      });
+      var systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["allSystems"])
+      });
+      $("#addSystem").typeahead({
+        source: systems.ttAdapter(),
+        displayText: function (item) {
+          return item.Name + (item.Description ? " - " + item.Description : "");
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
+            + (item.Description ? item.Description : "") + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.SystemId + "'>");
+          row.append(cell);
+          $("#systems").append(row);
+          $("#addSystem").val("");
+        }
+      });
+      $(".delEmployee").click(function (event) {
+        event.preventDefault();
+        var row = $(this).closest("tr");
+        var unitId = "@Model.ProcessingUnitId";
+        var employeeId = row.attr("data-employee-id");
+        $.ajax({
+          url: "/api/processingUnit/" + unitId + "/employees/" + employeeId,
+          method: "DELETE",
+          success: function () {
+            row.remove();
+          }
+        });
+      });
+      $(".delSystem").click(function (event) {
+        event.preventDefault();
+        var row = $(this).closest("tr");
+        var unitId = "@Model.ProcessingUnitId";
+        var systemId = row.attr("data-system-id");
+        $.ajax({
+          url: "/api/processingUnit/" + unitId + "/systems/" + systemId,
+          method: "DELETE",
+          success: function () {
+            row.remove();
+          }
+        });
+      });
+    });
+    function confirmRemoval() {
+      var msg = "Are you sure you want to remove this processing unit?";
+      if (confirm(msg))
+        window.location.href = "/ProcessingUnit/RemoveProcessingUnit/@Model.ProcessingUnitId";
+    }
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Processing Units</a></li>
+    <li class="breadcrumb-item"><a asp-action="ViewProcessingUnit" asp-route-id="@Model.ProcessingUnitId">@Model.Name</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+  </ol>
+</nav>
+
+<form method="post">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="Email" class="form-label">Email</label>
+      <input asp-for="Email" type="text" class="form-control" required>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="addEmployee">Add Employee</label>
+      <input id="addEmployee" type="text" class="form-control" placeholder="Search employees by id (i.e. e#)">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="addSystem">Add System</label>
+      <input id="addSystem" type="text" class="form-control" placeholder="Search systems by name or description">
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">Employees</div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead><tr><th>Name</th><th class="d-none d-md-table-cell">Email</th><th></th></tr></thead>
+        <tbody id="employees">
+          @foreach (var employee in employees)
+          {
+            <tr data-employee-id="@employee.EmployeeId">
+              <td>@employee.Name</td>
+              <td class="d-none d-md-table-cell">@employee.Email</td>
+              <td>
+                <button class="btn btn-danger delEmployee"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card mt-3 mb-3">
+    <div class="card-header">Employees</div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead><tr><th>Id</th><th>Name</th><th class="d-none d-md-table-cell">Description</th><th></th></tr></thead>
+        <tbody id="systems">
+          @foreach (var system in systems)
+          {
+            <tr data-system-id="@system.SystemId">
+              <td>@system.SystemId</td>
+              <td>@system.Name</td>
+              <td class="d-none d-md-table-cell">@system.Description</td>
+              <td>
+                <button class="btn btn-danger delSystem"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-6">
+      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Processing Unit</a>
+    </div>
+    <div class="col-6 text-right">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</form>
