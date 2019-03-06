@@ -24,12 +24,9 @@ namespace PAM.Data
 
         public ICollection<Models.SystemAccess> GetSystemAccessesByEmployeeId(int empId)
         {
-            // *** TODO: Should only include Systems that they have access to, not ones that have been removed
-            /*var*/ return /*allSystemAccesses =*/ _dbContext.SystemAccesses
-                .Include(e => e.System)
-                .Where(e => e.EmployeeId == empId).ToList();
-
-            //allSystemAccesses.
+            return _dbContext.SystemAccesses
+                            .Include(e => e.System)
+                            .Where(e => e.EmployeeId == empId).ToList();
         }
 
         public ICollection<Models.System> GetAllSystems()
@@ -49,7 +46,8 @@ namespace PAM.Data
             return system;
         }
 
-        public ICollection<SystemAccess> GetSystemAccess(){
+        public ICollection<SystemAccess> GetSystemAccess()
+        {
             return _dbContext.SystemAccesses.ToList();
         }
 
