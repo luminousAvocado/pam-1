@@ -1,0 +1,291 @@
+﻿@model Review
+@{
+  ViewData["Title"] = "Viewing";
+  var request = (Request)ViewData["request"];
+}
+
+<div class="row mb-3">
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReview" class="btn btn-primary float-right">Return</a>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">Request Information</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Request Id</label>
+        <span class="form-control">@request.RequestId</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Request Type</label>
+        <span class="form-control">@request.RequestType.DisplayCode</span>
+      </div>
+    </div>
+    @if (!request.IsSelfRequest)
+    {
+      <div class="row">
+        <div class="form-group">
+          <label>Prepared By</label>
+          <span class="form-control">@request.RequestedBy.Name</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Requester Information
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>First Name</label>
+        <span class="form-control">@request.RequestedFor.FirstName</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Last Name</label>
+        <span class="form-control">@request.RequestedFor.LastName</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Department</label>
+        <span class="form-control">@request.RequestedFor.Department</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Service</label>
+        <span class="form-control">@request.RequestedFor.Service</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Title</label>
+        <span class="form-control">@request.RequestedFor.Title</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Email</label>
+        <span class="form-control">@request.RequestedFor.Email</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Department</label>
+        <span class="form-control">@request.RequestedFor.Department</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Service</label>
+        <span class="form-control">@request.RequestedFor.Service</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Address</label>
+        <span class="form-control">@request.RequestedFor.Address</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>City</label>
+        <span class="form-control">@request.RequestedFor.City</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>State</label>
+        <span class="form-control">@request.RequestedFor.State</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Zip Code</label>
+        <span class="form-control">@request.RequestedFor.Zip</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Phone</label>
+        <span class="form-control">@request.RequestedFor.Phone</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Cell Phone</label>
+        <span class="form-control">@request.RequestedFor.CellPhone</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+@*<div class="card">
+  <div class="card-header">
+    Systems Requested
+  </div>
+  @if (request.RequestTypeId == 4)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
+        </div>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col" class="d-none d-md-table-cell">Description</th>
+              <th scope="col" class="nowrap">In Portfolio</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in request.Systems)
+            {
+              <tr>
+                <td>@requestedSystem.System.SystemId</td>
+                <td>@requestedSystem.System.Name</td>
+                <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+                <td>@requestedSystem.InPortfolio</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+  @if (request.RequestTypeId == 11)
+  {
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Bureau</label>
+          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Unit / Job Function</label>
+          <span class="form-control">@request.RequestedFor.Unit.Name</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Default Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in request.Systems)
+              {
+                @if ((bool)requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <h5 class="card-header text-center">Additional Systems</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">In Portfolio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var requestedSystem in request.Systems)
+              {
+                @if (!(bool)requestedSystem.InPortfolio)
+                {
+                  <tr>
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td>@requestedSystem.InPortfolio</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Additional Information
+  </div>
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-4">
+        @if (request.IsContractor)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Contractor
+      </div>
+      <div class="col-md-4">
+        @if (request.IsHighProfileAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        High Profile
+      </div>
+      <div class="col-md-4">
+        @if (request.IsGlobalAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Global Access
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Caseload Type</label>
+        <span class="form-control">@request.CaseloadType</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Function</label>
+        <span class="form-control">@request.CaseloadFunction</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Number</label>
+        <span class="form-control">@request.CaseloadNumber</span>
+      </div>
+    </div>
+  </div>
+</div>*@
+
+@*<div class="row mt-3">
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
+  </div>
+</div>*@

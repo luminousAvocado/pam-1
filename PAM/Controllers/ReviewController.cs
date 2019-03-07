@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -66,8 +67,29 @@ namespace PAM.Controllers
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
             }
+
             ViewData["request"] = request;
-            return View(review);
+
+            switch (request.RequestType.DisplayCode)
+            {
+                //case "Portfolio Assignment":
+                //    return View("ViewPortfolioReview");
+                //case "Add Access":
+                //    return View("ViewAddAccessReview");
+                case "Remove Access":
+                    return View("ViewRemoveAccessReview");
+                case "Update Information":
+                    return View("ViewUpdateInfoReview");
+                //case "Transfer":
+                //    return View("ViewTransferReview");
+                //case "Leaving Probation":
+                //    return View("ViewLeavingReview");
+                default:
+                    return RedirectToAction("MyReviews");
+            }
+
+            //ViewData["request"] = request;
+            //return View(review);
         }
 
         [HttpGet]
@@ -123,10 +145,11 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                switch (request.RequestTypeId)
+                // TODO: We might be able to take out this whole switch statement, since it seems as though regardless of requestType, we are just creating SystemAccess(s), and we can get AccessType from RequestedSystem
+                switch (request.RequestType.DisplayCode)
                 {
                     //Transfer Request
-                    case 2:
+                    case "Transfer":
                         foreach (var requestedSystem in request.Systems){
                             if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Remove){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
@@ -135,7 +158,7 @@ namespace PAM.Controllers
                         }
                         break;
                     //Portfolio Assignment Request
-                    case 4:
+                    case "Portfolio Assignment":
                         foreach (var requestedSystem in request.Systems)
                         {
                             var systemAccess = new SystemAccess(request, requestedSystem);
@@ -143,7 +166,7 @@ namespace PAM.Controllers
                         }
                         break;
                     //Add Access Request
-                    case 11:
+                    case "Add Access":
                         foreach (var requestedSystem in request.Systems)
                         {
                             if (!(bool)requestedSystem.InPortfolio)
@@ -154,10 +177,27 @@ namespace PAM.Controllers
                         }
                         break;
                     //Remove Access Request
-                    case 12:
+                    case "Remove Access":
                         foreach (var requestedSystem in request.Systems)
                         {
-                           // _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    //Update Info Request
+                    case "Update Information":
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    //Leaving Probation Request
+                    case "Leaving Probation":
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                     default:
