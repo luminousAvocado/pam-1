@@ -128,7 +128,7 @@ namespace PAM.Controllers
                     //Transfer Request
                     case 2:
                         foreach (var requestedSystem in request.Systems){
-                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update){
+                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Remove){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
                                 _systemService.AddSystemAccess(systemAccess);
                             }

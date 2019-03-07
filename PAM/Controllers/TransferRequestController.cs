@@ -91,11 +91,11 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnitTransfer(int id, int transferUnitId, bool saveDraft = false){
+        public IActionResult UnitTransfer(int id, int unitId, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
 
             List<RequestedSystem> currentSystems = new List<RequestedSystem>(request.Systems);
-            var transferUnit = _organizationService.GetUnit(transferUnitId);
+            var transferUnit = _organizationService.GetUnit(unitId);
 
             request.RequestedFor.BureauId = transferUnit.BureauId;
             request.RequestedFor.UnitId = transferUnit.UnitId;
