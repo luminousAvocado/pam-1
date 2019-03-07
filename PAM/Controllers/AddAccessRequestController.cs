@@ -36,6 +36,22 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
+        }
+
+        [HttpGet]
         public IActionResult UnitSelection(int id)
         {
             var request = _requestService.GetRequest(id);
