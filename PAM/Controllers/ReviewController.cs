@@ -72,8 +72,18 @@ namespace PAM.Controllers
 
             switch (request.RequestType.DisplayCode)
             {
+                //case "Portfolio Assignment":
+                //    return View("ViewPortfolioReview");
+                //case "Add Access":
+                //    return View("ViewAddAccessReview");
                 case "Remove Access":
                     return View("ViewRemoveAccessReview");
+                case "Update Information":
+                    return View("ViewUpdateInfoReview");
+                //case "Transfer":
+                //    return View("ViewTransferReview");
+                //case "Leaving Probation":
+                //    return View("ViewLeavingReview");
                 default:
                     return RedirectToAction("MyReviews");
             }
