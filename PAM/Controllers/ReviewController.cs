@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -66,8 +67,19 @@ namespace PAM.Controllers
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
             }
+
             ViewData["request"] = request;
-            return View(review);
+
+            switch (request.RequestType.DisplayCode)
+            {
+                case "Remove Access":
+                    return View("ViewRemoveAccessReview");
+                default:
+                    return RedirectToAction("MyReviews");
+            }
+
+            //ViewData["request"] = request;
+            //return View(review);
         }
 
         [HttpGet]
