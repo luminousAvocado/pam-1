@@ -123,10 +123,10 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                switch (request.RequestTypeId)
+                switch (request.RequestType.DisplayCode)
                 {
                     //Transfer Request
-                    case 2:
+                    case "Transfer":
                         foreach (var requestedSystem in request.Systems){
                             if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
@@ -135,7 +135,7 @@ namespace PAM.Controllers
                         }
                         break;
                     //Portfolio Assignment Request
-                    case 4:
+                    case "Portfolio Assignment":
                         foreach (var requestedSystem in request.Systems)
                         {
                             var systemAccess = new SystemAccess(request, requestedSystem);
@@ -143,7 +143,7 @@ namespace PAM.Controllers
                         }
                         break;
                     //Add Access Request
-                    case 11:
+                    case "Add Access":
                         foreach (var requestedSystem in request.Systems)
                         {
                             if(!(bool)requestedSystem.InPortfolio){
@@ -154,7 +154,7 @@ namespace PAM.Controllers
                         }
                         break;
                     //Remove Access Request
-                    case 12:
+                    case "Remove Access":
                         foreach (var requestedSystem in request.Systems)
                         {
                            // _systemService.RemoveSystemAccess(requestedSystem.SystemId);
