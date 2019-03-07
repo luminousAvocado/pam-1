@@ -123,6 +123,7 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
+                // TODO: We might be able to take out this whole switch statement, since it seems as though regardless of requestType, we are just creating SystemAccess(s), and we can get AccessType from RequestedSystem
                 switch (request.RequestType.DisplayCode)
                 {
                     //Transfer Request
@@ -157,7 +158,24 @@ namespace PAM.Controllers
                     case "Remove Access":
                         foreach (var requestedSystem in request.Systems)
                         {
-                           // _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    //Update Info Request
+                    case "Update Information":
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    //Leaving Probation Request
+                    case "Leaving Probation":
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                     default:
