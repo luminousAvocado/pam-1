@@ -42,7 +42,7 @@
       var systems = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: @Html.Raw(@ViewData["systems"])
+        local: Html.Raw(ViewData["systems"])
       });
 
       $("#addSystem").typeahead({

@@ -1,10 +1,12 @@
-﻿@model Request
+﻿@using Newtonsoft.Json;
+
+@model Request
 @{
-  ViewData["Title"] = "Add Systems";
-  ViewData["id"] = Model.RequestId;
-  var systemsList = (List<PAM.Models.System>)ViewData["systems"];
-  var defaultSystems = (List<PAM.Models.System>)ViewData["defaultSystems"];
+     ViewData["Title"] = "Add Systems";
+     ViewData["id"] = Model.RequestId;
+     var defaultSystems = (List<PAM.Models.System>)ViewData["defaultSystems"];
 }
+
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -17,15 +19,25 @@
 
   <script>
     $(function () {
+      var jsonSystems = @Html.Raw(JsonConvert.SerializeObject(ViewData["systems"]));
+
       var page ='@ViewData["Title"]';
       $("li[data-title='" + page + "']").addClass("active");
       $("#next").prop("disabled", false);
       $("#saveDraft").prop("disabled", false);
+
+      var systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: jsonSystems
+      });
+
       $("#addSystem").typeahead({
         source: systems.ttAdapter(),
         displayText: function (item) {
           return item.Name + (item.Description ? " - " + item.Description : "");
-        },
+        }
+        /*
         afterSelect: function (item) {
           var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
             + (item.Description ? item.Description : "") + "</td></tr>");
@@ -37,7 +49,7 @@
           row.append(cell);
           $("#additionalSystems").append(row);
           $("#addSystem").val("");
-        }
+        }*/
       });
       $("#saveDraft").click(function () {
         var form = $(this).parents("form:first");
@@ -98,15 +110,18 @@
             <tbody id="additionalSystems">
               @foreach (var requestedSystem in Model.Systems)
               {
-                <tr class="additionalSystem" data-system-id="@requestedSystem.SystemId">
-                  <td>@requestedSystem.System.SystemId</td>
-                  <td>@requestedSystem.System.Name</td>
-                  <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-                  <td>
-                    <input type="hidden" name="systemIds" value="@requestedSystem.SystemId" />
-                    <button class="btn btn-danger delSystem"><i class="fas fa-trash-alt"></i></button>
-                  </td>
-                </tr>
+                @if (!(bool)requestedSystem.InPortfolio)
+                {
+                  <tr class="additionalSystem" data-system-id="@requestedSystem.SystemId">
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+                    <td>
+                      <input type="hidden" name="systemIds" value="@requestedSystem.SystemId" />
+                      <button class="btn btn-danger delSystem"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>
+                }
               }
             </tbody>
           </table>

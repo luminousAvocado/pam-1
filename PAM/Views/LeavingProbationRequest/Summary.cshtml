@@ -36,8 +36,8 @@
 <partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
 <partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -51,8 +51,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Systems Requested For Removal
     <a class="float-right" asp-action="SystemsToRemove" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
