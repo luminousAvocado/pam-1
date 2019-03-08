@@ -7,20 +7,19 @@
 @section Scripts {
   <script>
   $(function(){
-    var page ='@ViewData["Title"]';
-    $("li[data-title='" + page + "']").addClass("active");
-
     $("#hasid,#askid").hide();
     $("input[name='forSelf']").click(function () {
-      if ($(this).val() == "no")
-        $("#hasid").show();
+      if ($(this).val() == "no") {
+        $("#hasid,#askid").show();
+        $("#idyes").prop("checked", true);
+        $("#requestedForUsername").prop("required", true);
+      }
       else {
         $("#hasid,#askid").hide();
         $("#requestedForUsername").prop("required", false);
       }
     });
     $("input[name='hasId']").click(function () {
-      console.log($(this).val());
       if ($(this).val() == "yes") {
         $("#askid").show();
         $("#requestedForUsername").prop("required", true);
