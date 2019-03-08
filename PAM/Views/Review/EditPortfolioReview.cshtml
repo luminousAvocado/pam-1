@@ -45,6 +45,61 @@
   </div>
 </div>
 
+<div class="card">
+  <div class="card-header">Additional Information</div>
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-4">
+        @if (request.IsContractor)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Contractor
+      </div>
+      <div class="col-md-4">
+        @if (request.IsHighProfileAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        High Profile
+      </div>
+      <div class="col-md-4">
+        @if (request.IsGlobalAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Global Access
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Caseload Type</label>
+        <span class="form-control">@request.CaseloadType</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Function</label>
+        <span class="form-control">@request.CaseloadFunction</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Number</label>
+        <span class="form-control">@request.CaseloadNumber</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <form id="decision" method="post">
   <div class="card mt-5">
     <div class="card-header">Your Decision</div>

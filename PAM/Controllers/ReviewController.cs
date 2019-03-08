@@ -75,15 +75,15 @@ namespace PAM.Controllers
                 case "Portfolio Assignment":
                     return View("ViewPortfolioReview", review);
                 //case "Add Access":
-                //    return View("ViewAddAccessReview");
+                //    return View("ViewAddAccessReview", review);
                 case "Remove Access":
                     return View("ViewRemoveAccessReview", review);
                 case "Update Information":
                     return View("ViewUpdateInfoReview", review);
                 //case "Transfer":
-                //    return View("ViewTransferReview");
+                //    return View("ViewTransferReview", review);
                 //case "Leaving Probation":
-                //    return View("ViewLeavingReview");
+                //    return View("ViewLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
@@ -106,18 +106,18 @@ namespace PAM.Controllers
 
             switch (request.RequestType.DisplayCode)
             {
-                //case "Portfolio Assignment":
-                //    return View("ViewPortfolioReview");
+                case "Portfolio Assignment":
+                    return View("EditPortfolioReview", review);
                 //case "Add Access":
-                //    return View("ViewAddAccessReview");
+                //    return View("EditAddAccessReview", review);
                 case "Remove Access":
                     return View("EditRemoveAccessReview", review);
                 //case "Update Information":
-                //    return View("ViewUpdateInfoReview");
+                //    return View("EditUpdateInfoReview", review);
                 //case "Transfer":
-                //    return View("ViewTransferReview");
+                //    return View("EditTransferReview", review);
                 //case "Leaving Probation":
-                //    return View("ViewLeavingReview");
+                //    return View("EditLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
