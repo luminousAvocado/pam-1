@@ -72,8 +72,8 @@ namespace PAM.Controllers
 
             switch (request.RequestType.DisplayCode)
             {
-                //case "Portfolio Assignment":
-                //    return View("ViewPortfolioReview");
+                case "Portfolio Assignment":
+                    return View("ViewPortfolioReview", review);
                 //case "Add Access":
                 //    return View("ViewAddAccessReview");
                 case "Remove Access":
