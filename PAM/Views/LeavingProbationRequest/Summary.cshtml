@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Leaving Probation Summary";
+  ViewData["Title"] = "Summary";
   ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
@@ -15,11 +15,46 @@
   </script>
 }
 
-<partial name="../Shared/_Summary.cshtml" />
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
 
-<div class="card">
-  <div class="card-header">
-    Systems With Current Access To
+<partial name="/Views/Shared/ProgressBars/LeavingProbation.cshtml" />
+
+<div class="row mb-3">
+  <div class="col-6">
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
+  </div>
+  <div class="col-6 text-right">
+    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
+  </div>
+</div>
+
+<partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
+<partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
+
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
+    Additional Information
+    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col">
+        <label>Departure Reason</label>
+        <span class="form-control">@Model.DepartureReason</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
+    Systems Requested For Removal
+    <a class="float-right" asp-action="SystemsToRemove" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
@@ -28,7 +63,7 @@
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Description</th>
+            <th scope="col" class="d-none d-md-table-cell">Description</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +72,7 @@
             <tr>
               <td>@requestedSystem.System.SystemId</td>
               <td>@requestedSystem.System.Name</td>
-              <td>@requestedSystem.System.Description</td>
+              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
             </tr>
           }
         </tbody>
@@ -46,23 +81,7 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
-    Signature(s) Required
-    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
-  </div>
-  <div class="card-body">
-    @foreach (var review in Model.Reviews)
-    {
-      <div class="row">
-        <div class="form-group col">
-          <label>@review.ReviewerTitle</label>
-          <span class="form-control">@review.Reviewer.Name</span>
-        </div>
-      </div>
-    }
-  </div>
-</div>
+<partial name="/Views/Shared/Partials/_SignaturesSummary.cshtml" />
 
 <div class="row mt-3">
   <div class="col-6">

@@ -1,46 +1,13 @@
-﻿@model Request
+﻿@model Review
 @{
-  ViewData["Title"] = "Summary";
-  ViewData["id"] = Model.RequestId;
-}
-@section StyleSheets{
-  <link rel="stylesheet" href="~/css/progressbar.css" />
-}
-@section Scripts {
-  <script>
-  $(function(){
-    var page ='@ViewData["Title"]';
-    $("li[data-title='" + page + "']").addClass("active");
-  });
-  </script>
+  ViewData["Title"] = "Viewing";
+  var request = (Request)ViewData["request"];
 }
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
-  </ol>
-</nav>
-
-<partial name="/Views/Shared/ProgressBars/PortfolioAssignment.cshtml" />
-
-<div class="row mb-3">
-  <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
-  </div>
-  <div class="col-6 text-right">
-    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
-  </div>
-</div>
-
-<partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
-<partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
+<partial name="/Views/Shared/Partials/_ViewReview.cshtml" />
 
 <div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
-    Systems Requested
-    <a class="float-right" asp-controller="TransferRequest" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
-  </div>
+  <div class="card-header bg-info text-white">Systems Requested</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -50,13 +17,13 @@
             <div class="row">
               <div class="col-md-12">
                 <label>Bureau</label>
-                <span class="form-control">@Model.TransferredFromUnit.Bureau.Description</span>
+                <span class="form-control">@request.TransferredFromUnit.Bureau.Description</span>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-md-12">
                 <label>Unit / Job Function</label>
-                <span class="form-control">@Model.TransferredFromUnit.Name</span>
+                <span class="form-control">@request.TransferredFromUnit.Name</span>
               </div>
             </div>
             <table class="table">
@@ -67,7 +34,7 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach (var requestedSystem in Model.Systems)
+                @foreach (var requestedSystem in request.Systems)
                 {
                   @if (requestedSystem.AccessType == SystemAccessType.Remove || requestedSystem.AccessType == SystemAccessType.Update)
                   {
@@ -89,13 +56,13 @@
             <div class="row">
               <div class="col-md-12">
                 <label>Bureau</label>
-                <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
+                <span class="form-control">@request.RequestedFor.Bureau.Description</span>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-md-12">
                 <label>Unit / Job Function</label>
-                <span class="form-control">@Model.RequestedFor.Unit.Name</span>
+                <span class="form-control">@request.RequestedFor.Unit.Name</span>
               </div>
             </div>
             <table class="table">
@@ -106,7 +73,7 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach (var requestedSystem in Model.Systems)
+                @foreach (var requestedSystem in request.Systems)
                 {
                   @if (requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update)
                   {
@@ -134,7 +101,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach (var requestedSystem in Model.Systems)
+              @foreach (var requestedSystem in request.Systems)
               {
                 @if (requestedSystem.AccessType == SystemAccessType.Add)
                 {
@@ -159,7 +126,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach (var requestedSystem in Model.Systems)
+              @foreach (var requestedSystem in request.Systems)
               {
                 @if (requestedSystem.AccessType == SystemAccessType.Remove)
                 {
@@ -184,7 +151,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach (var requestedSystem in Model.Systems)
+              @foreach (var requestedSystem in request.Systems)
               {
                 @if (requestedSystem.AccessType == SystemAccessType.Update)
                 {
@@ -202,15 +169,14 @@
   </div>
 </div>
 
-<div class="card border-info mb-1">
+<div class="card border-info">
   <div class="card-header bg-info text-white">
     Additional Information
-    <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row mb-2">
       <div class="col-md-4">
-        @if (Model.IsContractor)
+        @if (request.IsContractor)
         {
           <i class="far fa-check-square"></i>
         }
@@ -221,7 +187,7 @@
         Contractor
       </div>
       <div class="col-md-4">
-        @if (Model.IsHighProfileAccess)
+        @if (request.IsHighProfileAccess)
         {
           <i class="far fa-check-square"></i>
         }
@@ -232,7 +198,7 @@
         High Profile
       </div>
       <div class="col-md-4">
-        @if (Model.IsGlobalAccess)
+        @if (request.IsGlobalAccess)
         {
           <i class="far fa-check-square"></i>
         }
@@ -246,27 +212,22 @@
     <div class="row">
       <div class="form-group col-md-4">
         <label>Caseload Type</label>
-        <span class="form-control">@Model.CaseloadType</span>
+        <span class="form-control">@request.CaseloadType</span>
       </div>
       <div class="form-group col-md-4">
         <label>Caseload Function</label>
-        <span class="form-control">@Model.CaseloadFunction</span>
+        <span class="form-control">@request.CaseloadFunction</span>
       </div>
       <div class="form-group col-md-4">
         <label>Caseload Number</label>
-        <span class="form-control">@Model.CaseloadNumber</span>
+        <span class="form-control">@request.CaseloadNumber</span>
       </div>
     </div>
   </div>
 </div>
 
-<partial name="/Views/Shared/Partials/_SignaturesSummary.cshtml" />
-
 <div class="row mt-3">
-  <div class="col-6">
-    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
-  </div>
-  <div class="col-6 text-right">
-    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
   </div>
 </div>
