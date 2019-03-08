@@ -112,8 +112,8 @@ namespace PAM.Controllers
                 //    return View("EditAddAccessReview", review);
                 case "Remove Access":
                     return View("EditRemoveAccessReview", review);
-                //case "Update Information":
-                //    return View("EditUpdateInfoReview", review);
+                case "Update Information":
+                    return View("EditUpdateInfoReview", review);
                 //case "Transfer":
                 //    return View("EditTransferReview", review);
                 //case "Leaving Probation":

@@ -1,0 +1,101 @@
+﻿@model Review
+@{
+  ViewData["Title"] = "Viewing";
+  var request = (Request)ViewData["request"];
+}
+
+<partial name="/Views/Shared/Partials/_ViewReview.cshtml" />
+
+<div class="card">
+  <div class="card-header">
+    Additional Information
+  </div>
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-4">
+        @if (request.IsContractor)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Contractor
+      </div>
+      <div class="col-md-4">
+        @if (request.IsHighProfileAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        High Profile
+      </div>
+      <div class="col-md-4">
+        @if (request.IsGlobalAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Global Access
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Caseload Type</label>
+        <span class="form-control">@request.CaseloadType</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Function</label>
+        <span class="form-control">@request.CaseloadFunction</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Number</label>
+        <span class="form-control">@request.CaseloadNumber</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    Systems Requested
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="d-none d-md-table-cell">Description</th>
+            <th scope="col" class="nowrap">In Portfolio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in request.Systems)
+          {
+            <tr>
+              <td>@requestedSystem.System.SystemId</td>
+              <td>@requestedSystem.System.Name</td>
+              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+              <td>@requestedSystem.InPortfolio</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-12">
+    <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
+  </div>
+</div>
