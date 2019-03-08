@@ -46,6 +46,15 @@ namespace PAM.Data
             return system;
         }
 
+        public IList<SystemAccess> GetSystemAccesses(List<int> ids)
+        {
+            return _dbContext.SystemAccesses.Where(s => ids.Contains(s.SystemAccessId))
+                .Include(s => s.System).Include(s => s.ProcessedBy).Include(s => s.ConfirmedBy)
+                .Include(s => s.Request).ThenInclude(r => r.RequestedBy)
+                .Include(s => s.Request).ThenInclude(r => r.RequestedFor)
+                .ToList();
+        }
+
         public IList<SystemAccess> GetSystemAccessesByEmployeeId(int employeeId)
         {
             return _dbContext.SystemAccesses.Include(s => s.System)
@@ -64,6 +73,17 @@ namespace PAM.Data
 
             return currentAccesses.Where(a => a.Value.AccessType == SystemAccessType.Add || a.Value.AccessType == SystemAccessType.Update)
                 .Select(a => a.Value).ToList();
+        }
+
+        public IList<SystemAccess> GetCurrentSystemAccessesByProcessingUnitId(int processingUnitId)
+        {
+            return _dbContext.SystemAccesses.Include(s => s.System)
+                .Include(s => s.Request).ThenInclude(r => r.RequestType)
+                .Include(s => s.Request).ThenInclude(r => r.RequestedFor)
+                .Include(s => s.ProcessedBy).Include(s => s.ConfirmedBy)
+                .Where(s => s.System.ProcessingUnitId == processingUnitId && (s.ProcessedOn == null || s.ConfirmedOn == null))
+                .OrderBy(s => s.RequestId)
+                .ToList();
         }
 
         public SystemAccess AddSystemAccess(SystemAccess systemAccess)

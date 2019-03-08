@@ -44,12 +44,11 @@ namespace PAM.Models
 
         public string SupervisorName { get; set; }
 
-        public bool IsAdmin { get; set; } = false;
-        public bool IsApprover { get; set; } = false;
-        public bool IsProcessor { get; set; } = false;
-
         public int? ProcessingUnitId { get; set; }
         public ProcessingUnit ProcessingUnit { get; set; }
+
+        public bool IsAdmin { get; set; } = false;
+        public bool IsApprover { get; set; } = false;
 
         public Employee() { }
 
@@ -77,9 +76,12 @@ namespace PAM.Models
 
             SupervisorName = identity.GetClaim("Supervisor");
 
+            var claim = identity.GetClaim("ProcessingUnitId");
+            if (claim != null)
+                ProcessingUnitId = Int32.Parse(claim);
+
             IsAdmin = identity.GetClaim("IsAdmin") != null ? true : false;
             IsApprover = identity.GetClaim("IsApprover") != null ? true : false;
-            IsProcessor = identity.GetClaim("IsProcessor") != null ? true : false;
         }
 
         public ClaimsIdentity ToClaimsIdentity()
@@ -107,9 +109,10 @@ namespace PAM.Models
 
             if (SupervisorName != null) claims.Add(new Claim("Supervisor", SupervisorName));
 
+            if (ProcessingUnitId != null) claims.Add(new Claim("ProcessingUnitId", ProcessingUnitId.ToString()));
+
             if (IsAdmin) claims.Add(new Claim("IsAdmin", "true"));
             if (IsApprover) claims.Add(new Claim("IsApprover", "true"));
-            if (IsProcessor) claims.Add(new Claim("IsProcessor", "true"));
 
             return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         }
