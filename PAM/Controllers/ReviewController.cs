@@ -77,9 +77,9 @@ namespace PAM.Controllers
                 //case "Add Access":
                 //    return View("ViewAddAccessReview");
                 case "Remove Access":
-                    return View("ViewRemoveAccessReview");
+                    return View("ViewRemoveAccessReview", review);
                 case "Update Information":
-                    return View("ViewUpdateInfoReview");
+                    return View("ViewUpdateInfoReview", review);
                 //case "Transfer":
                 //    return View("ViewTransferReview");
                 //case "Leaving Probation":
@@ -103,7 +103,26 @@ namespace PAM.Controllers
                 request.TransferredFromUnit = unit;
             }
             ViewData["request"] = request;
-            return View(review);
+
+            switch (request.RequestType.DisplayCode)
+            {
+                //case "Portfolio Assignment":
+                //    return View("ViewPortfolioReview");
+                //case "Add Access":
+                //    return View("ViewAddAccessReview");
+                case "Remove Access":
+                    return View("EditRemoveAccessReview", review);
+                //case "Update Information":
+                //    return View("ViewUpdateInfoReview");
+                //case "Transfer":
+                //    return View("ViewTransferReview");
+                //case "Leaving Probation":
+                //    return View("ViewLeavingReview");
+                default:
+                    return RedirectToAction("MyReviews");
+            }
+
+            //return View(review);
         }
 
         [HttpPost]
