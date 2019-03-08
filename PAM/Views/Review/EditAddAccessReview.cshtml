@@ -19,28 +19,34 @@
         <span class="form-control">@request.RequestedFor.Unit.Name</span>
       </div>
     </div>
-    <div class="row">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col" class="d-none d-md-table-cell">Description</th>
-            <th scope="col" class="nowrap">In Portfolio</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var requestedSystem in request.Systems)
-          {
+  </div>
+  <div class="row p-2">
+    <div class="col-md-12">
+      <div class="card border-success">
+        <h5 class="card-header bg-success text-white text-center">Requested Additional Systems</h5>
+        <table class="table">
+          <thead>
             <tr>
-              <td>@requestedSystem.System.SystemId</td>
-              <td>@requestedSystem.System.Name</td>
-              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-              <td>@requestedSystem.InPortfolio</td>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @foreach (var requestedSystem in request.Systems)
+            {
+              if (!(bool)requestedSystem.InPortfolio)
+              {
+                <tr>
+                  <td>@requestedSystem.System.SystemId</td>
+                  <td>@requestedSystem.System.Name</td>
+                  <td>@requestedSystem.System.Description</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

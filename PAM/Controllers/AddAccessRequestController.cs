@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
@@ -36,6 +37,22 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        public IActionResult RequesterInfo(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["request"] = request;
+            return View(request.RequestedFor);
+        }
+
+        [HttpPost]
+        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
+        {
+            _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
+        }
+
+        [HttpGet]
         public IActionResult UnitSelection(int id)
         {
             var request = _requestService.GetRequest(id);
@@ -53,7 +70,7 @@ namespace PAM.Controllers
             request.RequestedFor.UnitId = unit.UnitId;
             request.Systems.Clear();
             foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
+                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId) { InPortfolio = true });
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
@@ -68,7 +85,7 @@ namespace PAM.Controllers
             foreach (var ds in request.Systems)
                 defaultSystems.Add(ds.System);
             ViewData["defaultSystems"] = defaultSystems;
-            ViewData["systems"] = systems;
+            ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystems());
             return View(request);
         }
 

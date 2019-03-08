@@ -74,14 +74,14 @@ namespace PAM.Controllers
             {
                 case "Portfolio Assignment":
                     return View("ViewPortfolioReview", review);
-                //case "Add Access":
-                //    return View("ViewAddAccessReview", review);
+                case "Add Access":
+                    return View("ViewAddAccessReview", review);
                 case "Remove Access":
                     return View("ViewRemoveAccessReview", review);
                 case "Update Information":
                     return View("ViewUpdateInfoReview", review);
-                //case "Transfer":
-                //    return View("ViewTransferReview", review);
+                case "Transfer":
+                    return View("ViewTransferReview", review);
                 //case "Leaving Probation":
                 //    return View("ViewLeavingReview", review);
                 default:
@@ -108,14 +108,14 @@ namespace PAM.Controllers
             {
                 case "Portfolio Assignment":
                     return View("EditPortfolioReview", review);
-                //case "Add Access":
-                //    return View("EditAddAccessReview", review);
+                case "Add Access":
+                    return View("EditAddAccessReview", review);
                 case "Remove Access":
                     return View("EditRemoveAccessReview", review);
                 case "Update Information":
                     return View("EditUpdateInfoReview", review);
-                //case "Transfer":
-                //    return View("EditTransferReview", review);
+                case "Transfer":
+                    return View("EditTransferReview", review);
                 //case "Leaving Probation":
                 //    return View("EditLeavingReview", review);
                 default:
@@ -170,7 +170,7 @@ namespace PAM.Controllers
                     //Transfer Request
                     case "Transfer":
                         foreach (var requestedSystem in request.Systems){
-                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update){
+                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Remove){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
                                 _systemService.AddSystemAccess(systemAccess);
                             }
@@ -188,11 +188,11 @@ namespace PAM.Controllers
                     case "Add Access":
                         foreach (var requestedSystem in request.Systems)
                         {
-                            if(!(bool)requestedSystem.InPortfolio){
-                                requestedSystem.InPortfolio = true;
+                            if (!(bool)requestedSystem.InPortfolio)
+                            {
+                                var systemAccess = new SystemAccess(request, requestedSystem);
+                                _systemService.AddSystemAccess(systemAccess);
                             }
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                     //Remove Access Request
