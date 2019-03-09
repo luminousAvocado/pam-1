@@ -7,19 +7,66 @@
 
 <div class="card border-info mb-1">
   <div class="card-header bg-info text-white">
-    Systems Requested For Removal
+    Additional Information
   </div>
   <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@request.RequestedFor.Bureau.Description</span>
+    <div class="row mb-2">
+      <div class="col">
+        @if (request.IsContractor)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Contractor
       </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@request.RequestedFor.Unit.Name</span>
+      <div class="col">
+        @if (request.IsHighProfileAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        High Profile Access
+      </div>
+      <div class="col">
+        @if (request.IsGlobalAccess)
+        {
+          <i class="far fa-check-square"></i>
+        }
+        else
+        {
+          <i class="far fa-square"></i>
+        }
+        Global Access
       </div>
     </div>
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label>Caseload Type</label>
+        <span class="form-control">@request.CaseloadType</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Function</label>
+        <span class="form-control">@request.CaseloadFunction</span>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Caseload Number</label>
+        <span class="form-control">@request.CaseloadNumber</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
+    Update Information on Systems
+  </div>
+  <div class="card-body">
     <div class="row">
       <table class="table">
         <thead>

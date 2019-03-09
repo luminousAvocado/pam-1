@@ -7,19 +7,23 @@
 
 <div class="card border-info mb-1">
   <div class="card-header bg-info text-white">
-    Systems Requested For Removal
+    Additional Information
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@request.RequestedFor.Bureau.Description</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@request.RequestedFor.Unit.Name</span>
+      <div class="form-group col">
+        <label>Departure Reason</label>
+        <span class="form-control">@request.DepartureReason</span>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
+    Systems Requested For Removal
+  </div>
+  <div class="card-body">
     <div class="row">
       <table class="table">
         <thead>

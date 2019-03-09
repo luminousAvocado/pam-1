@@ -8,28 +8,7 @@
 <partial name="/Views/Shared/Partials/_PortfolioReview.cshtml" />
 
 <form id="decision" method="post">
-  <div class="card border-primary mt-5">
-    <div class="card-header bg-primary text-white">Your Decision</div>
-    <div class="card-body">
-      <div class="form-group">
-        <label for="comments">Comments (required for denying a request)</label>
-        <textarea class="form-control" id="comments" name="comments" rows="3" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="signature">Signature (Your password serves as your digital signature)</label>
-        <input type="password" class="form-control" id="signature" name="signature" required>
-      </div>
-    </div>
-  </div>
-  <div class="row mt-3">
-    <div class="col-4">
-      <a asp-action="MyReviews" class="btn btn-secondary">Cancel</a>
-    </div>
-    <div class="col-8 text-right">
-      <button id="deny" class="btn btn-danger">Deny</button>
-      <button id="approve" class="btn btn-success ml-3">Approve</button>
-    </div>
-  </div>
+  <partial name="/Views/Shared/Partials/_Decisions.cshtml" />
 </form>
 
 @section Scripts{
