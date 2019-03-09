@@ -82,14 +82,11 @@ namespace PAM.Controllers
                     return View("ViewUpdateInfoReview", review);
                 case "Transfer":
                     return View("ViewTransferReview", review);
-                //case "Leaving Probation":
-                //    return View("ViewLeavingReview", review);
+                case "Leaving Probation":
+                    return View("ViewLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
-
-            //ViewData["request"] = request;
-            //return View(review);
         }
 
         [HttpGet]
@@ -102,6 +99,7 @@ namespace PAM.Controllers
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
             }
+
             ViewData["request"] = request;
 
             switch (request.RequestType.DisplayCode)
@@ -116,13 +114,11 @@ namespace PAM.Controllers
                     return View("EditUpdateInfoReview", review);
                 case "Transfer":
                     return View("EditTransferReview", review);
-                //case "Leaving Probation":
-                //    return View("EditLeavingReview", review);
+                case "Leaving Probation":
+                    return View("EditLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
-
-            //return View(review);
         }
 
         [HttpPost]
