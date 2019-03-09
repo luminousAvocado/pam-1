@@ -16,6 +16,8 @@
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
 
   <script>
     $(function () {
@@ -25,19 +27,21 @@
       $("li[data-title='" + page + "']").addClass("active");
       $("#next").prop("disabled", false);
       $("#saveDraft").prop("disabled", false);
-
+      $("#saveDraft").click(function () {
+        var form = $(this).parents("form:first");
+        form.append("<input type='hidden' name='saveDraft' value='true'>");
+        form.submit();
+      });
       var systems = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: jsonSystems
+        local: @Html.Raw(@ViewData["systems"])
       });
-
       $("#addSystem").typeahead({
         source: systems.ttAdapter(),
         displayText: function (item) {
           return item.Name + (item.Description ? " - " + item.Description : "");
-        }
-        /*
+        },
         afterSelect: function (item) {
           var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
             + (item.Description ? item.Description : "") + "</td></tr>");
@@ -49,13 +53,9 @@
           row.append(cell);
           $("#additionalSystems").append(row);
           $("#addSystem").val("");
-        }*/
+        }
       });
-      $("#saveDraft").click(function () {
-        var form = $(this).parents("form:first");
-        form.append("<input type='hidden' name='saveDraft' value='true'>");
-        form.submit();
-      });
+    
     });
   </script>
 }

@@ -90,10 +90,10 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSystems(int id, int unitId, int[] addingSystem, bool saveDraft = false){
+        public IActionResult AddSystems(int id, int unitId, List<int> systemIds, bool saveDraft = false){
             var request = _requestService.GetRequest(id);
 
-            foreach (var a in addingSystem)
+            foreach (var a in systemIds)
             {
                 request.Systems.Add(new RequestedSystem(request.RequestId, a) { InPortfolio = false });
             }
