@@ -30,7 +30,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Users</a>
+          <a class="nav-link" asp-controller="Employee" asp-action="Employees">Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Reports</a>
@@ -46,7 +46,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" asp-controller="User" asp-action="Profile">@identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)'s Profile</a>
+          <a class="nav-link" asp-controller="Profile" asp-action="ViewProfile">@identity.GetClaim(ClaimTypes.GivenName) @identity.GetClaim(ClaimTypes.Surname)'s Profile</a>
         </li>
       </ul>
       <span class="navbar-text">

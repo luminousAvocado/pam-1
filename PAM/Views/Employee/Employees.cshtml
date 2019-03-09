@@ -1,0 +1,52 @@
+﻿@model ICollection<Employee>
+@{
+  ViewData["Title"] = "Employees";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Users</li>
+  </ol>
+</nav>
+
+<form method="get">
+  <div class="form-row mb-3">
+    <div class="col-6">
+      <input type="text" class="form-control" name="term" value="@Context.Request.Query["term"]">
+    </div>
+    <div class="col-3">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    <div class="col-3 text-right">
+      <a asp-action="AddEmployeesFromAD" class="btn btn-secondary">Add<span class="d-none d-lg-inline"> Employees From AD</span></a>
+    </div>
+  </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Context.Request.Query["term"]))
+{
+  <table class="table table-hover">
+    <thead>
+      <tr><th>Name</th><th class="d-none d-md-table-cell">Email</th></tr>
+    </thead>
+    <tbody>
+      @foreach (var employee in Model)
+      {
+        <tr>
+          <td>
+            <a asp-action="ViewEmployee" asp-route-id="@employee.EmployeeId">@employee.Name</a>
+            @if (employee.IsAdmin)
+            {
+              <span class="badge badge-success">Admin</span>
+            }
+            @if (employee.IsApprover)
+            {
+              <span class="badge badge-primary">Approver</span>
+            }
+          </td>
+          <td class="d-none d-md-table-cell">@employee.Email</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using FluentEmail.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
@@ -11,6 +12,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class ProcessingController : Controller
     {
         private readonly UserService _userService;

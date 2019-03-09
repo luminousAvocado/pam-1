@@ -230,6 +230,22 @@ namespace PAM.Services
                 Service = "IT Systems",
                 Phone = "345-678-9012"
             },
+            new Employee()
+            {
+                Username = "e911111",
+                Name = "Bob Lee (e911111)",
+                FirstName = "Bob",
+                LastName = "Lee",
+                Email = "blee1@localhost.localdomain",
+            },
+            new Employee()
+            {
+                Username = "e922222",
+                Name = "Bob Lee (e922222)",
+                FirstName = "Bob",
+                LastName = "Lee",
+                Email = "blee2@localhost.localdomain",
+            }
         };
 
         public bool Authenticate(string username, string password)

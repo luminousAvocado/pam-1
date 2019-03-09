@@ -12,6 +12,11 @@ namespace PAM.Services
             CreateMap<Models.System, Models.System>().ForMember(s => s.SystemId, opt => opt.Ignore());
             CreateMap<Employee, Employee>().ForMember(e => e.EmployeeId, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Employee, EmployeeBindingModel>();
+            CreateMap<EmployeeBindingModel, Employee>()
+                .ForMember(e => e.EmployeeId, opt => opt.Ignore())
+                .ForMember(e => e.Name, opt => opt.Ignore())
+                .ForMember(e => e.Email, opt => opt.Ignore());
             CreateMap<Employee, Requester>();
             CreateMap<Requester, Requester>().ForMember(r => r.RequesterId, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
