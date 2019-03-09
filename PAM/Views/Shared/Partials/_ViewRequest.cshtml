@@ -1,4 +1,5 @@
-﻿@model Review
+﻿@model Request 
+
 @{
   ViewData["Title"] = "Viewing";
   var request = (Request)ViewData["request"];
@@ -6,11 +7,11 @@
 
 <div class="row mb-3">
   <div class="col-12">
-    <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-primary float-right">Return</a>
   </div>
 </div>
-<div class="card">
-  <div class="card-header">Request Information</div>
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">Request Information</div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
@@ -34,8 +35,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Requester Information
   </div>
   <div class="card-body">
@@ -112,7 +113,7 @@
   </div>
 </div>
 
-<div class="card">
+@*<div class="card">
   <div class="card-header">
     Systems Requested
   </div>
@@ -225,87 +226,6 @@
       </div>
     </div>
   }
-  @if (request.RequestTypeId == 4){ 
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label>Bureau</label>
-        <span class="form-control">@request.RequestedFor.Bureau.Description</span>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Unit / Job Function</label>
-        <span class="form-control">@request.RequestedFor.Unit.Name</span>
-      </div>
-    </div>
-    <div class="row">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col" class="d-none d-md-table-cell">Description</th>
-            <th scope="col" class="nowrap">In Portfolio</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var requestedSystem in request.Systems)
-          {
-            <tr>
-              <td>@requestedSystem.System.SystemId</td>
-              <td>@requestedSystem.System.Name</td>
-              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-              <td>@requestedSystem.InPortfolio</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    </div>
-    }
-  @if (request.RequestTypeId == 11)
-  {
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>Bureau</label>
-          <span class="form-control">@request.RequestedFor.Bureau.Description</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Unit / Job Function</label>
-          <span class="form-control">@request.RequestedFor.Unit.Name</span>
-        </div>
-      </div>
-    </div>
-  <div class="row p-2">
-    <div class="col-md-12 ">
-      <div class="card border-primary">
-        <h5 class="card-header bg-primary text-white text-center">Requested Additional Systems</h5>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach (var requestedSystem in request.Systems)
-            {
-              if (!(bool)requestedSystem.InPortfolio)
-              {
-                <tr>
-                  <td>@requestedSystem.System.SystemId</td>
-                  <td>@requestedSystem.System.Name</td>
-                  <td>@requestedSystem.System.Description</td>
-                </tr>
-              }
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  }
 </div>
 
 <div class="card">
@@ -363,10 +283,10 @@
       </div>
     </div>
   </div>
-</div>
+</div>*@
 
-<div class="row mt-3">
+@*<div class="row mt-3">
   <div class="col-12">
     <a asp-controller="Review" asp-action="MyReviews" class="btn btn-primary float-right">Return</a>
   </div>
-</div>
+</div>*@

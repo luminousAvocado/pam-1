@@ -82,8 +82,8 @@ namespace PAM.Controllers
                     return View("ViewUpdateInfoReview", review);
                 case "Transfer":
                     return View("ViewTransferReview", review);
-                //case "Leaving Probation":
-                //    return View("ViewLeavingReview", review);
+                case "Leaving Probation":
+                    return View("ViewLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
@@ -112,12 +112,12 @@ namespace PAM.Controllers
                     return View("EditAddAccessReview", review);
                 case "Remove Access":
                     return View("EditRemoveAccessReview", review);
-                //case "Update Information":
-                //    return View("EditUpdateInfoReview", review);
+                case "Update Information":
+                    return View("EditUpdateInfoReview", review);
                 case "Transfer":
                     return View("EditTransferReview", review);
-                //case "Leaving Probation":
-                //    return View("EditLeavingReview", review);
+                case "Leaving Probation":
+                    return View("EditLeavingReview", review);
                 default:
                     return RedirectToAction("MyReviews");
             }
