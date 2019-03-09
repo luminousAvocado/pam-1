@@ -1,0 +1,14 @@
+﻿<p>The access to the following systems in your System Registration Request ID# @Model.Request.DisplayId has been confirmed:</p>
+
+<table border="1" cellpadding="2">
+  <tr><th>System</th><th>Confirmed On</th></tr>
+  @foreach(var systemAccess in @Model.SystemAccesses)
+  {
+  <tr>
+    <td>@systemAccess.System.Name</td>
+    <td>@systemAccess.ConfirmedOn.ToString("MM/dd/yyyy")</td>
+  </tr>
+  }
+</table>
+
+<p>PAM Admin</p>
