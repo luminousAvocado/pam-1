@@ -1,0 +1,186 @@
+﻿@{
+  ViewData["Title"] = "Processing Requests";
+  var systemAccesses = (List<SystemAccess>)ViewData["systemAccesses"];
+  var systemsToProcess = (Dictionary<Request, List<SystemAccess>>)ViewData["systemsToProcess"];
+  var systemsToConfirm = (Dictionary<Request, List<SystemAccess>>)ViewData["systemsToConfirm"];
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Process Requests</li>
+  </ol>
+</nav>
+
+@if (!systemAccesses.Any())
+{
+  <p>There are no requests for you to process.</p>
+}
+
+@if (systemAccesses.Any())
+{
+  <ul class="nav nav-tabs">
+    @if (systemsToProcess.Count > 0)
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#toProcess">To Be Processed</a>
+      </li>
+    }
+    @if (systemsToConfirm.Count > 0)
+    {
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#toConfirm">To Be Confirmed</a>
+      </li>
+    }
+  </ul>
+}
+
+@if (systemAccesses.Any())
+{
+  <div id="myTabContent" class="tab-content">
+
+    @if (systemsToProcess.Count > 0)
+    {
+      <div id="toProcess" class="tab-pane fade p-2">
+        <form asp-action="ProcessSystemAccesses" method="post">
+          @foreach (var request in systemsToProcess.Keys)
+          {
+            <div class="card mb-3">
+              <div class="card-header">
+                <div class="row">
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Request</label>
+                    <span class="form-control"><a href="#">@request.DisplayId</a></span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Type</label>
+                    <span class="form-control">@request.RequestType.DisplayCode</span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Requester</label>
+                    <span class="form-control">@request.RequestedFor.Name</span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Approved</label>
+                    <span class="form-control">@request.CompletedOn.Value.ToString("MM/dd/yyyy")</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th class="d-none d-sm-table-cell">Id</th>
+                      <th>Name</th>
+                      <th class="d-none d-md-table-cell">Description</th>
+                      <th>Access</th>
+                      <th>Processed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @{var systems = systemsToProcess.GetValueOrDefault(request);}
+                    @foreach (var system in systems)
+                    {
+                      <tr>
+                        <td class="d-none d-sm-table-cell">@system.SystemId</td>
+                        <td>@system.System.Name</td>
+                        <td class="d-none d-md-table-cell">@system.System.Description</td>
+                        <td>@system.AccessType</td>
+                        <td><input type="checkbox" name="systemAccessIds" value="@system.SystemAccessId" /></td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer">
+                <div class="text-right">
+                  <button class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          }
+        </form>
+      </div>
+    }
+
+    @if (systemsToConfirm.Count > 0)
+    {
+      <div id="toConfirm" class="tab-pane fade p-2">
+        <form asp-action="ConfirmSystemAccesses" method="post">
+          @foreach (var request in systemsToConfirm.Keys)
+          {
+            <div class="card mb-3">
+              <div class="card-header">
+                <div class="row">
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Request</label>
+                    <span class="form-control"><a href="#">@request.DisplayId</a></span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Type</label>
+                    <span class="form-control">@request.RequestType.DisplayCode</span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Requester</label>
+                    <span class="form-control">@request.RequestedFor.Name</span>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3">
+                    <label>Approved</label>
+                    <span class="form-control">@request.CompletedOn.Value.ToString("MM/dd/yyyy")</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th class="d-none d-sm-table-cell">Id</th>
+                      <th>Name</th>
+                      <th>Access</th>
+                      <th class="d-none d-md-table-cell">Processed</th>
+                      <th>Confirmed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @{var systems = systemsToConfirm.GetValueOrDefault(request);}
+                    @foreach (var system in systems)
+                    {
+                      <tr>
+                        <td class="d-none d-sm-table-cell">@system.SystemId</td>
+                        <td>@system.System.Name</td>
+                        <td>@system.AccessType</td>
+                        <td class="d-none d-md-table-cell">
+                          <small>
+                            @system.ProcessedBy.Name on
+                            @system.ProcessedOn.Value.ToString("MM/dd/yyyy")
+                          </small>
+                        </td>
+                        <td><input type="checkbox" name="systemAccessIds" value="@system.SystemAccessId" /></td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer">
+                <div class="text-right">
+                  <button class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          }
+        </form>
+      </div>
+    }
+
+  </div>
+
+  @section Scripts{
+    <script>
+      $(function () {
+        var tabTitle = $("ul.nav>li:first-child>a");
+        tabTitle.addClass("active");
+        var tab = $(tabTitle.attr("href"));
+        tab.addClass("active show");
+      });
+    </script>
+  }
+}

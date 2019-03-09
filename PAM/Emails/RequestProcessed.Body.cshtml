@@ -1,0 +1,14 @@
+﻿<p>The following systems in your System Registration Request ID# @Model.Request.DisplayId have been processed:</p>
+
+<table border="1" cellpadding="2">
+  <tr><th>System</th><th>Processed On</th></tr>
+  @foreach(var systemAccess in @Model.SystemAccesses)
+  {
+  <tr>
+    <td>@systemAccess.System.Name</td>
+    <td>@systemAccess.ProcessedOn.ToString("MM/dd/yyyy")</td>
+  </tr>
+  }
+</table>
+
+<p>PAM Admin</p>
