@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using PAM.Models;
 
 namespace PAM.Data
@@ -10,11 +11,13 @@ namespace PAM.Data
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(AppDbContext dbContext, IMapper mapper)
+        public UserService(AppDbContext dbContext, IMapper mapper, ILogger<UserService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public bool HasEmployee(string username)

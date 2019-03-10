@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +8,7 @@ using PAM.Data;
 
 namespace PAM.Test.Data
 {
-    public class DataServiceFixture : IDisposable
+    public class DataServiceFixture
     {
         public DataServiceFixture()
         {
@@ -19,22 +20,18 @@ namespace PAM.Test.Data
                 .UseSqlServer(Configuration.GetConnectionString("UnitTestConnection"))
                 .Options;
 
-            var serviceProvider = new ServiceCollection()
+            ServiceProvider = new ServiceCollection()
                 .AddLogging(config => config.AddConsole())
+                .AddAutoMapper()
                 .BuildServiceProvider();
-
-            LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
         }
 
         public IConfiguration Configuration { get; }
 
         public DbContextOptions<AppDbContext> DbContextOptions { get; }
 
-        public ILoggerFactory LoggerFactory { get; }
+        public IServiceProvider ServiceProvider { get; }
 
-        public void Dispose()
-        {
-            LoggerFactory.Dispose();
-        }
+        public ILoggerFactory LoggerFactory => ServiceProvider.GetService<ILoggerFactory>();
     }
 }

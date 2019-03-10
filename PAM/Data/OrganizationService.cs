@@ -9,7 +9,7 @@ namespace PAM.Data
     public class OrganizationService
     {
         private readonly AppDbContext _dbContext;
-        private readonly ILogger _logger;
+        private readonly ILogger<OrganizationService> _logger;
 
         public OrganizationService(AppDbContext dbContext, ILogger<OrganizationService> logger)
         {
