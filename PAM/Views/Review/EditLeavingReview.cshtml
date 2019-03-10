@@ -1,0 +1,26 @@
+﻿@model Review
+@{
+  ViewData["Title"] = "Review";
+  var request = (Request)ViewData["request"];
+}
+
+<partial name="/Views/Shared/Partials/_EditReview.cshtml" />
+<partial name="/Views/Shared/Partials/_LeavingReview.cshtml" />
+
+<form id="decision" method="post">
+  <partial name="/Views/Shared/Partials/_Decisions.cshtml" />
+</form>
+
+@section Scripts{
+  <script>
+    $(function () {
+      $("#deny").click(function () {
+        $("#decision").attr("action", "/Review/Deny/@Model.ReviewId");
+      });
+      $("#approve").click(function () {
+        $("#comments").prop("required", false);
+        $("#decision").attr("action", "/Review/Approve/@Model.ReviewId");
+      });
+    });
+  </script>
+}

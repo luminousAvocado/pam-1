@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -66,8 +67,26 @@ namespace PAM.Controllers
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
             }
+
             ViewData["request"] = request;
-            return View(review);
+
+            switch (request.RequestType.DisplayCode)
+            {
+                case "Portfolio Assignment":
+                    return View("ViewPortfolioReview", review);
+                case "Add Access":
+                    return View("ViewAddAccessReview", review);
+                case "Remove Access":
+                    return View("ViewRemoveAccessReview", review);
+                case "Update Information":
+                    return View("ViewUpdateInfoReview", review);
+                case "Transfer":
+                    return View("ViewTransferReview", review);
+                case "Leaving Probation":
+                    return View("ViewLeavingReview", review);
+                default:
+                    return RedirectToAction("MyReviews");
+            }
         }
 
         [HttpGet]
@@ -80,8 +99,26 @@ namespace PAM.Controllers
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
             }
+
             ViewData["request"] = request;
-            return View(review);
+
+            switch (request.RequestType.DisplayCode)
+            {
+                case "Portfolio Assignment":
+                    return View("EditPortfolioReview", review);
+                case "Add Access":
+                    return View("EditAddAccessReview", review);
+                case "Remove Access":
+                    return View("EditRemoveAccessReview", review);
+                case "Update Information":
+                    return View("EditUpdateInfoReview", review);
+                case "Transfer":
+                    return View("EditTransferReview", review);
+                case "Leaving Probation":
+                    return View("EditLeavingReview", review);
+                default:
+                    return RedirectToAction("MyReviews");
+            }
         }
 
         [HttpPost]
@@ -123,19 +160,20 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                switch (request.RequestTypeId)
+                // TODO: We might be able to take out this whole switch statement, since it seems as though regardless of requestType, we are just creating SystemAccess(s), and we can get AccessType from RequestedSystem
+                switch (request.RequestType.DisplayCode)
                 {
                     //Transfer Request
-                    case 2:
+                    case "Transfer":
                         foreach (var requestedSystem in request.Systems){
-                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Update){
+                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Remove){
                                 var systemAccess = new SystemAccess(request, requestedSystem);
                                 _systemService.AddSystemAccess(systemAccess);
                             }
                         }
                         break;
                     //Portfolio Assignment Request
-                    case 4:
+                    case "Portfolio Assignment":
                         foreach (var requestedSystem in request.Systems)
                         {
                             var systemAccess = new SystemAccess(request, requestedSystem);
@@ -143,21 +181,38 @@ namespace PAM.Controllers
                         }
                         break;
                     //Add Access Request
-                    case 11:
+                    case "Add Access":
                         foreach (var requestedSystem in request.Systems)
                         {
-                            if(!(bool)requestedSystem.InPortfolio){
-                                requestedSystem.InPortfolio = true;
+                            if (!(bool)requestedSystem.InPortfolio)
+                            {
+                                var systemAccess = new SystemAccess(request, requestedSystem);
+                                _systemService.AddSystemAccess(systemAccess);
                             }
+                        }
+                        break;
+                    //Remove Access Request
+                    case "Remove Access":
+                        foreach (var requestedSystem in request.Systems)
+                        {
                             var systemAccess = new SystemAccess(request, requestedSystem);
                             _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
-                    //Remove Access Request
-                    case 12:
+                    //Update Info Request
+                    case "Update Information":
                         foreach (var requestedSystem in request.Systems)
                         {
-                           // _systemService.RemoveSystemAccess(requestedSystem.SystemId);
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
+                        }
+                        break;
+                    //Leaving Probation Request
+                    case "Leaving Probation":
+                        foreach (var requestedSystem in request.Systems)
+                        {
+                            var systemAccess = new SystemAccess(request, requestedSystem);
+                            _systemService.AddSystemAccess(systemAccess);
                         }
                         break;
                     default:

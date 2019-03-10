@@ -15,10 +15,29 @@
   </script>
 }
 
-<partial name="../Shared/_Summary.cshtml" />
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
 
-<div class="card">
-  <div class="card-header">
+<partial name="/Views/Shared/ProgressBars/AddAccess.cshtml" />
+
+<div class="row mb-3">
+  <div class="col-6">
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
+  </div>
+  <div class="col-6 text-right">
+    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
+  </div>
+</div>
+
+<partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
+<partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
+
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Systems Requested
     <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -36,8 +55,8 @@
   </div>
   <div class="row p-2">
     <div class="col-md-12 ">
-      <div class="card">
-        <h5 class="card-header text-center">Requested Additional Systems</h5>
+      <div class="card border-primary">
+        <h5 class="card-header bg-primary text-white text-center">Requested Additional Systems</h5>
         <table class="table">
           <thead>
             <tr>
@@ -65,8 +84,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -123,8 +142,8 @@
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-info mb-1">
+  <div class="card-header bg-info text-white">
     Signature(s) Required
     <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>

@@ -1,10 +1,12 @@
-﻿@model Request
+﻿@using Newtonsoft.Json;
+
+@model Request
 @{
-  ViewData["Title"] = "Additional Systems";
-  ViewData["id"] = Model.RequestId;
-  var systemsList = (List<PAM.Models.System>)ViewData["systems"];
-  var defaultSystems = (List<PAM.Models.System>)ViewData["defaultSystems"];
+     ViewData["Title"] = "Add Systems";
+     ViewData["id"] = Model.RequestId;
+     var defaultSystems = (List<PAM.Models.System>)ViewData["defaultSystems"];
 }
+
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -14,42 +16,46 @@
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
 
   <script>
     $(function () {
+      var jsonSystems = @Html.Raw(JsonConvert.SerializeObject(ViewData["systems"]));
+
+      var page ='@ViewData["Title"]';
+      $("li[data-title='" + page + "']").addClass("active");
       $("#next").prop("disabled", false);
       $("#saveDraft").prop("disabled", false);
-      /*
-      $.ajax({
-        url: "/api/portfolio",
-        success: function (data) {
-          data.forEach(function (system) {
-            $("#select" + system.systemId).hide();
-            $("input[type='checkbox']").click(function () {
-              if (system.systemId == $(this).val()) {
-                if ($("input[type='checkbox']").is(":checked")) {
-                  $("#select" + $(this).val()).show();
-                }
-                else
-                  $("#select" + $(this).val()).hide();
-              }
-            });
-          });
-        }
-      });
-      */
-      $("input[name='addingSystem']").click(function () {
-        var item = $(this).val()
-        if ($("#system"+item).is(":checked"))
-          $("#select" + item).show();
-        else
-          $("#select" + item).hide();
-      });
       $("#saveDraft").click(function () {
         var form = $(this).parents("form:first");
         form.append("<input type='hidden' name='saveDraft' value='true'>");
         form.submit();
       });
+      var systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["systems"])
+      });
+      $("#addSystem").typeahead({
+        source: systems.ttAdapter(),
+        displayText: function (item) {
+          return item.Name + (item.Description ? " - " + item.Description : "");
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
+            + (item.Description ? item.Description : "") + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.SystemId + "'>");
+          row.append(cell);
+          $("#additionalSystems").append(row);
+          $("#addSystem").val("");
+        }
+      });
+    
     });
   </script>
 }
@@ -61,93 +67,69 @@
   </ol>
 </nav>
 
+<partial name="/Views/Shared/ProgressBars/AddAccess.cshtml" />
+
 <form asp-action="AddSystems" method="post">
-  <div class="row mb-3">
+  <div class="row">
     <div class="col-md-3">
-      <div class="row mb-2" id="systemsCard">
-        <div class="col-md-12">
-          <div class="card border-info">
-            <h4 class="card-header bg-info text-white">Selected Systems</h4>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              @foreach (var system in systemsList)
-              {
-                var label = "select" + system.SystemId;
-                <tr id="@label" style="display:none;">
-                  <td>@system.SystemId</td>
-                  <td>@system.Name</td>
-                </tr>
-              }
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card border-info">
-            <h4 class="card-header bg-info text-white">Default Systems</h4>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach (var ds in defaultSystems)
-                {
-                  <tr>
-                    <td>@ds.SystemId</td>
-                    <td>@ds.Name</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="card border-info">
+        <div class="card-header bg-info text-white">Default Systems</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var ds in defaultSystems)
+            {
+              <tr>
+                <td>@ds.SystemId</td>
+                <td>@ds.Name</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="col-md-9">
-      <p class="float-left mt-2">Please select the system(s) to add:</p>
-      <table id="table"
-             data-pagination="true"
-             data-page-size="15"
-             data-toggle="table"
-             data-maintain-selected="true"
-             data-search="true"
-             data-search-align="right">
-        <thead>
-          <tr>
-            <th></th>
-            <th data-sortable="true" scope="col">Id</th>
-            <th data-sortable="true" scope="col">Name</th>
-            <th scope="col">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var system in systemsList)
-          {
-            var label = "system" + system.SystemId;
-            <tr>
-              <td>
-                <div class="custom-control custom-checkbox" id="selectSystems">
-                  <input type="checkbox" class="custom-control-input" name="addingSystem" id="@label" value="@system.SystemId" />
-                  <label class="custom-control-label" for="@label"></label>
-                </div>
-              </td>
-              <td>@system.SystemId</td>
-              <td>@system.Name</td>
-              <td>@system.Description</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="col-md-9 mb-3">
+      <p>Please add any additional systems:</p>
+      <div class="card border-primary">
+        <div class="card-header bg-primary text-white">Additional Systems To Add</div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th class="d-none d-md-table-cell" scope="col">Description</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="additionalSystems">
+              @foreach (var requestedSystem in Model.Systems)
+              {
+                @if (!(bool)requestedSystem.InPortfolio)
+                {
+                  <tr class="additionalSystem" data-system-id="@requestedSystem.SystemId">
+                    <td>@requestedSystem.System.SystemId</td>
+                    <td>@requestedSystem.System.Name</td>
+                    <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+                    <td>
+                      <input type="hidden" name="systemIds" value="@requestedSystem.SystemId" />
+                      <button class="btn btn-danger delSystem"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+          <div class="col">
+            <input id="addSystem" type="text" class="form-control" placeholder="Search systems by name or description">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-row">
@@ -155,7 +137,7 @@
       <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
     </div>
     <div class="col-8 text-right">
-      <a asp-controller="EditAddAccess" asp-action="UnitSelection" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+      <a asp-controller="AddAccessRequest" asp-action="UnitSelection" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
     </div>
   </div>

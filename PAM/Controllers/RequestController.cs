@@ -20,17 +20,19 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly OrganizationService _organizationService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
+            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
+            _organizationService = organizationService;
             _email = email;
             _emailHelper = emailHelper;
             _mapper = mapper;
@@ -105,7 +107,31 @@ namespace PAM.Controllers
         public IActionResult ViewRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            return View(request);
+            if(request.RequestTypeId == 2){
+                int unitId = request.TransferredFromUnitId ?? default(int);
+                var unit = _organizationService.GetUnit(unitId);
+                request.TransferredFromUnit = unit;
+            }
+
+            ViewData["request"] = request;
+
+            switch (request.RequestType.DisplayCode)
+            {
+                case "Portfolio Assignment":
+                    return View("ViewPortfolioRequest", request);
+                case "Add Access":
+                    return View("ViewAddAccessRequest", request);
+                case "Remove Access":
+                    return View("ViewRemoveAccessRequest", request);
+                case "Update Information":
+                    return View("ViewUpdateInfoRequest", request);
+                case "Transfer":
+                    return View("ViewTransferRequest", request);
+                case "Leaving Probation":
+                    return View("ViewLeavingRequest", request);
+                default:
+                    return RedirectToAction("MyReviews");
+            }
         }
 
         public IActionResult EditRequest(int id)
