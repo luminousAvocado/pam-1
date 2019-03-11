@@ -11,7 +11,7 @@
       $("#addEmployee").typeahead({
         source: function (query, process) {
           $.ajax({
-            url: '/api/employee/search',
+            url: '@Context.Request.PathBase/api/employee/search',
             data: { term: query },
             success: function (results) {
               var employees = [];

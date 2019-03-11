@@ -32,7 +32,7 @@
         $("#editBtn").prop("disabled", false);
         $("#addBtn").prop("disabled", false);
         $.ajax({
-          url: "/api/portfolio/" + node.id,
+          url: "@Context.Request.PathBase/api/portfolio/" + node.id,
           success: function (data) {
             $("#systems").empty();
             data.forEach(function (system) {
