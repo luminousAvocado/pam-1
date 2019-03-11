@@ -7,7 +7,7 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this location?";
       if (confirm(msg))
-        window.location.href = "/Location/RemoveLocation/@Model.LocationId";
+        window.location.href = "@Context.Request.PathBase/Location/RemoveLocation/@Model.LocationId";
     }
   </script>
 }

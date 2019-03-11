@@ -92,7 +92,7 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this processing unit?";
       if (confirm(msg))
-        window.location.href = "/ProcessingUnit/RemoveProcessingUnit/@Model.ProcessingUnitId";
+        window.location.href = "@Context.Request.PathBase/ProcessingUnit/RemoveProcessingUnit/@Model.ProcessingUnitId";
     }
   </script>
 }

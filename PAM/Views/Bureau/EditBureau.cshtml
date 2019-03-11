@@ -7,7 +7,7 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this bureau?";
       if (confirm(msg))
-        window.location.href = "/Bureau/RemoveBureau/@Model.BureauId";
+        window.location.href = "@Context.Request.PathBase/Bureau/RemoveBureau/@Model.BureauId";
     }
   </script>
 }

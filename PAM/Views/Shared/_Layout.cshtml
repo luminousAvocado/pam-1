@@ -70,7 +70,7 @@
     function confirmLogout() {
       var msg = "Are you sure you want to logout?";
       if (confirm(msg))
-        window.location.href = "/Account/Logout/";
+        window.location.href = "@Context.Request.PathBase/Account/Logout/";
     }
   </script>
   @RenderSection("Scripts", required: false)

@@ -63,12 +63,12 @@
       var unitId = $("#unit").attr("data-unit-id");
       var bureauId = $("#bureau").attr("data-bureau-id");
       if (!unitId && !bureauId) return;
-      window.location.href = "/Unit/AddUnit?parentId=" + unitId + "&bureauId=" + bureauId;
+      window.location.href = "@Context.Request.PathBase/Unit/AddUnit?parentId=" + unitId + "&bureauId=" + bureauId;
     });
     $("#editBtn").click(function () {
       var unitId = $("#unit").attr("data-unit-id");
       if (!unitId) return;
-      window.location.href = "/Unit/EditUnit/" + unitId;
+      window.location.href = "@Context.Request.PathBase/Unit/EditUnit/" + unitId;
     });
   });
   </script>

@@ -40,7 +40,7 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this unit?";
       if (confirm(msg))
-        window.location.href = "/Unit/RemoveUnit/@Model.UnitId";
+        window.location.href = "@Context.Request.PathBase/Unit/RemoveUnit/@Model.UnitId";
     }
   </script>
 }
