@@ -155,7 +155,6 @@ CREATE TABLE [Requesters] (
     [MiddleName] nvarchar(max) NULL,
     [LastName] nvarchar(max) NOT NULL,
     [Email] nvarchar(max) NOT NULL,
-    [BureauId] int NULL,
     [UnitId] int NULL,
     [Title] nvarchar(max) NULL,
     [Department] nvarchar(max) NULL,
@@ -168,7 +167,6 @@ CREATE TABLE [Requesters] (
     [CellPhone] nvarchar(max) NULL,
     [SupervisorName] nvarchar(max) NULL,
     CONSTRAINT [PK_Requesters] PRIMARY KEY ([RequesterId]),
-    CONSTRAINT [FK_Requesters_Bureaus_BureauId] FOREIGN KEY ([BureauId]) REFERENCES [Bureaus] ([BureauId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Requesters_Units_UnitId] FOREIGN KEY ([UnitId]) REFERENCES [Units] ([UnitId]) ON DELETE NO ACTION
 );
 
@@ -287,10 +285,6 @@ CREATE INDEX [IX_RequestedSystems_SystemId] ON [RequestedSystems] ([SystemId]);
 
 GO
 
-CREATE INDEX [IX_Requesters_BureauId] ON [Requesters] ([BureauId]);
-
-GO
-
 CREATE INDEX [IX_Requesters_UnitId] ON [Requesters] ([UnitId]);
 
 GO
@@ -360,7 +354,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190308002330_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190312211531_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

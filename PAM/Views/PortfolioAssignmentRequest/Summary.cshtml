@@ -45,7 +45,7 @@
     <div class="row">
       <div class="form-group col-md-6">
         <label>Bureau</label>
-        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
+        <span class="form-control">@Model.RequestedFor.Unit.Bureau.Description</span>
       </div>
       <div class="form-group col-md-6">
         <label>Unit / Job Function</label>
@@ -59,7 +59,6 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col" class="d-none d-md-table-cell">Description</th>
-            <th scope="col" class="nowrap">In Portfolio</th>
           </tr>
         </thead>
         <tbody>
@@ -69,7 +68,6 @@
               <td>@requestedSystem.System.SystemId</td>
               <td>@requestedSystem.System.Name</td>
               <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
-              <td>@requestedSystem.InPortfolio</td>
             </tr>
           }
         </tbody>

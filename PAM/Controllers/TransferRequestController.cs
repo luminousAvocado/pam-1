@@ -1,42 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Linq;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
-using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
 
 namespace PAM.Controllers
 {
     [Authorize]
-    public class TransferRequestController: Controller
+    public class TransferRequestController : Controller
     {
-        private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
-        private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public TransferRequestController(IADService adService, UserService userService, RequestService requestService,
-            SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<TransferRequestController> logger)
+        public TransferRequestController(UserService userService, RequestService requestService,
+            OrganizationService organizationService, TreeViewService treeViewService, ILogger<TransferRequestController> logger)
         {
-            _adService = adService;
             _userService = userService;
             _requestService = requestService;
-            _systemService = systemService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -53,11 +41,11 @@ namespace PAM.Controllers
         {
             _userService.UpdateRequester(requester);
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction(nameof(UnitSelection), new { id });
+                RedirectToAction(nameof(TransferFromUnit), new { id });
         }
 
         [HttpGet]
-        public IActionResult UnitSelection(int id)
+        public IActionResult TransferFromUnit(int id)
         {
             var request = _requestService.GetRequest(id);
             ViewData["tree"] = _treeViewService.GenerateTreeInJson();
@@ -65,66 +53,38 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
+        public IActionResult TransferFromUnit(int id, int unitId, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-            var unit = _organizationService.GetUnit(unitId);
-
-            request.TransferredFromUnitId = unit.UnitId;
-            request.TransferredFromUnit = unit;
-
-            request.Systems.Clear();
-            foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId));
-            _requestService.SaveChanges();
+            if (request.TransferredFromUnitId != unitId)
+            {
+                request.TransferredFromUnitId = unitId;
+                setRequestedSystems(request);
+                _requestService.SaveChanges();
+            }
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("UnitTransfer", new { id });
+                RedirectToAction(nameof(TransferToUnit), new { id });
         }
 
         [HttpGet]
-        public IActionResult UnitTransfer(int id){
+        public IActionResult TransferToUnit(int id)
+        {
             var request = _requestService.GetRequest(id);
             ViewData["tree"] = _treeViewService.GenerateTreeInJson();
-
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult UnitTransfer(int id, int unitId, bool saveDraft = false){
+        public IActionResult TransferToUnit(int id, int unitId, bool saveDraft = false)
+        {
             var request = _requestService.GetRequest(id);
-
-            List<RequestedSystem> currentSystems = new List<RequestedSystem>(request.Systems);
-            var transferUnit = _organizationService.GetUnit(unitId);
-
-            request.RequestedFor.BureauId = transferUnit.BureauId;
-            request.RequestedFor.UnitId = transferUnit.UnitId;
-
-            request.Systems.Clear();
-            foreach(var cs in currentSystems){
-                foreach(var ts in transferUnit.Systems){
-                    if (ts.SystemId == cs.SystemId) {
-                        //Keep matching systems
-                        request.Systems.Add(new RequestedSystem(request.RequestId, cs.SystemId) { AccessType = SystemAccessType.Update });
-                        break;
-                    }
-                    else if(transferUnit.Systems.IndexOf(ts) == transferUnit.Systems.Count - 1 ){
-                        //Remove system not in new bureau
-                        request.Systems.Add(new RequestedSystem(request.RequestId, cs.SystemId) { AccessType = SystemAccessType.Remove });
-                    }
-                }
+            if (request.RequestedFor.UnitId != unitId)
+            {
+                request.RequestedFor.UnitId = unitId;
+                setRequestedSystems(request);
+                _requestService.SaveChanges();
             }
-            foreach(var ts in transferUnit.Systems){
-                foreach(var cs in currentSystems){
-                    if (cs.SystemId == ts.SystemId) {
-                        break;
-                    }
-                    else if(currentSystems.IndexOf(cs) == currentSystems.Count - 1 ){
-                        request.Systems.Add(new RequestedSystem(request.RequestId, ts.SystemId) { AccessType = SystemAccessType.Add });
-                    }
-                }
-            }
-            _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("AdditionalInfo", new { id });
@@ -141,8 +101,6 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             request.IsContractor = update.IsContractor;
-            request.IsGlobalAccess = update.IsGlobalAccess;
-            request.IsHighProfileAccess = update.IsHighProfileAccess;
             request.CaseloadType = update.CaseloadType;
             request.CaseloadFunction = update.CaseloadFunction;
             request.CaseloadNumber = update.CaseloadNumber;
@@ -150,7 +108,6 @@ namespace PAM.Controllers
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
-
 
         [HttpGet]
         public IActionResult Signatures(int id)
@@ -172,11 +129,31 @@ namespace PAM.Controllers
 
         public IActionResult Summary(int id)
         {
-            var request = _requestService.GetRequest(id);
-            int unitId = request.TransferredFromUnitId ?? default(int);
-            var unit = _organizationService.GetUnit(unitId);
-            request.TransferredFromUnit = unit;
             return View(_requestService.GetRequest(id));
+        }
+
+        private void setRequestedSystems(Request request)
+        {
+            if (request.TransferredFromUnitId == null || request.RequestedFor?.UnitId == null)
+                return;
+
+            request.Systems.Clear();
+            var fromUnit = _organizationService.GetUnit((int)request.TransferredFromUnitId);
+            var fromSystemIds = fromUnit.Systems.Select(s => s.SystemId);
+            var toUnit = _organizationService.GetUnit((int)request.RequestedFor.UnitId);
+            var toSystemIds = toUnit.Systems.Select(s => s.SystemId);
+
+            request.Systems.AddRange(toUnit.Systems.Where(s => !fromSystemIds.Contains(s.SystemId))
+                .Select(us => new RequestedSystem(request.RequestId, us.SystemId)
+                {
+                    AccessType = SystemAccessType.Add,
+                    InPortfolio = true
+                }).ToList());
+            request.Systems.AddRange(fromUnit.Systems.Where(s => !toSystemIds.Contains(s.SystemId))
+                .Select(us => new RequestedSystem(request.RequestId, us.SystemId)
+                {
+                    AccessType = SystemAccessType.Remove
+                }).ToList());
         }
     }
 }

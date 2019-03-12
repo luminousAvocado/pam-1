@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,17 +15,15 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public PortfolioAssignmentRequestController(UserService userService, RequestService requestService, OrganizationService organizationService,
-            TreeViewService treeViewService, IMapper mapper, ILogger<PortfolioAssignmentRequestController> logger)
+        public PortfolioAssignmentRequestController(UserService userService, RequestService requestService,
+            OrganizationService organizationService, TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -60,7 +57,6 @@ namespace PAM.Controllers
             var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
 
-            request.RequestedFor.BureauId = unit.BureauId;
             request.RequestedFor.UnitId = unit.UnitId;
             request.Systems.Clear();
             foreach (var us in unit.Systems)

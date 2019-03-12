@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Unit Selection";
+  ViewData["Title"] = "Transfer From Unit";
   ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
@@ -49,7 +49,6 @@
         node = $("#tree").treeview("getNode", ++nodeId);
       }
       if (node) {
-        console.log(node);
         $("#tree").treeview("selectNode", node);
         $('#tree').treeview('revealNode', [nodeId, { silent: true }]);
         $("#next").prop("disabled", false);
@@ -74,10 +73,10 @@
 
 <partial name="/Views/Shared/ProgressBars/Transfer.cshtml" />
 
-<form asp-controller="TransferRequest" asp-action="UnitSelection" method="post">
-  <p>Please select <strong>your current</strong> unit/job function:</p>
+<form method="post">
   <div class="row">
     <div class="col-12 col-md-6 mb-3">
+      <p>Please select the unit/job function you are transfering FROM:</p>
       <div id="tree"></div>
     </div>
     <div class="col-12 col-md-6 mb-3">
