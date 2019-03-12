@@ -28,7 +28,7 @@ namespace PAM.Controllers
 
         public TransferRequestController(IADService adService, UserService userService, RequestService requestService,
             SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<PortfolioRequestController> logger)
+            ILogger<TransferRequestController> logger)
         {
             _adService = adService;
             _userService = userService;

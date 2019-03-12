@@ -10,7 +10,7 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class PortfolioRequestController : Controller
+    public class PortfolioAssignmentRequestController : Controller
     {
         private readonly UserService _userService;
         private readonly RequestService _requestService;
@@ -19,8 +19,8 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public PortfolioRequestController(UserService userService, RequestService requestService, OrganizationService organizationService,
-            TreeViewService treeViewService, IMapper mapper, ILogger<PortfolioRequestController> logger)
+        public PortfolioAssignmentRequestController(UserService userService, RequestService requestService, OrganizationService organizationService,
+            TreeViewService treeViewService, IMapper mapper, ILogger<PortfolioAssignmentRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;

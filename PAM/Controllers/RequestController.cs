@@ -107,7 +107,8 @@ namespace PAM.Controllers
         public IActionResult ViewRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            if(request.RequestTypeId == 2){
+            if (request.RequestTypeId == 2)
+            {
                 int unitId = request.TransferredFromUnitId ?? default(int);
                 var unit = _organizationService.GetUnit(unitId);
                 request.TransferredFromUnit = unit;
@@ -237,7 +238,7 @@ namespace PAM.Controllers
                 case "Leaving Probation":
                     return RedirectToAction("RequesterInfo", "LeavingProbationRequest", new { id });
                 default:
-                    return RedirectToAction("RequesterInfo", "PortfolioRequest", new { id });
+                    return RedirectToAction("RequesterInfo", "PortfolioAssignmentRequest", new { id });
             }
         }
     }
