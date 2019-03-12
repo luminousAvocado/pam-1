@@ -50,10 +50,6 @@
     {
       "library": "bootstrap-3-typeahead@4.0.2",
       "destination": "wwwroot/lib/bootstrap-3-typeahead/"
-    },
-    {
-      "library": "bootstrap-select@1.13.5",
-      "destination": "wwwroot/lib/bootstrap-select/"
     }
   ]
 }

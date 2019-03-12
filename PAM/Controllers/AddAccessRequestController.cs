@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AutoMapper;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,28 +11,23 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class AddAccessRequestController: Controller
+    public class AddAccessRequestController : Controller
     {
-        private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public AddAccessRequestController(IADService adService, UserService userService, RequestService requestService,
-            SystemService systemService, OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper,
-            ILogger<AddAccessRequestController> logger)
+        public AddAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
+            OrganizationService organizationService, TreeViewService treeViewService, ILogger<RemoveAccessRequestController> logger)
         {
-            _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -65,38 +60,44 @@ namespace PAM.Controllers
         {
             var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
-
             request.RequestedFor.BureauId = unit.BureauId;
             request.RequestedFor.UnitId = unit.UnitId;
-            request.Systems.Clear();
-            foreach (var us in unit.Systems)
-                request.Systems.Add(new RequestedSystem(request.RequestId, us.SystemId) { InPortfolio = true });
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("AddSystems", new { id });
+                RedirectToAction(nameof(SystemsToAdd), new { id });
         }
 
         [HttpGet]
-        public IActionResult AddSystems(int id){
+        public IActionResult SystemsToAdd(int id)
+        {
             var request = _requestService.GetRequest(id);
-            var systems = _systemService.GetSystems();
-            var defaultSystems = new List<Models.System>();
-            foreach (var ds in request.Systems)
-                defaultSystems.Add(ds.System);
-            ViewData["defaultSystems"] = defaultSystems;
+            var systemAccesses = _systemService.GetCurrentSystemAccessesByEmployeeId(request.RequestedFor.EmployeeId);
+
+            ViewData["systemAccesses"] = systemAccesses;
             ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystems());
+            ViewData["requestedSystemIds"] = JsonConvert.SerializeObject(request.Systems.Select(s => s.SystemId).ToList());
+            ViewData["accessSystemIds"] = JsonConvert.SerializeObject(systemAccesses.Select(s => s.SystemId).ToList());
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult AddSystems(int id, int unitId, List<int> systemIds, bool saveDraft = false){
+        public IActionResult SystemsToAdd(int id, List<int> systemIds, bool saveDraft = false)
+        {
             var request = _requestService.GetRequest(id);
+            var requestedSystems = request.Systems.ToDictionary(s => s.SystemId, s => s);
 
-            foreach (var a in systemIds)
-            {
-                request.Systems.Add(new RequestedSystem(request.RequestId, a) { InPortfolio = false });
-            }
+            foreach (var requestedSystemId in requestedSystems.Keys)
+                if (!systemIds.Contains(requestedSystemId))
+                    request.Systems.Remove(requestedSystems.GetValueOrDefault(requestedSystemId));
+
+            foreach (var systemId in systemIds)
+                if (!requestedSystems.Keys.Contains(systemId))
+                    request.Systems.Add(new RequestedSystem(request.RequestId, systemId)
+                    {
+                        AccessType = SystemAccessType.Add,
+                        InPortfolio = false
+                    });
 
             _requestService.SaveChanges();
 
@@ -124,7 +125,6 @@ namespace PAM.Controllers
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }
-
 
         [HttpGet]
         public IActionResult Signatures(int id)

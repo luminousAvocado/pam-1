@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,6 +10,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class RemoveAccessRequestController : Controller
     {
         private readonly UserService _userService;
@@ -17,18 +18,16 @@ namespace PAM.Controllers
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RemoveAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper, ILogger<RemoveAccessRequestController> logger)
+            OrganizationService organizationService, TreeViewService treeViewService, ILogger<RemoveAccessRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _mapper = mapper;
             _logger = logger;
         }
 

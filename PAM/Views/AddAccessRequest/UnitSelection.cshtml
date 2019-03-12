@@ -2,7 +2,6 @@
 @{
   ViewData["Title"] = "Unit Selection";
   ViewData["id"] = Model.RequestId;
-  
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/css/progressbar.css" />
@@ -21,7 +20,6 @@
       onNodeSelected: function (event, node) {
         if (node.type == "Bureau") {
           $("#unitId").val("");
-          $("#systems").empty();
           $("#next").prop("disabled", true);
           $("#saveDraft").prop("disabled", true);
           return;
@@ -29,18 +27,6 @@
         $("#unitId").val(node.id);
         $("#next").prop("disabled", false);
         $("#saveDraft").prop("disabled", false);
-        $.ajax({
-          url: "@Context.Request.PathBase/api/portfolio/" + node.id,
-          success: function (data) {
-            $("#systems").empty();
-            data.forEach(function (system) {
-              $("#systems").append("<tr><td>"
-                + system.systemId + "</td><td>"
-                + system.name + "</td><td>"
-                + (system.description ? system.description : '') + "</td></tr>");
-            });
-          }
-        })
       }
     });
     if ($("#unitId").val()) {
@@ -88,7 +74,7 @@
       <button id="saveDraft" class="btn btn-secondary" disabled>Save Draft</button>
     </div>
     <div class="col-8 text-right">
-      <a asp-controller="AddAccessRequest" asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
+      <a asp-action="RequesterInfo" asp-route-id="@Model.RequestId" class="btn btn-secondary">Previous</a>
       <button id="next" type="submit" class="btn btn-primary ml-3" disabled>Next</button>
     </div>
   </div>
