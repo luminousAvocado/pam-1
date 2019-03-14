@@ -49,6 +49,11 @@ namespace PAM.Controllers
             return View();
         }
 
+        public IActionResult ViewRequest(int id)
+        {
+            return View(_requestService.GetRequest(id));
+        }
+
         public IActionResult ProcessSystemAccesses(List<int> systemAccessIds)
         {
             int employeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));

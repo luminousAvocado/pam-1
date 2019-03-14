@@ -93,7 +93,7 @@
               <tr>
                 <td class="align-middle">@review.Request.DisplayId</td>
                 <td class="align-middle">
-                  <a asp-action="ViewReview" asp-route-id="@review.ReviewId">@review.Request.RequestType.DisplayCode</a>
+                  <a asp-action="ViewRequest" asp-route-id="@review.ReviewId">@review.Request.RequestType.DisplayCode</a>
                 </td>
                 <td class="align-middle">@review.Request.RequestedFor.Name</td>
                 <td class="align-middle d-none d-md-table-cell">@review.Request.SubmittedOn.Value.ToString("MM/dd/yyyy")</td>

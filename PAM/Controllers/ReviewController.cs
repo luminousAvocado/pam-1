@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -58,35 +58,10 @@ namespace PAM.Controllers
             return View();
         }
 
-        public IActionResult ViewReview(int id)
+        public IActionResult ViewRequest(int id)
         {
             var review = _requestService.GetReview(id);
-            var request = _requestService.GetRequest(review.RequestId);
-            if(request.RequestTypeId == 2){
-                int unitId = request.TransferredFromUnitId ?? default(int);
-                var unit = _organizationService.GetUnit(unitId);
-                request.TransferredFromUnit = unit;
-            }
-
-            ViewData["request"] = request;
-
-            switch (request.RequestType.DisplayCode)
-            {
-                case "Portfolio Assignment":
-                    return View("ViewPortfolioReview", review);
-                case "Add Access":
-                    return View("ViewAddAccessReview", review);
-                case "Remove Access":
-                    return View("ViewRemoveAccessReview", review);
-                case "Update Information":
-                    return View("ViewUpdateInfoReview", review);
-                case "Transfer":
-                    return View("ViewTransferReview", review);
-                case "Leaving Probation":
-                    return View("ViewLeavingReview", review);
-                default:
-                    return RedirectToAction("MyReviews");
-            }
+            return View(_requestService.GetRequest(review.RequestId));
         }
 
         [HttpGet]
@@ -94,31 +69,9 @@ namespace PAM.Controllers
         {
             var review = _requestService.GetReview(id);
             var request = _requestService.GetRequest(review.RequestId);
-            if(request.RequestTypeId == 2){
-                int unitId = request.TransferredFromUnitId ?? default(int);
-                var unit = _organizationService.GetUnit(unitId);
-                request.TransferredFromUnit = unit;
-            }
-
             ViewData["request"] = request;
-
-            switch (request.RequestType.DisplayCode)
-            {
-                case "Portfolio Assignment":
-                    return View("EditPortfolioReview", review);
-                case "Add Access":
-                    return View("EditAddAccessReview", review);
-                case "Remove Access":
-                    return View("EditRemoveAccessReview", review);
-                case "Update Information":
-                    return View("EditUpdateInfoReview", review);
-                case "Transfer":
-                    return View("EditTransferReview", review);
-                case "Leaving Probation":
-                    return View("EditLeavingReview", review);
-                default:
-                    return RedirectToAction("MyReviews");
-            }
+            ViewData["reviewsBefore"] = request.Reviews.Where(r => r.ReviewOrder < review.ReviewOrder).OrderBy(r => r.ReviewOrder).ToList();
+            return View(review);
         }
 
         [HttpPost]
@@ -160,64 +113,11 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                // TODO: We might be able to take out this whole switch statement, since it seems as though regardless of requestType, we are just creating SystemAccess(s), and we can get AccessType from RequestedSystem
-                switch (request.RequestType.DisplayCode)
+                foreach (var requestedSystem in request.Systems)
                 {
-                    //Transfer Request
-                    case "Transfer":
-                        foreach (var requestedSystem in request.Systems){
-                            if(requestedSystem.AccessType == SystemAccessType.Add || requestedSystem.AccessType == SystemAccessType.Remove){
-                                var systemAccess = new SystemAccess(request, requestedSystem);
-                                _systemService.AddSystemAccess(systemAccess);
-                            }
-                        }
-                        break;
-                    //Portfolio Assignment Request
-                    case "Portfolio Assignment":
-                        foreach (var requestedSystem in request.Systems)
-                        {
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
-                        }
-                        break;
-                    //Add Access Request
-                    case "Add Access":
-                        foreach (var requestedSystem in request.Systems)
-                        {
-                            if (!(bool)requestedSystem.InPortfolio)
-                            {
-                                var systemAccess = new SystemAccess(request, requestedSystem);
-                                _systemService.AddSystemAccess(systemAccess);
-                            }
-                        }
-                        break;
-                    //Remove Access Request
-                    case "Remove Access":
-                        foreach (var requestedSystem in request.Systems)
-                        {
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
-                        }
-                        break;
-                    //Update Info Request
-                    case "Update Information":
-                        foreach (var requestedSystem in request.Systems)
-                        {
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
-                        }
-                        break;
-                    //Leaving Probation Request
-                    case "Leaving Probation":
-                        foreach (var requestedSystem in request.Systems)
-                        {
-                            var systemAccess = new SystemAccess(request, requestedSystem);
-                            _systemService.AddSystemAccess(systemAccess);
-                        }
-                        break;
-                    default:
-                        break;
-                } 
+                    var systemAccess = new SystemAccess(request, requestedSystem);
+                    _systemService.AddSystemAccess(systemAccess);
+                }
 
                 string emailName = "RequestApproved";
                 var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
@@ -226,10 +126,19 @@ namespace PAM.Controllers
                 _email.To(receipient)
                     .Subject(subject)
                     .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
-                    .SendAsync();
+                    .Send();
 
-                // send email notification to processing units
-                // ...
+                emailName = "ProcessRequest";
+                _email.Subject(_emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer))
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model);
+                _email.Data.ToAddresses.Clear();
+                var processingUnitIds = request.Systems.GroupBy(s => s.System.ProcessingUnitId, s => s).Select(g => g.Key).ToList();
+                foreach (var processingUnitId in processingUnitIds)
+                {
+                    var processingUnit = _organizationService.GetProcessingUnit((int)processingUnitId);
+                    _email.To(processingUnit.Email);
+                }
+                _email.SendAsync();
             }
 
             return RedirectToAction(nameof(MyReviews));
