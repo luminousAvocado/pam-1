@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
+using PAM.Services;
 
 namespace PAM.Controllers
 {
@@ -13,14 +14,16 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
+        private readonly TreeViewService _treeViewService;
         private readonly ILogger _logger;
 
         public LeavingProbationRequestController(UserService userService, RequestService requestService, SystemService systemService,
-            ILogger<LeavingProbationRequestController> logger)
+            TreeViewService treeViewService, ILogger<LeavingProbationRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
+            _treeViewService = treeViewService;
             _logger = logger;
         }
 
@@ -36,6 +39,25 @@ namespace PAM.Controllers
         public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
         {
             _userService.UpdateRequester(requester);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction(nameof(UnitSelection), new { id });
+        }
+
+        [HttpGet]
+        public IActionResult UnitSelection(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            ViewData["tree"] = _treeViewService.GenerateTreeInJson();
+            return View(request);
+        }
+
+        [HttpPost]
+        public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
+        {
+            var request = _requestService.GetRequest(id);
+            request.RequestedFor.UnitId = unitId;
+            _requestService.SaveChanges();
+
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction(nameof(AdditionalInfo), new { id });
         }

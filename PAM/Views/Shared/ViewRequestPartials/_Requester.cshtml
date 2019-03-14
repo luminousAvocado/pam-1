@@ -1,0 +1,67 @@
+﻿@model Request
+
+<div class="card">
+  <div class="card-header">Requester Information</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>First Name</label>
+        <span class="form-control">@Model.RequestedFor.FirstName</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Last Name</label>
+        <span class="form-control">@Model.RequestedFor.LastName</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Department</label>
+        <span class="form-control">@Model.RequestedFor.Department</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Service</label>
+        <span class="form-control">@Model.RequestedFor.Service</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Title</label>
+        <span class="form-control">@Model.RequestedFor.Title</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Email</label>
+        <span class="form-control">@Model.RequestedFor.Email</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Address</label>
+        <span class="form-control">@Model.RequestedFor.Address</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>City</label>
+        <span class="form-control">@Model.RequestedFor.City</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>State</label>
+        <span class="form-control">@Model.RequestedFor.State</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Zip Code</label>
+        <span class="form-control">@Model.RequestedFor.Zip</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Phone</label>
+        <span class="form-control">@Model.RequestedFor.Phone</span>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Cell Phone</label>
+        <span class="form-control">@Model.RequestedFor.CellPhone</span>
+      </div>
+    </div>
+  </div>
+</div>
