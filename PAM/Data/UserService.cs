@@ -34,9 +34,10 @@ namespace PAM.Data
 
         public Employee UpdateEmployee(Employee update)
         {
-            var employee = update.EmployeeId > 0 ?
-                _dbContext.Employees.Find(update.EmployeeId) :
-                _dbContext.Employees.Where(e => e.Username == update.Username).FirstOrDefault();
+            var employee = _dbContext.Employees.Where(e => e.Username == update.Username).FirstOrDefault();
+            update.EmployeeId = employee.EmployeeId;
+            update.IsAdmin = employee.IsAdmin;
+            update.IsApprover = employee.IsApprover;
             _mapper.Map(update, employee);
             _dbContext.SaveChanges();
             return employee;

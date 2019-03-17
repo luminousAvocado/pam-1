@@ -90,6 +90,8 @@ namespace PAM.Controllers
                     Employee supervisor = _adService.GetEmployeeByName(request.RequestedFor.SupervisorName);
                     supervisor = _userService.HasEmployee(supervisor.Username) ?
                         _userService.UpdateEmployee(supervisor) : _userService.CreateEmployee(supervisor);
+                    supervisor.IsApprover = true;
+                    _userService.SaveChanges();
                     review.ReviewerId = supervisor.EmployeeId;
                 }
                 request.Reviews.Add(review);

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly IADService _adService;
@@ -25,14 +27,15 @@ namespace PAM.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult Login()
+        [HttpGet, AllowAnonymous]
+        public IActionResult Login(string returnUrl)
         {
-            return User.Identity.IsAuthenticated ? RedirectToAction("Welcome") : (IActionResult)View();
+            ViewData["ReturnUrl"] = returnUrl;
+            return User.Identity.IsAuthenticated ? RedirectToAction(nameof(Welcome)) : (IActionResult)View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        [HttpPost, AllowAnonymous]
+        public async Task<IActionResult> Login(string username, string password, string returnUrl)
         {
             if (!_adService.Authenticate(username, password))
                 return View(new ErrorViewModel
@@ -49,8 +52,10 @@ namespace PAM.Controllers
                 new ClaimsPrincipal(employee.ToClaimsIdentity()),
                 new AuthenticationProperties());
 
-            _logger.LogInformation($"User {employee.Username} logged in at {DateTime.UtcNow}.");
-            return RedirectToAction("Welcome");
+            _logger.LogInformation($"{employee.Username} logged in at {DateTime.Now}.");
+
+            return !string.IsNullOrEmpty(returnUrl) ? (IActionResult)LocalRedirect(returnUrl)
+                : RedirectToAction(nameof(Welcome));
         }
 
         [HttpGet]
@@ -61,11 +66,19 @@ namespace PAM.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            _logger.LogInformation($"User {User.Identity.Name} logged out at {DateTime.UtcNow}.");
+            _logger.LogInformation($"{User.Identity.Name} logged out at {DateTime.Now}.");
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
+        }
 
-            return Redirect("~/");
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            string resource = $"URL: [{returnUrl}]";
+
+            _logger.LogWarning($"Access to {resource} denied for {User.Identity.Name} at {DateTime.Now}.");
+
+            return View();
         }
     }
 }

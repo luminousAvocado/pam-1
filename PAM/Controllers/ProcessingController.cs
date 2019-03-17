@@ -12,7 +12,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Authorize]
+    [Authorize("CanProcessRequests")]
     public class ProcessingController : Controller
     {
         private readonly UserService _userService;
