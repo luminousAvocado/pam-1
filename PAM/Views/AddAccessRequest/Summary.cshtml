@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  ViewData["Title"] = "Add Access Summary";
+  ViewData["Title"] = "Summary";
   ViewData["id"] = Model.RequestId;
 }
 @section StyleSheets{
@@ -33,65 +33,57 @@
   </div>
 </div>
 
-<partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
-<partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_RequestInfoSummary.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_RequesterInfoSummary.cshtml" />
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
-    Systems Requested
-    <a class="float-right" asp-action="UnitSelection" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+<div class="card">
+  <div class="card-header">
+    Systems Requested To Add
+    <a class="float-right" asp-action="SystemsToAdd" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row">
       <div class="form-group col-md-6">
         <label>Bureau</label>
-        <span class="form-control">@Model.RequestedFor.Bureau.Description</span>
+        <span class="form-control">@Model.RequestedFor.Unit.Bureau.Description</span>
       </div>
       <div class="form-group col-md-6">
         <label>Unit / Job Function</label>
         <span class="form-control">@Model.RequestedFor.Unit.Name</span>
       </div>
     </div>
-  </div>
-  <div class="row p-2">
-    <div class="col-md-12 ">
-      <div class="card border-primary">
-        <h5 class="card-header bg-primary text-white text-center">Requested Additional Systems</h5>
-        <table class="table">
-          <thead>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="d-none d-md-table-cell">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in Model.Systems)
+          {
             <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
+              <td>@requestedSystem.System.SystemId</td>
+              <td>@requestedSystem.System.Name</td>
+              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
             </tr>
-          </thead>
-          <tbody>
-            @foreach (var requestedSystem in Model.Systems)
-            {
-              @if (!(bool)requestedSystem.InPortfolio)
-              {
-                <tr>
-                  <td>@requestedSystem.System.SystemId</td>
-                  <td>@requestedSystem.System.Name</td>
-                  <td>@requestedSystem.System.Description</td>
-                </tr>
-              }
-            }
-          </tbody>
-        </table>
-      </div>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
+<div class="card">
+  <div class="card-header">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
   <div class="card-body">
     <div class="row mb-2">
-      <div class="col-md-4">
+      <div class="col">
         @if (Model.IsContractor)
         {
           <i class="far fa-check-square"></i>
@@ -102,7 +94,7 @@
         }
         Contractor
       </div>
-      <div class="col-md-4">
+      <div class="col">
         @if (Model.IsHighProfileAccess)
         {
           <i class="far fa-check-square"></i>
@@ -111,9 +103,9 @@
         {
           <i class="far fa-square"></i>
         }
-        High Profile
+        High Profile Access
       </div>
-      <div class="col-md-4">
+      <div class="col">
         @if (Model.IsGlobalAccess)
         {
           <i class="far fa-check-square"></i>
@@ -142,23 +134,7 @@
   </div>
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
-    Signature(s) Required
-    <a class="float-right" asp-action="Signatures" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
-  </div>
-  <div class="card-body">
-    @foreach (var review in Model.Reviews)
-    {
-      <div class="row">
-        <div class="form-group col">
-          <label>@review.ReviewerTitle</label>
-          <span class="form-control">@review.Reviewer.Name</span>
-        </div>
-      </div>
-    }
-  </div>
-</div>
+<partial name="/Views/Shared/RequestPartials/_SignaturesSummary.cshtml" />
 
 <div class="row mt-3">
   <div class="col-6">

@@ -1,0 +1,63 @@
+﻿@model Request
+@{
+  ViewData["Title"] = "Additional Information";
+  ViewData["id"] = @Model.RequestId;
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+    $("#saveDraft").click(function () {
+      var form = $(this).parents("form:first");
+      form.append("<input type='hidden' name='saveDraft' value='true'>");
+      form.submit();
+    });
+  });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
+
+<partial name="/Views/Shared/ProgressBars/PortfolioAssignment.cshtml" />
+
+<p>Please enter all that apply:</p>
+<form asp-action="AdditionalInfo" method="post">
+  <div class="mb-3">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" asp-for="IsContractor">
+      <label class="form-check-label" asp-for="IsContractor">Contractor</label>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-12 col-md-4">
+      <label asp-for="CaseloadType">Caseload Type</label>
+      <input asp-for="CaseloadType" class="form-control" type="text" />
+    </div>
+    <div class="form-group col-12 col-md-4">
+      <label asp-for="CaseloadFunction">Caseload Function</label>
+      <input asp-for="CaseloadFunction" class="form-control" type="text" />
+    </div>
+    <div class="form-group col-12 col-md-4">
+      <label asp-for="CaseloadNumber">Caseload Number</label>
+      <input asp-for="CaseloadNumber" class="form-control" type="text" />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-4">
+      <button id="saveDraft" class="btn btn-secondary">Save Draft</button>
+    </div>
+    <div class="col-8 text-right">
+      <a asp-action="UnitSelection" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+      <button id="next" type="submit" class="btn btn-primary ml-3">Next</button>
+    </div>
+  </div>
+</form>

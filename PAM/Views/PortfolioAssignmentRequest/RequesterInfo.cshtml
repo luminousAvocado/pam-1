@@ -1,0 +1,32 @@
+﻿@model Requester
+@{
+  ViewData["Title"] = "Requester Information";
+  Request request = (Request)ViewData["request"];
+  ViewData["id"] = request.RequestId;
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+}
+@section Scripts {
+  <script>
+  $(function(){
+    var page ='@ViewData["Title"]';
+    $("li[data-title='" + page + "']").addClass("active");
+    $("#saveDraft").click(function () {
+      var form = $(this).parents("form:first");
+      form.append("<input type='hidden' name='saveDraft' value='true'>");
+      form.submit();
+    });
+  });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
+
+<partial name="/Views/Shared/ProgressBars/PortfolioAssignment.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_RequesterInfo.cshtml" model="@Model" />

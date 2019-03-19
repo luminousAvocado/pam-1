@@ -33,11 +33,11 @@
   </div>
 </div>
 
-<partial name="/Views/Shared/Partials/_RequestInfoSummary.cshtml" />
-<partial name="/Views/Shared/Partials/_RequesterInfoSummary.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_RequestInfoSummary.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_RequesterInfoSummary.cshtml" />
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
+<div class="card">
+  <div class="card-header">
     Additional Information
     <a class="float-right" asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -94,8 +94,8 @@
   </div>
 </div>
 
-<div class="card border-info mb-1">
-  <div class="card-header bg-info text-white">
+<div class="card">
+  <div class="card-header">
     Update Information on Systems
     <a class="float-right" asp-action="SystemsToUpdate" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
   </div>
@@ -124,7 +124,7 @@
   </div>
 </div>
 
-<partial name="/Views/Shared/Partials/_SignaturesSummary.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_SignaturesSummary.cshtml" />
 
 <div class="row mt-3">
   <div class="col-6">

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,25 +10,22 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class RemoveAccessRequestController : Controller
     {
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
-        private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RemoveAccessRequestController(UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, TreeViewService treeViewService, IMapper mapper, ILogger<RemoveAccessRequestController> logger)
+            TreeViewService treeViewService, ILogger<RemoveAccessRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
-            _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -60,9 +57,7 @@ namespace PAM.Controllers
         public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-            var unit = _organizationService.GetUnit(unitId);
-            request.RequestedFor.BureauId = unit.BureauId;
-            request.RequestedFor.UnitId = unit.UnitId;
+            request.RequestedFor.UnitId = unitId;
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :

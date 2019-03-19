@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,10 +37,14 @@ namespace PAM
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanProcessRequests", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
+                options.AddPolicy("CanReviewRequests", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
+                options.AddPolicy("IsAdmin", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
+            });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSession();
 
             services
                 .AddFluentEmail(Configuration.GetValue<string>("Application:Email"))
@@ -91,9 +96,14 @@ namespace PAM
                 _logger.LogInformation($"Environment: {_env.EnvironmentName}");
             }
 
+            app.UsePathBase(Configuration.GetValue<string>("Application:PathBase"));
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSession();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
             app.UseMvc(routes =>

@@ -6,11 +6,10 @@
   <div class="login-container">
     <div class="login-form">
       <div class="logo">
-        <img src="~/Images/ProbBadge.png" alt="LA COUNTY PROBATION LOGO" />
+        <img src="~/images/ProbBadge.png" alt="LA COUNTY PROBATION LOGO" />
       </div>
       <span class="login-title"> Probation Access Manager </span>
-
-      <form asp-controller="Account" asp-action="Login" method="post">
+      <form asp-action="Login" method="post">
         <div class="input-container">
           <input name="username" class="input-edit" placeholder="Username" data-val-required="Username is required." />
         </div>
@@ -23,6 +22,7 @@
           <p class="text-danger">@Model.Message</p>
         }
         <p style="text-align:center; color:white; padding-top: 10px;">&copy; Copyright 2018-2019. Los Angeles County. </p>
+        <input type="hidden" name="returnUrl" value="@ViewData["returnUrl"]" />
       </form>
     </div>
   </div>

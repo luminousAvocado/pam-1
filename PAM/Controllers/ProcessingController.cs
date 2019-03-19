@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using FluentEmail.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
@@ -11,6 +12,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize("CanProcessRequests")]
     public class ProcessingController : Controller
     {
         private readonly UserService _userService;
@@ -45,6 +47,11 @@ namespace PAM.Controllers
             ViewData["systemsToProcess"] = systemsToProcess.GroupBy(s => s.Request, s => s).ToDictionary(g => g.Key, g => g.ToList());
             ViewData["systemsToConfirm"] = systemsToConfirm.GroupBy(s => s.Request, s => s).ToDictionary(g => g.Key, g => g.ToList());
             return View();
+        }
+
+        public IActionResult ViewRequest(int id)
+        {
+            return View(_requestService.GetRequest(id));
         }
 
         public IActionResult ProcessSystemAccesses(List<int> systemAccessIds)

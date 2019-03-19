@@ -143,9 +143,6 @@ namespace PAM.Models
         [Required]
         public string Email { get; set; }
 
-        public int? BureauId { get; set; }
-        public Bureau Bureau { get; set; }
-
         public int? UnitId { get; set; }
         public Unit Unit { get; set; }
 

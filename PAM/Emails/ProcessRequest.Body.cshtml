@@ -1,0 +1,12 @@
+﻿<p>A system registration request is waiting to be processed:</p>
+
+<table>
+    <tr><th>Request Id</th><td>@Model.Request.DisplayId</td></tr>
+    <tr><th>Request Type</th><td>@Model.Request.RequestType.DisplayCode</td></tr>
+    <tr><th>Requested For</th><td>@Model.Request.RequestedFor.Name</td></tr>
+    <tr><th>Approved On</th><td>@Model.Request.CompletedOn.ToString("MM/dd/yyyy")</td></tr>
+</table>
+
+<p>You may access the details of the request at @Model.AppUrl/Processing/MyProcessings</p>
+
+<p>PAM Admin</p>

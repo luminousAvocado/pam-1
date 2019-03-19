@@ -1,0 +1,58 @@
+﻿@model List<Employee>
+@{
+  ViewData["Title"] = "Add Employees";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Employees">Employees</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Employees From AD</li>
+  </ol>
+</nav>
+
+<form asp-action="AddEmployeesFromAD" method="get">
+  <div class="form-row">
+    <div class="form-group col">
+      <label for="username">Employee Number</label>
+      <input id="username" name="username" type="text" class="form-control" placeholder="Employee Number" value="@Context.Request.Query["username"]" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="firstName">First Name</label>
+      <input id="firstName" name="firstName" type="text" class="form-control" placeholder="First Name" value="@Context.Request.Query["firstName"]" />
+    </div>
+    <div class="form-group col-md-6">
+      <label for="lastName">Last Name</label>
+      <input id="lastName" name="lastName" type="text" class="form-control" placeholder="Last Name" value="@Context.Request.Query["lastName"]" />
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit" name="search">Search</button>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+  <form asp-action="AddEmployeesFromAD" method="post">
+    <table class="table table-hover table-bordered mt-3">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th class="d-none d-md-table-cell">Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var employee in Model)
+        {
+          <tr>
+            <td><input type="checkbox" name="usernames" value="@employee.Username" /></td>
+            <td>@employee.Name</td>
+            <td class="d-none d-md-table-cell">@employee.Email</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <p class="text-right"><button class="btn btn-primary">Add To PAM</button></p>
+  </form>
+}

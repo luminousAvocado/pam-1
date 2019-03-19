@@ -51,8 +51,8 @@ namespace PAM.Data
         public Request GetRequest(int id)
         {
             return _dbContext.Requests.Include(r => r.RequestType).ThenInclude(rt => rt.RequiredSignatures).Include(r => r.RequestedBy)
-                .Include(r => r.RequestedFor).ThenInclude(rr => rr.Bureau)
-                .Include(r => r.RequestedFor).ThenInclude(rr => rr.Unit)
+                .Include(r => r.RequestedFor).ThenInclude(rr => rr.Unit).ThenInclude(u => u.Bureau)
+                .Include(r => r.TransferredFromUnit).ThenInclude(u => u.Bureau)
                 .Include(r => r.Systems).ThenInclude(rs => rs.System)
                 .Include(r => r.Reviews).ThenInclude(rr => rr.Reviewer)
                 .Where(r => r.RequestId == id).FirstOrDefault();

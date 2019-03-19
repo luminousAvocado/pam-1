@@ -1,0 +1,30 @@
+﻿@model Request
+
+<div class="card">
+  <div class="card-header">Systems Requested</div>
+  <div class="card-body">
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="d-none d-md-table-cell">Description</th>
+            <th scope="col" class="text-nowrap">Access Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var requestedSystem in Model.Systems.OrderBy(s => s.AccessType).ThenBy(s => s.SystemId))
+          {
+            <tr>
+              <td>@requestedSystem.System.SystemId</td>
+              <td>@requestedSystem.System.Name</td>
+              <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
+              <td>@requestedSystem.AccessType</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

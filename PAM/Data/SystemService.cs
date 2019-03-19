@@ -57,7 +57,7 @@ namespace PAM.Data
 
         public IList<SystemAccess> GetSystemAccessesByEmployeeId(int employeeId)
         {
-            return _dbContext.SystemAccesses.Include(s => s.System)
+            return _dbContext.SystemAccesses.Include(s => s.System).Include(s => s.ProcessedBy).Include(s => s.ConfirmedBy)
                 .Where(s => s.EmployeeId == employeeId)
                 .OrderBy(s => s.SystemId).OrderByDescending(s => s.ApprovedOn)
                 .ToList();

@@ -7,7 +7,7 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this system?";
       if (confirm(msg))
-        window.location.href = "/System/RemoveSystem/@Model.SystemId";
+        window.location.href = "@Context.Request.PathBase/System/RemoveSystem/@Model.SystemId";
     }
   </script>
 }

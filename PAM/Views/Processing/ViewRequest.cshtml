@@ -1,0 +1,25 @@
+﻿@model Request
+@{
+  ViewData["Title"] = "View Request";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="MyProcessings">Process Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request ID @Model.DisplayId</li>
+  </ol>
+</nav>
+
+<partial name="/Views/Shared/ViewRequestPartials/_Request.cshtml" />
+<partial name="/Views/Shared/ViewRequestPartials/_Requester.cshtml" />
+<partial name="/Views/Shared/ViewRequestPartials/_Unit.cshtml" />
+<partial name="/Views/Shared/ViewRequestPartials/_Systems.cshtml" />
+@if (Model.RequestType.DisplayCode == "Leaving Probation")
+{
+<partial name="/Views/Shared/ViewRequestPartials/_AdditionalInfoForLeaving.cshtml" />
+}
+else
+{
+<partial name="/Views/Shared/ViewRequestPartials/_AdditionalInfo.cshtml" />
+}
+<partial name="/Views/Shared/ViewRequestPartials/_Signatures.cshtml" />
