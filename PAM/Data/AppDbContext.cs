@@ -28,6 +28,8 @@ namespace PAM.Data
         public DbSet<SystemAccess> SystemAccesses { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<Form> Forms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +90,10 @@ namespace PAM.Data
             modelBuilder.Entity<SystemAccess>().Property(s => s.AccessType).HasConversion(
                 v => v.ToString(),
                 v => (SystemAccessType)Enum.Parse(typeof(SystemAccessType), v));
+
+            modelBuilder.Entity<Form>().Property(l => l.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<Form>().HasQueryFilter(l => !l.Deleted);
+            modelBuilder.Entity<SystemForm>().HasKey(x => new { x.SystemId, x.FormId });
         }
     }
 }
