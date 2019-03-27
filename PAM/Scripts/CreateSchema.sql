@@ -264,6 +264,20 @@ CREATE TABLE [SystemAccesses] (
 
 GO
 
+CREATE TABLE [AuditLogs] (
+    [LogEntryId] int NOT NULL,
+    [Timestamp] datetime2 NOT NULL,
+    [EmployeeId] int NOT NULL,
+    [Action] nvarchar(max) NOT NULL,
+    [ResourceType] nvarchar(max) NOT NULL,
+    [ResourceId] int NOT NULL,
+    [OldValue] nvarchar(max) NULL,
+    [NewValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AuditLogs] PRIMARY KEY ([LogEntryId]),
+);
+
+GO
+
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'LastName', N'MiddleName', N'Name', N'Phone', N'ProcessingUnitId', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] ON;
 INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [LastName], [MiddleName], [Name], [Phone], [ProcessingUnitId], [Service], [State], [SupervisorName], [Title], [Username], [Zip])
