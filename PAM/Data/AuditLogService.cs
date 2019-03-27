@@ -19,5 +19,12 @@ namespace PAM.Data
         {
             return _dbContext.AuditLogs.ToList();
         }
+
+        public AuditLog CreateAuditLog(AuditLog auditLog)
+        {
+            _dbContext.AuditLogs.Add(auditLog);
+            _dbContext.SaveChanges();
+            return auditLog;
+        }
     }
 }

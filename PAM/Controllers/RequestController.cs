@@ -25,8 +25,11 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
+        // TEST AuditLog
+        private readonly AuditLogService _auditService;
+
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<RequestController> logger)
+            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<RequestController> logger, AuditLogService auditService)
         {
             _adService = adService;
             _userService = userService;
@@ -35,6 +38,9 @@ namespace PAM.Controllers
             _emailHelper = emailHelper;
             _mapper = mapper;
             _logger = logger;
+
+            // TEST AuditLog
+            _auditService = auditService;
         }
 
         [HttpGet]
@@ -136,7 +142,14 @@ namespace PAM.Controllers
                 .SendAsync();
 
             // TEST create AuditLog record
-
+            AuditLog newLog = new AuditLog()
+            {
+                EmployeeId = request.RequestedById,
+                Action = Models.Action.Submit,
+                ResourceType = ResourceType.Request,
+                ResourceId = request.RequestId,
+            };
+            _auditService.CreateAuditLog(newLog);
 
             return RedirectToAction("MyRequests");
         }
