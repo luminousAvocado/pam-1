@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -18,12 +19,14 @@ namespace PAM.Controllers
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
+        private readonly FileService _fileService;
         private readonly ILogger _logger;
 
-        public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
+        public AccountController(IADService adService, UserService userService, FileService fileService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
+            _fileService = fileService;
             _logger = logger;
         }
 
@@ -62,6 +65,38 @@ namespace PAM.Controllers
         public IActionResult Welcome()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            long size = file.Length;
+
+            var filePath = Path.GetTempFileName();
+
+            if (file.Length > 0)
+            {
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+
+            var saveFile = new PAM.Models.File
+            {
+                Name = file.Name,
+                ContentType = file.ContentType,
+                Length = file.Length,
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                saveFile.Content = memoryStream.ToArray();
+            }
+            _fileService.AddFile(saveFile);
+
+            return Ok(new { size, filePath });
         }
 
         public async Task<IActionResult> Logout()

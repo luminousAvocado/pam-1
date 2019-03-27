@@ -1,6 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace PAM.Models
 {
@@ -70,4 +74,5 @@ namespace PAM.Models
         public int FormId { get; set; }
         public Form Form { get; set; }
     }
+
 }
