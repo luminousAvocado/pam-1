@@ -81,6 +81,8 @@ namespace PAM
             services.AddScoped<RequestService>();
             services.AddScoped<SystemService>();
             services.AddScoped<TreeViewService>();
+            // TEST AuditLog
+            services.AddScoped<AuditLogService>();
         }
 
         public void Configure(IApplicationBuilder app)
