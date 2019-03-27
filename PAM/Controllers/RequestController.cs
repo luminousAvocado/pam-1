@@ -135,6 +135,8 @@ namespace PAM.Controllers
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
 
+
+
             return RedirectToAction("MyRequests");
         }
 

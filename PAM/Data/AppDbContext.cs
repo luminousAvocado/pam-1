@@ -28,6 +28,7 @@ namespace PAM.Data
         public DbSet<SystemAccess> SystemAccesses { get; set; }
         public DbSet<UnitSystem> UnitSystems { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
