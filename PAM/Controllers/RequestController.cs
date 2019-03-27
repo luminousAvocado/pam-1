@@ -135,6 +135,7 @@ namespace PAM.Controllers
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
 
+            // TEST create AuditLog record
 
 
             return RedirectToAction("MyRequests");
