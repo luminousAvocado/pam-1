@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,6 +19,8 @@ namespace PAM.Models
 
         public int? ProcessingUnitId { get; set; }
         public ProcessingUnit ProcessingUnit { get; set; }
+
+        public ICollection<SystemForm> Forms { get; set; }
     }
 
     [Table("UnitSystems")]

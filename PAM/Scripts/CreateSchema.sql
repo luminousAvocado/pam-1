@@ -18,6 +18,18 @@ CREATE TABLE [BureauTypes] (
 
 GO
 
+CREATE TABLE [Files] (
+    [FileId] int NOT NULL IDENTITY,
+    [Name] nvarchar(max) NULL,
+    [ContentType] nvarchar(max) NULL,
+    [Length] bigint NOT NULL,
+    [Timestamp] datetime2 NOT NULL,
+    [Content] varbinary(max) NULL,
+    CONSTRAINT [PK_Files] PRIMARY KEY ([FileId])
+);
+
+GO
+
 CREATE TABLE [Locations] (
     [LocationId] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NULL,
@@ -73,6 +85,21 @@ CREATE TABLE [Bureaus] (
     [Deleted] bit NOT NULL DEFAULT 0,
     CONSTRAINT [PK_Bureaus] PRIMARY KEY ([BureauId]),
     CONSTRAINT [FK_Bureaus_BureauTypes_BureauTypeId] FOREIGN KEY ([BureauTypeId]) REFERENCES [BureauTypes] ([BureauTypeId]) ON DELETE NO ACTION
+);
+
+GO
+
+CREATE TABLE [Forms] (
+    [FormId] int NOT NULL IDENTITY,
+    [Name] nvarchar(max) NOT NULL,
+    [Description] nvarchar(max) NULL,
+    [DisplayOrder] int NOT NULL,
+    [ForEmployeeOnly] bit NOT NULL,
+    [ForContractorOnly] bit NOT NULL,
+    [Deleted] bit NOT NULL DEFAULT 0,
+    [FileId] int NULL,
+    CONSTRAINT [PK_Forms] PRIMARY KEY ([FormId]),
+    CONSTRAINT [FK_Forms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION
 );
 
 GO
@@ -146,6 +173,16 @@ CREATE TABLE [Units] (
 
 GO
 
+CREATE TABLE [SytemForms] (
+    [SystemId] int NOT NULL,
+    [FormId] int NOT NULL,
+    CONSTRAINT [PK_SytemForms] PRIMARY KEY ([SystemId], [FormId]),
+    CONSTRAINT [FK_SytemForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_SytemForms_Systems_SystemId] FOREIGN KEY ([SystemId]) REFERENCES [Systems] ([SystemId]) ON DELETE CASCADE
+);
+
+GO
+
 CREATE TABLE [Requesters] (
     [RequesterId] int NOT NULL IDENTITY,
     [EmployeeId] int NOT NULL,
@@ -209,6 +246,19 @@ CREATE TABLE [Requests] (
     CONSTRAINT [FK_Requests_Requesters_RequestedById] FOREIGN KEY ([RequestedById]) REFERENCES [Requesters] ([RequesterId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Requests_Requesters_RequestedForId] FOREIGN KEY ([RequestedForId]) REFERENCES [Requesters] ([RequesterId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Requests_Units_TransferredFromUnitId] FOREIGN KEY ([TransferredFromUnitId]) REFERENCES [Units] ([UnitId]) ON DELETE NO ACTION
+);
+
+GO
+
+CREATE TABLE [FilledForms] (
+    [FilledFormId] int NOT NULL IDENTITY,
+    [RequestId] int NOT NULL,
+    [FormId] int NOT NULL,
+    [FileId] int NULL,
+    CONSTRAINT [PK_FilledForms] PRIMARY KEY ([FilledFormId]),
+    CONSTRAINT [FK_FilledForms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_FilledForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_FilledForms_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE
 );
 
 GO
@@ -281,6 +331,22 @@ CREATE INDEX [IX_Employees_ProcessingUnitId] ON [Employees] ([ProcessingUnitId])
 
 GO
 
+CREATE INDEX [IX_FilledForms_FileId] ON [FilledForms] ([FileId]);
+
+GO
+
+CREATE INDEX [IX_FilledForms_FormId] ON [FilledForms] ([FormId]);
+
+GO
+
+CREATE INDEX [IX_FilledForms_RequestId] ON [FilledForms] ([RequestId]);
+
+GO
+
+CREATE INDEX [IX_Forms_FileId] ON [Forms] ([FileId]);
+
+GO
+
 CREATE INDEX [IX_RequestedSystems_SystemId] ON [RequestedSystems] ([SystemId]);
 
 GO
@@ -337,6 +403,10 @@ CREATE INDEX [IX_Systems_ProcessingUnitId] ON [Systems] ([ProcessingUnitId]);
 
 GO
 
+CREATE INDEX [IX_SytemForms_FormId] ON [SytemForms] ([FormId]);
+
+GO
+
 CREATE INDEX [IX_Units_BureauId] ON [Units] ([BureauId]);
 
 GO
@@ -354,7 +424,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190312211531_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190325214311_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 
