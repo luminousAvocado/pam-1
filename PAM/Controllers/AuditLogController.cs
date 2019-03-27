@@ -13,7 +13,7 @@ namespace PAM.Controllers
 
         }
 
-        public IActionResult AuditLogs()
+        public IActionResult ListLogs()
         {
             return View();
         }
