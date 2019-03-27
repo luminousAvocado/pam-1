@@ -14,7 +14,7 @@ namespace PAM.Models
     [Table("AuditLogs")]
     public class AuditLog
     {
-        public int LogEntryId { get; set; }
+        public int AuditLogId { get; set; }
 
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
