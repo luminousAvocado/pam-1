@@ -53,7 +53,7 @@ namespace PAM.Data
             return _dbContext.Requests.Include(r => r.RequestType).ThenInclude(rt => rt.RequiredSignatures).Include(r => r.RequestedBy)
                 .Include(r => r.RequestedFor).ThenInclude(rr => rr.Unit).ThenInclude(u => u.Bureau)
                 .Include(r => r.TransferredFromUnit).ThenInclude(u => u.Bureau)
-                .Include(r => r.Systems).ThenInclude(rs => rs.System)
+                .Include(r => r.Systems).ThenInclude(rs => rs.System).ThenInclude(s => s.Forms)
                 .Include(r => r.Reviews).ThenInclude(rr => rr.Reviewer)
                 .Where(r => r.RequestId == id).FirstOrDefault();
         }

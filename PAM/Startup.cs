@@ -32,6 +32,11 @@ namespace PAM
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
+
             var connString = Configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
