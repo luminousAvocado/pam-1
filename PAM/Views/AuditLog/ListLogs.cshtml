@@ -1,0 +1,95 @@
+﻿@model ICollection<AuditLog>
+@{
+  ViewData["Title"] = "List Logs";
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
+}
+@section Scripts{
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Audit Logs</li>
+  </ol>
+</nav>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#allLogs" role="tab" aria-controls="allLogs" aria-selected="true">All Logs</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="search-tab" data-toggle="tab" href="#searchLogs" role="tab" aria-controls="searchLogs" aria-selected="false">Search By Date</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="tabContent">
+
+  <div class="tab-pane fade show active" id="allLogs" role="tabpanel" aria-labelledby="logs-tab">
+    <table data-toggle="table" data-pagination="true" data-page-size="25">
+      <thead>
+        <tr>
+          <th data-sortable="true">AuditLog ID</th>
+          <th data-sortable="true">Timestamp</th>
+          <th data-sortable="true">Employee ID</th>
+          <th data-sortable="true">Action</th>
+          <th data-sortable="true">Resource Type</th>
+          <th data-sortable="true">Resource ID</th>
+          <th>Old Value</th>
+          <th>New Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var log in Model)
+        {
+          <tr>
+            <td>@log.AuditLogId</td>
+            <td>@log.Timestamp</td>
+            <td>@log.EmployeeId</td>
+            <td>@log.Action</td>
+            <td>@log.ResourceType</td>
+            <td>@log.ResourceId</td>
+            <td>@log.OldValue</td>
+            <td>@log.NewValue</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="searchLogs" role="tabpanel" aria-labelledby="search-tab">
+    <h1>hi</h1>
+    @*<table data-toggle="table" data-pagination="true" data-page-size="25">
+      <thead>
+        <tr>
+          <th data-sortable="true">AuditLog ID</th>
+          <th data-sortable="true">Timestamp</th>
+          <th data-sortable="true">Employee ID</th>
+          <th data-sortable="true">Action</th>
+          <th data-sortable="true">Resource Type</th>
+          <th data-sortable="true">Resource ID</th>
+          <th>Old Value</th>
+          <th>New Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var log in Model)
+        {
+          <tr>
+            <td>@log.AuditLogId</td>
+            <td>@log.Timestamp</td>
+            <td>@log.EmployeeId</td>
+            <td>@log.Action</td>
+            <td>@log.ResourceType</td>
+            <td>@log.ResourceId</td>
+            <td>@log.OldValue</td>
+            <td>@log.NewValue</td>
+          </tr>
+        }
+      </tbody>
+    </table>*@
+  </div>
+
+</div>
