@@ -142,18 +142,13 @@ namespace PAM.Controllers
                 .SendAsync();
 
             // TEST create AuditLog record
-            //AuditLog newLog = new AuditLog()
-            //{
-            //    EmployeeId = request.RequestedById,
-            //    Action = Models.Action.Submit,
-            //    ResourceType = ResourceType.Request,
-            //    ResourceId = request.RequestId,
-            //};
-            AuditLog newLog = new AuditLog();
-            newLog.EmployeeId = request.RequestedById;
-            newLog.Action = Models.Action.Submit;
-            newLog.ResourceType = ResourceType.Request;
-            newLog.ResourceId = request.RequestId;
+            AuditLog newLog = new AuditLog
+            {
+                EmployeeId = request.RequestedById,
+                Action = Models.Action.Submit,
+                ResourceType = ResourceType.Request,
+                ResourceId = request.RequestId
+            };
             _auditService.CreateAuditLog(newLog);
 
             return RedirectToAction("MyRequests");

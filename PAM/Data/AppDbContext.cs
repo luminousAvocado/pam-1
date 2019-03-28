@@ -89,6 +89,13 @@ namespace PAM.Data
             modelBuilder.Entity<SystemAccess>().Property(s => s.AccessType).HasConversion(
                 v => v.ToString(),
                 v => (SystemAccessType)Enum.Parse(typeof(SystemAccessType), v));
+
+            modelBuilder.Entity<AuditLog>().Property(s => s.Action).HasConversion(
+                v => v.ToString(),
+                v => (Models.Action)Enum.Parse(typeof(Models.Action), v));
+            modelBuilder.Entity<AuditLog>().Property(s => s.ResourceType).HasConversion(
+                v => v.ToString(),
+                v => (ResourceType)Enum.Parse(typeof(ResourceType), v));
         }
     }
 }
