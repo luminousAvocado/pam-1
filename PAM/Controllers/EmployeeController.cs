@@ -5,6 +5,10 @@ using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using PAM.Extensions;
+using Newtonsoft.Json;
+using System;
+using System.Security.Claims;
 
 namespace PAM.Controllers
 {
@@ -15,15 +19,17 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly IMapper _mapper;
         private readonly ILogger<EmployeeController> _logger;
+        private readonly AuditLogService _auditService;
 
         public EmployeeController(UserService userService, SystemService systemSerivce,
-            IADService adService, IMapper mapper, ILogger<EmployeeController> logger)
+            IADService adService, IMapper mapper, ILogger<EmployeeController> logger, AuditLogService auditService)
         {
             _userService = userService;
             _systemService = systemSerivce;
             _adService = adService;
             _mapper = mapper;
             _logger = logger;
+            _auditService = auditService;
         }
 
         public IActionResult Employees(string term)
@@ -48,8 +54,14 @@ namespace PAM.Controllers
         public IActionResult EditEmployee(int id, Employee update)
         {
             var employee = _userService.GetEmployee(id);
+            var oldValue = JsonConvert.SerializeObject(employee);
+
             _mapper.Map(update, employee);
             _userService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(_userService.GetEmployee(id));
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Edit, ResourceType.Employee, id, oldValue, newValue);
+
             return RedirectToAction(nameof(ViewEmployee), new { id });
         }
 
@@ -73,6 +85,7 @@ namespace PAM.Controllers
                 {
                     var employee = _userService.CreateEmployee(_adService.GetEmployeeByUsername(username));
                     term = employee.FirstName + " " + employee.LastName;
+                    _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Employee, employee.EmployeeId);
                 }
             }
             return RedirectToAction(nameof(Employees), new { term });
