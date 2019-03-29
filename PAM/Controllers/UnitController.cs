@@ -8,6 +8,10 @@ using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using Newtonsoft.Json;
+using System;
+using System.Security.Claims;
+using PAM.Extensions;
 
 namespace PAM.Controllers
 {
@@ -18,15 +22,17 @@ namespace PAM.Controllers
         private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger<UnitController> _logger;
+        private readonly AuditLogService _auditService;
 
         public UnitController(OrganizationService organizationService, SystemService systemService,
-            TreeViewService treeViewService, IMapper mapper, ILogger<UnitController> logger)
+            TreeViewService treeViewService, IMapper mapper, ILogger<UnitController> logger, AuditLogService auditService)
         {
             _organizationService = organizationService;
             _systemService = systemService;
             _treeViewService = treeViewService;
             _mapper = mapper;
             _logger = logger;
+            _auditService = auditService;
         }
 
         public IActionResult Units(int? id)
@@ -63,6 +69,9 @@ namespace PAM.Controllers
                     SystemId = systemId
                 });
             unit = _organizationService.AddUnit(unit);
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Unit, unit.UnitId);
+
             return RedirectToAction(nameof(Units), new { id = unit.UnitId });
         }
 
@@ -82,6 +91,8 @@ namespace PAM.Controllers
         public IActionResult EditUnit(int id, Unit update, ICollection<int> systemIds)
         {
             var unit = _organizationService.GetUnit(id);
+            var oldValue = JsonConvert.SerializeObject(unit);
+
             unit.Name = update.Name;
             unit.UnitTypeId = update.UnitTypeId;
             unit.DisplayOrder = update.DisplayOrder;
@@ -93,6 +104,10 @@ namespace PAM.Controllers
                     SystemId = systemId
                 });
             _organizationService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(_organizationService.GetUnit(id));
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Edit, ResourceType.Unit, id, oldValue, newValue);
+
             return RedirectToAction(nameof(Units), new { id });
         }
 
@@ -102,6 +117,9 @@ namespace PAM.Controllers
             unit.Deleted = true;
             removeChildren(unit);
             _organizationService.SaveChanges();
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Unit, id);
+
             return RedirectToAction(nameof(Units), new { id = unit.ParentId });
         }
 
