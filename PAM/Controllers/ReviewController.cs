@@ -24,9 +24,10 @@ namespace PAM.Controllers
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
+        private readonly AuditLogService _auditService;
 
         public ReviewController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
+            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger, AuditLogService auditService)
         {
             _adService = adService;
             _userService = userService;
@@ -36,6 +37,7 @@ namespace PAM.Controllers
             _email = email;
             _emailHelper = emailHelper;
             _logger = logger;
+            _auditService = auditService;
         }
 
         [HttpGet]
@@ -113,6 +115,8 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
+                _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Approve, ResourceType.Request, request.RequestId);
+
                 foreach (var requestedSystem in request.Systems)
                 {
                     var systemAccess = new SystemAccess(request, requestedSystem);
@@ -158,6 +162,8 @@ namespace PAM.Controllers
             request.UpdatedOn = DateTime.Now;
             request.CompletedOn = DateTime.Now;
             _requestService.SaveChanges();
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Deny, ResourceType.Request, request.RequestId);
 
             string emailName = "RequestDenied";
             var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request, Review = review };
