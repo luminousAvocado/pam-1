@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
+using PAM.Extensions;
+using System;
+using Newtonsoft.Json;
 
 namespace PAM.Controllers
 {
@@ -12,12 +16,14 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<BureauController> _logger;
+        private readonly AuditLogService _auditService;
 
-        public BureauController(OrganizationService organizationService, IMapper mapper, ILogger<BureauController> logger)
+        public BureauController(OrganizationService organizationService, IMapper mapper, ILogger<BureauController> logger, AuditLogService auditService)
         {
             _organizationService = organizationService;
             _mapper = mapper;
             _logger = logger;
+            _auditService = auditService;
         }
 
         public IActionResult Bureaus()
@@ -42,6 +48,9 @@ namespace PAM.Controllers
         public IActionResult AddBureau(Bureau bureau)
         {
             bureau = _organizationService.AddBureau(bureau);
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Bureau, bureau.BureauId);
+
             return RedirectToAction(nameof(ViewBureau), new { id = bureau.BureauId });
         }
 
@@ -56,8 +65,14 @@ namespace PAM.Controllers
         public IActionResult EditBureau(int id, Bureau update)
         {
             var bureau = _organizationService.GetBureau(id);
+            var oldValue = JsonConvert.SerializeObject(bureau);        
+
             _mapper.Map(update, bureau);
             _organizationService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(_organizationService.GetBureau(id));
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Edit, ResourceType.Bureau, bureau.BureauId, oldValue, newValue);
+
             return RedirectToAction(nameof(ViewBureau), new { id });
         }
 
@@ -67,6 +82,9 @@ namespace PAM.Controllers
             bureau.Deleted = true;
             removeChildren(bureau);
             _organizationService.SaveChanges();
+
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Bureau, bureau.BureauId);
+
             return RedirectToAction(nameof(Bureaus));
         }
 

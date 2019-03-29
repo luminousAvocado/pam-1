@@ -101,15 +101,7 @@ namespace PAM.Controllers
 
             request = _requestService.CreateRequest(request);
 
-            // TEST create AuditLog record
-            AuditLog newLog = new AuditLog
-            {
-                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
-                Action = Models.Action.Create,
-                ResourceType = ResourceType.Request,
-                ResourceId = request.RequestId
-            };
-            _auditService.CreateAuditLog(newLog);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Request, request.RequestId);
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
@@ -147,15 +139,7 @@ namespace PAM.Controllers
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
 
-            // TEST create AuditLog record
-            AuditLog newLog = new AuditLog
-            {
-                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
-                Action = Models.Action.Submit,
-                ResourceType = ResourceType.Request,
-                ResourceId = request.RequestId
-            };
-            _auditService.CreateAuditLog(newLog);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Submit, ResourceType.Request, request.RequestId);
 
             return RedirectToAction("MyRequests");
         }
@@ -169,15 +153,7 @@ namespace PAM.Controllers
             request.Deleted = true;
             _requestService.SaveChanges();
 
-            // TEST create AuditLog record
-            AuditLog newLog = new AuditLog
-            {
-                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
-                Action = Models.Action.Delete,
-                ResourceType = ResourceType.Request,
-                ResourceId = request.RequestId
-            };
-            _auditService.CreateAuditLog(newLog);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Request, request.RequestId);
 
             return RedirectToAction("MyRequests");
         }
