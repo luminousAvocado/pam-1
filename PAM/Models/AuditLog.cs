@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace PAM.Models
 {
-    // Get the proper types for Action and ResourceType
     public enum Action { Create, Edit, Delete, Submit, Approve, Deny };
     public enum ResourceType { Bureau, Location, System, Unit, File, Form, Employee, Request, Review };
 
@@ -24,10 +23,9 @@ namespace PAM.Models
 
         public ResourceType ResourceType { get; set; }
 
-        // PK of the resourceType
         public int ResourceId { get; set; }
 
-        // json of old/new values
+        // JSON of old/new values
         public string OldValue { get; set; }
         public string NewValue { get; set; }
     }
