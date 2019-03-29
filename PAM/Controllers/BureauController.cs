@@ -71,7 +71,7 @@ namespace PAM.Controllers
             _organizationService.SaveChanges();
             var newValue = JsonConvert.SerializeObject(_organizationService.GetBureau(id));
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Edit, ResourceType.Bureau, bureau.BureauId, oldValue, newValue);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Edit, ResourceType.Bureau, id, oldValue, newValue);
 
             return RedirectToAction(nameof(ViewBureau), new { id });
         }
@@ -83,7 +83,7 @@ namespace PAM.Controllers
             removeChildren(bureau);
             _organizationService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Bureau, bureau.BureauId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Bureau, id);
 
             return RedirectToAction(nameof(Bureaus));
         }
