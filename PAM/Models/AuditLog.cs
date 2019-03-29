@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace PAM.Models
 {
     // Get the proper types for Action and ResourceType
-    public enum Action { Submit, Approve, Deny };
-    public enum ResourceType { Request, Review };
+    public enum Action { Create, Edit, Delete, Submit, Approve, Deny };
+    public enum ResourceType { Bureau, Location, System, Unit, File, Form, Employee, Request, Review };
 
     [Table("AuditLogs")]
     public class AuditLog

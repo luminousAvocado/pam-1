@@ -24,8 +24,6 @@ namespace PAM.Controllers
         private readonly EmailHelper _emailHelper;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-
-        // TEST AuditLog
         private readonly AuditLogService _auditService;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
@@ -38,8 +36,6 @@ namespace PAM.Controllers
             _emailHelper = emailHelper;
             _mapper = mapper;
             _logger = logger;
-
-            // TEST AuditLog
             _auditService = auditService;
         }
 
@@ -105,6 +101,16 @@ namespace PAM.Controllers
 
             request = _requestService.CreateRequest(request);
 
+            // TEST create AuditLog record
+            AuditLog newLog = new AuditLog
+            {
+                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
+                Action = Models.Action.Create,
+                ResourceType = ResourceType.Request,
+                ResourceId = request.RequestId
+            };
+            _auditService.CreateAuditLog(newLog);
+
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
             return RedirectEditRequest(request.RequestId, requestType);
@@ -144,7 +150,7 @@ namespace PAM.Controllers
             // TEST create AuditLog record
             AuditLog newLog = new AuditLog
             {
-                EmployeeId = request.RequestedById,
+                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
                 Action = Models.Action.Submit,
                 ResourceType = ResourceType.Request,
                 ResourceId = request.RequestId
@@ -162,6 +168,17 @@ namespace PAM.Controllers
 
             request.Deleted = true;
             _requestService.SaveChanges();
+
+            // TEST create AuditLog record
+            AuditLog newLog = new AuditLog
+            {
+                EmployeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")),
+                Action = Models.Action.Delete,
+                ResourceType = ResourceType.Request,
+                ResourceId = request.RequestId
+            };
+            _auditService.CreateAuditLog(newLog);
+
             return RedirectToAction("MyRequests");
         }
 
