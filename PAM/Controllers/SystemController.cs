@@ -51,7 +51,7 @@ namespace PAM.Controllers
         {
             system = _systemService.AddSystem(system);
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.System, system.SystemId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.System, system.SystemId, null, null);
 
             return RedirectToAction(nameof(ViewSystem), new { id = system.SystemId });
         }
@@ -84,7 +84,7 @@ namespace PAM.Controllers
             system.Retired = true;
             _systemService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.System, id);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.System, id, null, null);
 
             return RedirectToAction(nameof(Systems));
         }

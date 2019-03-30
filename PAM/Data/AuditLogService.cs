@@ -36,20 +36,5 @@ namespace PAM.Data
             _dbContext.SaveChanges();
             return newLog;
         }
-
-        public AuditLog CreateAuditLog(Int32 empId, Models.Action action, ResourceType resType, int resId)
-        {
-            AuditLog newLog = new AuditLog
-            {
-                EmployeeId = empId,
-                Action = action,
-                ResourceType = resType,
-                ResourceId = resId
-            };
-
-            _dbContext.AuditLogs.Add(newLog);
-            _dbContext.SaveChanges();
-            return newLog;
-        }
     }
 }

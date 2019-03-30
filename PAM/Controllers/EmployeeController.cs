@@ -85,7 +85,7 @@ namespace PAM.Controllers
                 {
                     var employee = _userService.CreateEmployee(_adService.GetEmployeeByUsername(username));
                     term = employee.FirstName + " " + employee.LastName;
-                    _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Employee, employee.EmployeeId);
+                    _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Employee, employee.EmployeeId, null, null);
                 }
             }
             return RedirectToAction(nameof(Employees), new { term });

@@ -69,7 +69,7 @@ namespace PAM.Controllers
                 });
             unit = _organizationService.AddUnit(unit);
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Unit, unit.UnitId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Unit, unit.UnitId, null, null);
 
             return RedirectToAction(nameof(Units), new { id = unit.UnitId });
         }
@@ -117,7 +117,7 @@ namespace PAM.Controllers
             removeChildren(unit);
             _organizationService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Unit, id);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Unit, id, null, null);
 
             return RedirectToAction(nameof(Units), new { id = unit.ParentId });
         }

@@ -115,7 +115,7 @@ namespace PAM.Controllers
                 request.CompletedOn = DateTime.Now;
                 _requestService.SaveChanges();
 
-                _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Approve, ResourceType.Request, request.RequestId);
+                _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Approve, ResourceType.Request, request.RequestId, null, null);
 
                 foreach (var requestedSystem in request.Systems)
                 {
@@ -163,7 +163,7 @@ namespace PAM.Controllers
             request.CompletedOn = DateTime.Now;
             _requestService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Deny, ResourceType.Request, request.RequestId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Deny, ResourceType.Request, request.RequestId, null, null);
 
             string emailName = "RequestDenied";
             var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request, Review = review };

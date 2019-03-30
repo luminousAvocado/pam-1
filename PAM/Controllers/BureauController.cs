@@ -49,7 +49,7 @@ namespace PAM.Controllers
         {
             bureau = _organizationService.AddBureau(bureau);
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Bureau, bureau.BureauId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Bureau, bureau.BureauId, null, null);
 
             return RedirectToAction(nameof(ViewBureau), new { id = bureau.BureauId });
         }
@@ -83,7 +83,7 @@ namespace PAM.Controllers
             removeChildren(bureau);
             _organizationService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Bureau, id);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Bureau, id, null, null);
 
             return RedirectToAction(nameof(Bureaus));
         }

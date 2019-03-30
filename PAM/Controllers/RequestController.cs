@@ -101,7 +101,7 @@ namespace PAM.Controllers
 
             request = _requestService.CreateRequest(request);
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Request, request.RequestId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Request, request.RequestId, null, null);
 
             _logger.LogInformation($"User {User.Identity.Name} created request {request.RequestId}.");
 
@@ -139,7 +139,7 @@ namespace PAM.Controllers
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Submit, ResourceType.Request, request.RequestId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Submit, ResourceType.Request, request.RequestId, null, null);
 
             return RedirectToAction("MyRequests");
         }
@@ -153,7 +153,7 @@ namespace PAM.Controllers
             request.Deleted = true;
             _requestService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Request, request.RequestId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Request, request.RequestId, null, null);
 
             return RedirectToAction("MyRequests");
         }

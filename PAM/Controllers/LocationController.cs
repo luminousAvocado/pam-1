@@ -46,7 +46,7 @@ namespace PAM.Controllers
         {
             location = _organizationService.AddLocation(location);
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Location, location.LocationId);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Create, ResourceType.Location, location.LocationId, null, null);
 
             return RedirectToAction(nameof(ViewLocation), new { id = location.LocationId });
         }
@@ -77,7 +77,7 @@ namespace PAM.Controllers
             location.Deleted = true;
             _organizationService.SaveChanges();
 
-            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Location, id);
+            _auditService.CreateAuditLog(Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId")), Models.Action.Delete, ResourceType.Location, id, null, null);
 
             return RedirectToAction(nameof(Locations));
         }
