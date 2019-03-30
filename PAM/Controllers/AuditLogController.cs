@@ -22,6 +22,6 @@ namespace PAM.Controllers
         public IActionResult ListLogs()
         {
             return View(_auditService.GetAllLogs());
-        }
+        } 
     }
 }

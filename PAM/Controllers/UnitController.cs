@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
-using Newtonsoft.Json;
 using System;
 using System.Security.Claims;
 using PAM.Extensions;

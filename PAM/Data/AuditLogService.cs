@@ -17,7 +17,7 @@ namespace PAM.Data
 
         public ICollection<AuditLog> GetAllLogs()
         {
-            return _dbContext.AuditLogs.ToList();
+            return _dbContext.AuditLogs.OrderByDescending(x => x.AuditLogId).ToList();
         }
 
         public AuditLog CreateAuditLog(Int32 empId, Models.Action action, ResourceType resType, int resId, string oldValue, string newValue)

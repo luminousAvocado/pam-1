@@ -44,16 +44,24 @@
       <tbody>
         @foreach (var log in Model)
         {
-          <tr>
-            <td>@log.AuditLogId</td>
-            <td>@log.Timestamp</td>
-            <td>@log.EmployeeId</td>
-            <td>@log.Action</td>
-            <td>@log.ResourceType</td>
-            <td>@log.ResourceId</td>
-            <td>@log.OldValue</td>
-            <td>@log.NewValue</td>
-          </tr>
+        <tr>
+          <td>@log.AuditLogId</td>
+          <td>@log.Timestamp</td>
+          <td>@log.EmployeeId</td>
+          <td>@log.Action</td>
+          <td>@log.ResourceType</td>
+          <td>@log.ResourceId</td>
+          @if (log.OldValue != null)
+          {
+            <td><a href="">View</a></td>
+            <td><a href="">View</a></td>
+          }
+          else
+          {
+            <td></td>
+            <td></td>
+          }
+        </tr>
         }
       </tbody>
     </table>
