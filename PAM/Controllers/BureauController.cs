@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class BureauController : Controller
     {
         private readonly OrganizationService _organizationService;
@@ -32,6 +35,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult AddBureau()
         {
             ViewData["BureauTypes"] = new SelectList(_organizationService.GetBureauTypes(), "BureauTypeId", "DisplayCode");
@@ -39,6 +43,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult AddBureau(Bureau bureau)
         {
             bureau = _organizationService.AddBureau(bureau);
@@ -46,6 +51,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult EditBureau(int id)
         {
             ViewData["BureauTypes"] = new SelectList(_organizationService.GetBureauTypes(), "BureauTypeId", "DisplayCode");
@@ -53,6 +59,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult EditBureau(int id, Bureau update)
         {
             var bureau = _organizationService.GetBureau(id);
@@ -61,6 +68,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewBureau), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveBureau(int id)
         {
             var bureau = _organizationService.GetBureau(id);
@@ -70,6 +78,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(Bureaus));
         }
 
+        [Authorize("IsAdmin")]
         private void removeChildren(Bureau bureau)
         {
             var units = _organizationService.GetBureauChildren(bureau.BureauId);
@@ -80,6 +89,7 @@ namespace PAM.Controllers
             }
         }
 
+        [Authorize("IsAdmin")]
         private void removeChildren(Unit parent)
         {
             var units = _organizationService.GetUnitChildren(parent.UnitId);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -24,10 +25,12 @@ namespace PAM.Controllers
         private readonly EmailHelper _emailHelper;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IAuthorizationService _authService;
 
-        public RequestController(IADService adService, UserService userService, RequestService requestService,
+        public RequestController(IAuthorizationService authService, IADService adService, UserService userService, RequestService requestService,
             IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<RequestController> logger)
         {
+            _authService = authService;
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
@@ -108,11 +111,18 @@ namespace PAM.Controllers
         {
             return View(_requestService.GetRequest(id));
         }
-
-        public IActionResult EditRequest(int id)
+        [Authorize]
+        public async Task<IActionResult> EditRequest(int id)
         {
+
             var request = _requestService.GetRequest(id);
-            return RedirectEditRequest(id, request.RequestType);
+            var authResult =  await _authService.AuthorizeAsync(User,request,"CanEditRequest");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+            else { return RedirectEditRequest(id, request.RequestType); }
+            
         }
 
         public IActionResult SubmitRequest(int id)

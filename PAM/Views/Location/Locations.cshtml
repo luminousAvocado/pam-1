@@ -1,6 +1,7 @@
 ﻿@model ICollection<Location>
 @{
   ViewData["Title"] = "Locations";
+  var isAllowed = (bool)ViewData["Admin"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -15,8 +16,10 @@
     <li class="breadcrumb-item active" aria-current="page">Locations</li>
   </ol>
 </nav>
-
-<p><a asp-action="AddLocation" class="btn btn-primary float-right">Add Location</a></p>
+@if (isAllowed)
+{
+  <p><a asp-action="AddLocation" class="btn btn-primary float-right">Add Location</a></p>
+}
 
 <table data-toggle="table" data-pagination="true" data-page-size="25" data-search="true" data-search-align="left">
   <thead>
@@ -43,7 +46,8 @@
         <td>
           <a asp-action="EditLocation" asp-route-id="@location.LocationId" class="btn btn-primary">
             <i class="fas fa-edit"></i>
-            <span class="d-none d-sm-inline">Edit</span></a>
+            <span class="d-none d-sm-inline">Edit</span>
+          </a>
         </td>
       </tr>
     }

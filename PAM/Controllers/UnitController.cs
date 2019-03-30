@@ -8,9 +8,12 @@ using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class UnitController : Controller
     {
         private readonly OrganizationService _organizationService;
@@ -36,6 +39,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult AddUnit(int? parentId, int? bureauId)
         {
             if (parentId != null)
@@ -54,6 +58,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult AddUnit(Unit unit, ICollection<int> systemIds)
         {
             unit.Systems = new List<UnitSystem>();
@@ -68,6 +73,7 @@ namespace PAM.Controllers
 
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult EditUnit(int id)
         {
             var unit = _organizationService.GetUnit(id);
@@ -79,6 +85,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult EditUnit(int id, Unit update, ICollection<int> systemIds)
         {
             var unit = _organizationService.GetUnit(id);
@@ -96,6 +103,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(Units), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveUnit(int id)
         {
             var unit = _organizationService.GetUnit(id);
@@ -105,6 +113,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(Units), new { id = unit.ParentId });
         }
 
+        [Authorize("IsAdmin")]
         private void removeChildren(Unit parent)
         {
             var units = _organizationService.GetUnitChildren(parent.UnitId);

@@ -5,9 +5,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class ProcessingUnitController : Controller
     {
         private readonly UserService _userService;
@@ -39,6 +42,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult AddProcessingUnit()
         {
             ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystemsWithoutProcessingUnit());
@@ -46,6 +50,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult AddProcessingUnit(ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             unit = _organizationService.AddProcessingUnit(unit);
@@ -64,6 +69,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult EditProcessingUnit(int id)
         {
             ViewData["employees"] = _userService.GetEmployeesOfProcessingUnit(id);
@@ -73,6 +79,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult EditProcessingUnit(int id, ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             var processingUnit = _organizationService.GetProcessingUnit(id);
@@ -93,6 +100,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewProcessingUnit), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveProcessingUnit(int id)
         {
             var unit = _organizationService.GetProcessingUnit(id);

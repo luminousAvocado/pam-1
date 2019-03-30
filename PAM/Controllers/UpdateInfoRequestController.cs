@@ -7,9 +7,12 @@ using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class UpdateInfoRequestController : Controller
     {
         private readonly UserService _userService;

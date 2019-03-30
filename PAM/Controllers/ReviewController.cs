@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,10 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Authorize]
+    [Authorize("CanReviewRequests")]
     public class ReviewController : Controller
     {
+        private readonly IAuthorizationService _authService;
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
@@ -25,9 +27,9 @@ namespace PAM.Controllers
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
-        public ReviewController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
+        public ReviewController(IAuthorizationService authService, IADService adService, UserService userService, RequestService requestService, SystemService systemService, OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController>logger)
         {
+            _authService = authService;
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
@@ -65,13 +67,22 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditReview(int id)
+        public async Task<IActionResult> EditReview(int id)
         {
             var review = _requestService.GetReview(id);
             var request = _requestService.GetRequest(review.RequestId);
-            ViewData["request"] = request;
-            ViewData["reviewsBefore"] = request.Reviews.Where(r => r.ReviewOrder < review.ReviewOrder).OrderBy(r => r.ReviewOrder).ToList();
-            return View(review);
+            var authResult = await _authService.AuthorizeAsync(User, review, "CanEditReview");
+            if (!authResult.Succeeded)
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                ViewData["request"] = request;
+                ViewData["reviewsBefore"] = request.Reviews.Where(r => r.ReviewOrder < review.ReviewOrder).OrderBy(r => r.ReviewOrder).ToList();
+                return View(review);
+            }
+            
         }
 
         [HttpPost]

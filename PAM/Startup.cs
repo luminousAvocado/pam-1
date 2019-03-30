@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Services;
+using PAM.Security;
+using Microsoft.AspNetCore.Authorization;
+using PAM.Models;
 
 namespace PAM
 {
@@ -43,7 +46,15 @@ namespace PAM
                 options.AddPolicy("CanProcessRequests", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
                 options.AddPolicy("CanReviewRequests", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
                 options.AddPolicy("IsAdmin", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
+                options.AddPolicy("CanEditRequest", policyBuilder => policyBuilder.AddRequirements(
+                    new CanRequestRequirement()
+                    ));
+                options.AddPolicy("CanEditReview", policyBuilder => policyBuilder.AddRequirements(
+                    new CanReviewRequirement()
+                    ));
             });
+            services.AddSingleton<IAuthorizationHandler, CanRequestHandler>();
+            services.AddSingleton<IAuthorizationHandler, CanReviewHandler>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services

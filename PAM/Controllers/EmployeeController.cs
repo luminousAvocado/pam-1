@@ -5,9 +5,13 @@ using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Models;
 using PAM.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace PAM.Controllers
 {
+    [Authorize("IsAdmin")]
     public class EmployeeController : Controller
     {
         private readonly UserService _userService;
