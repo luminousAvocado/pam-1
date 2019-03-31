@@ -1,6 +1,7 @@
 ﻿@model ICollection<PAM.Models.System>
 @{
   ViewData["Title"] = "Systems";
+  var isAllowed = (bool)ViewData["Admin"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -20,8 +21,10 @@
     <li class="breadcrumb-item active" aria-current="page">Systems</li>
   </ol>
 </nav>
-
-<p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+@if (isAllowed)
+{
+  <p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+}
 
 <table data-toggle="table" data-search="true" data-search-align="left" data-pagination="true" data-page-size="25">
   <thead>
@@ -44,10 +47,13 @@
         <td class="d-none d-md-table-cell">@system.Owner</td>
         <td class="d-none d-md-table-cell">@system.ProcessingUnit?.Name</td>
         <td>
-          <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
-            <i class="fas fa-edit"></i>
-            <span class="d-none d-md-inline">Edit</span>
-          </a>
+          @if (isAllowed)
+          {
+            <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+              <span class="d-none d-md-inline">Edit</span>
+            </a>
+          }
         </td>
       </tr>
     }

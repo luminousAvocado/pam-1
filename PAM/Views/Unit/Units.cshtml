@@ -1,6 +1,7 @@
-﻿@model  Unit
+﻿@model Unit
 @{
-  ViewData["Title"] = "Units";
+    ViewData["Title"] = "Units";
+    var isAllowed = (bool)ViewData["Admin"];
 }
 @section Scripts {
   <script src="~/lib/bootstrap-treeview/bootstrap-treeview.min.js"></script>
@@ -85,10 +86,15 @@
     <div id="tree"></div>
   </div>
   <div class="col-12 col-md-6 mb-3">
-    <p>
-      <button id="addBtn" class="btn btn-primary float-right ml-3">Add Unit</button>
-      <button id="editBtn" class="btn btn-primary float-right">Edit Unit</button>
-    </p>
+
+    @if (isAllowed)
+    {
+      <p>
+        <button id="addBtn" class="btn btn-primary float-right ml-3">Add Unit</button>
+        <button id="editBtn" class="btn btn-primary float-right">Edit Unit</button>
+      </p>
+    }
+
     <p class="clearfix">
       <table class="table">
         <tr><th>Bureau</th><td id="bureau" data-bureau-id="@Model?.BureauId">@Model?.Bureau.Name</td></tr>

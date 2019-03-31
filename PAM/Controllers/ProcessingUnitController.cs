@@ -7,6 +7,7 @@ using PAM.Data;
 using PAM.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace PAM.Controllers
 {
@@ -18,10 +19,12 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<ProcessingUnitController> _logger;
+        private readonly IAuthorizationService _authService;
 
-        public ProcessingUnitController(UserService userService, SystemService systemSerivce, OrganizationService organizationService,
+        public ProcessingUnitController(IAuthorizationService authService, UserService userService, SystemService systemSerivce, OrganizationService organizationService,
             IMapper mapper, ILogger<ProcessingUnitController> logger)
         {
+            _authService = authService;
             _userService = userService;
             _systemService = systemSerivce;
             _organizationService = organizationService;
@@ -29,13 +32,17 @@ namespace PAM.Controllers
             _logger = logger;
         }
 
-        public IActionResult ProcessingUnits()
+        public async Task<IActionResult> ProcessingUnits()
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_organizationService.GetProcessingUnits());
         }
 
-        public IActionResult ViewProcessingUnit(int id)
+        public async Task<IActionResult> ViewProcessingUnit(int id)
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             ViewData["employees"] = _userService.GetEmployeesOfProcessingUnit(id);
             ViewData["systems"] = _systemService.GetSystemsOfProcessingUnit(id);
             return View(_organizationService.GetProcessingUnit(id));

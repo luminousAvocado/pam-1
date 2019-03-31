@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PAM.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace PAM.Controllers
 {
@@ -15,9 +16,11 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<SystemController> _logger;
+        private readonly IAuthorizationService _authService;
 
-        public SystemController(SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger)
+        public SystemController(IAuthorizationService authService, SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger)
         {
+            _authService = authService;
             _systemService = systemService;
             _organizationService = organizationService;
             _mapper = mapper;
@@ -25,17 +28,22 @@ namespace PAM.Controllers
         }
 
 
-        public IActionResult Systems()
+        public async Task<IActionResult> Systems()
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_systemService.GetSystems());
         }
 
-        public IActionResult ViewSystem(int id)
+        public async Task<IActionResult> ViewSystem(int id)
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_systemService.GetSystem(id));
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult AddSystem()
         {
             ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
@@ -43,6 +51,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult AddSystem(Models.System system)
         {
             system = _systemService.AddSystem(system);
@@ -50,6 +59,7 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
+        [Authorize("IsAdmin")]
         public IActionResult EditSystem(int id)
         {
             ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
@@ -57,6 +67,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
+        [Authorize("IsAdmin")]
         public IActionResult EditSystem(int id, Models.System update)
         {
             var system = _systemService.GetSystem(id);
@@ -65,6 +76,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewSystem), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveSystem(int id)
         {
             var system = _systemService.GetSystem(id);

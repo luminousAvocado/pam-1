@@ -1,6 +1,7 @@
 ﻿@model ICollection<Bureau>
 @{
   ViewData["Title"] = "Bureaus";
+  var isAllowed = (bool)ViewData["Admin"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -15,8 +16,10 @@
     <li class="breadcrumb-item active" aria-current="page">Bureaus</li>
   </ol>
 </nav>
-
-<p><a asp-action="AddBureau" class="btn btn-primary float-right">Add Bureau</a></p>
+@if (isAllowed)
+{
+  <p><a asp-action="AddBureau" class="btn btn-primary float-right">Add Bureau</a></p>
+}
 
 <table data-toggle="table" data-search="true" data-search-align="left">
   <thead>
@@ -36,12 +39,15 @@
         </td>
         <td class="d-none d-sm-table-cell">@bureau.Description</td>
         <td class="d-none d-md-table-cell">@bureau.DisplayOrder</td>
+        @if (isAllowed)
+        {
         <td>
           <a asp-action="EditBureau" asp-route-id="@bureau.BureauId" class="btn btn-primary">
             <i class="fas fa-edit"></i>
             <span class="d-none d-md-inline">Edit</span>
           </a>
         </td>
+        }
       </tr>
     }
   </tbody>

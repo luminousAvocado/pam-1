@@ -10,6 +10,7 @@ using PAM.Models;
 using PAM.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace PAM.Controllers
 {
@@ -21,10 +22,12 @@ namespace PAM.Controllers
         private readonly TreeViewService _treeViewService;
         private readonly IMapper _mapper;
         private readonly ILogger<UnitController> _logger;
+        private readonly IAuthorizationService _authService;
 
-        public UnitController(OrganizationService organizationService, SystemService systemService,
+        public UnitController(IAuthorizationService authService, OrganizationService organizationService, SystemService systemService,
             TreeViewService treeViewService, IMapper mapper, ILogger<UnitController> logger)
         {
+            _authService = authService;
             _organizationService = organizationService;
             _systemService = systemService;
             _treeViewService = treeViewService;
@@ -32,8 +35,10 @@ namespace PAM.Controllers
             _logger = logger;
         }
 
-        public IActionResult Units(int? id)
+        public async Task<IActionResult> Units(int? id)
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             ViewData["tree"] = _treeViewService.GenerateTreeInJson();
             return View(id != null ? _organizationService.GetUnit((int)id) : null);
         }

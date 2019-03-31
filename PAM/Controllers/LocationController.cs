@@ -32,8 +32,10 @@ namespace PAM.Controllers
             return View(_organizationService.GetLocations());
         }
 
-        public IActionResult ViewLocation(int id)
+        public async Task<IActionResult> ViewLocation(int id)
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_organizationService.GetLocation(id));
         }
 

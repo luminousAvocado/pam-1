@@ -3,6 +3,7 @@
   ViewData["Title"] = "View Processing Unit";
   var employees = (List<Employee>)ViewData["employees"];
   var systems = (List<PAM.Models.System>)ViewData["systems"];
+  var isAllowed = (bool)ViewData["Admin"];
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -18,9 +19,10 @@
     <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
   </ol>
 </nav>
-
+@if (isAllowed)
+{
 <p class="text-right"><a asp-action="EditProcessingUnit" asp-route-id="@Model.ProcessingUnitId" class="btn btn-primary">Edit Processing Unit</a></p>
-
+}
 <table class="table table-bordered">
   <tr><th>Id</th><td>@Model.ProcessingUnitId</td></tr>
   <tr><th>Name</th><td>@Model.Name</td></tr>

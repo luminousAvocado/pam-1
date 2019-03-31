@@ -6,6 +6,7 @@ using PAM.Data;
 using PAM.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace PAM.Controllers
 {
@@ -15,22 +16,27 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<BureauController> _logger;
-
-        public BureauController(OrganizationService organizationService, IMapper mapper, ILogger<BureauController> logger)
+        private readonly IAuthorizationService _authService;
+        public BureauController(IAuthorizationService authResult, OrganizationService organizationService, IMapper mapper, ILogger<BureauController> logger)
         {
+            _authService = authResult;
             _organizationService = organizationService;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public IActionResult Bureaus()
+        public async Task<IActionResult> Bureaus()
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_organizationService.GetBureaus());
         }
 
 
-        public IActionResult ViewBureau(int id)
+        public async Task<IActionResult> ViewBureau(int id)
         {
+            var authResult = await _authService.AuthorizeAsync(User, "IsAdmin");
+            ViewData["Admin"] = authResult.Succeeded;
             return View(_organizationService.GetBureau(id));
         }
 

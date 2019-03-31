@@ -1,6 +1,7 @@
 ﻿@model PAM.Models.System
 @{
   ViewData["Title"] = "View System";
+  var isAllowed = (bool)ViewData["Admin"];
 }
 
 <nav aria-label="breadcrumb">
@@ -9,8 +10,10 @@
     <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
   </ol>
 </nav>
-
-<p class="text-right"><a asp-action="EditSystem" asp-route-id="@Model.SystemId" class="btn btn-primary">Edit System</a></p>
+@if (isAllowed)
+{
+  <p class="text-right"><a asp-action="EditSystem" asp-route-id="@Model.SystemId" class="btn btn-primary">Edit System</a></p>
+}
 
 <table class="table table-bordered">
   <tr><th>Id</th><td>@Model.SystemId</td></tr>

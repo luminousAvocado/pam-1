@@ -1,6 +1,7 @@
 ﻿@model Location
 @{
   ViewData["Title"] = "View Location";
+  var isAllowed = (bool)ViewData["Admin"];
 }
 
 <nav aria-label="breadcrumb">
@@ -9,8 +10,10 @@
     <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
   </ol>
 </nav>
-
-<p class="text-right"><a asp-action="EditLocation" asp-route-id="@Model.LocationId" class="btn btn-primary">Edit Location</a></p>
+@if (isAllowed)
+{
+  <p class="text-right"><a asp-action="EditLocation" asp-route-id="@Model.LocationId" class="btn btn-primary">Edit Location</a></p>
+}
 
 <table class="table table-bordered">
   <tr><th>Id</th><td>@Model.LocationId</td></tr>
