@@ -16,7 +16,10 @@
   </ol>
 </nav>
 
-<p><a asp-action="AddProcessingUnit" class="btn btn-primary float-right">Add Processing Unit</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddProcessingUnit" class="btn btn-primary float-right">Add Processing Unit</a></p>
+}
 
 <p class="clearfix">
   <table class="table table-bordered table-hover">
@@ -24,7 +27,10 @@
       <tr>
         <th>Name</th>
         <th class="d-none d-md-table-cell">Email</th>
-        <th></th>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <th></th>
+        }
       </tr>
     </thead>
     <tbody>
@@ -35,12 +41,15 @@
             <a asp-action="ViewProcessingUnit" asp-route-id="@unit.ProcessingUnitId">@unit.Name</a>
           </td>
           <td class="d-none d-md-table-cell">@unit.Email</td>
-          <td>
-            <a asp-action="EditProcessingUnit" asp-route-id="@unit.ProcessingUnitId" class="btn btn-primary">
-              <i class="fas fa-edit"></i>
-              <span class="d-none d-sm-inline">Edit</span>
-            </a>
-          </td>
+          @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+          {
+            <td>
+              <a asp-action="EditProcessingUnit" asp-route-id="@unit.ProcessingUnitId" class="btn btn-primary">
+                <i class="fas fa-edit"></i>
+                <span class="d-none d-sm-inline">Edit</span>
+              </a>
+            </td>
+          }
         </tr>
       }
     </tbody>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Authorize]
+    [Authorize("IsApprover")]
     public class ReviewController : Controller
     {
         private readonly IADService _adService;
@@ -21,18 +22,21 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
+        private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
         public ReviewController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
+            OrganizationService organizationService, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
+            ILogger<ReviewController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
+            _authService = authService;
             _email = email;
             _emailHelper = emailHelper;
             _logger = logger;
@@ -65,9 +69,13 @@ namespace PAM.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditReview(int id)
+        public async Task<IActionResult> EditReview(int id)
         {
             var review = _requestService.GetReview(id);
+            var authResult = await _authService.AuthorizeAsync(User, review, "CanEnterReview");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
             var request = _requestService.GetRequest(review.RequestId);
             ViewData["request"] = request;
             ViewData["reviewsBefore"] = request.Reviews.Where(r => r.ReviewOrder < review.ReviewOrder).OrderBy(r => r.ReviewOrder).ToList();
@@ -75,13 +83,17 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult Approve(int id, string password, string comments)
+        public async Task<IActionResult> Approve(int id, string password, string comments)
         {
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
             if (!_adService.Authenticate(username, password))
                 RedirectToAction(nameof(EditReview), new { id });
 
             Review review = _requestService.GetReview(id);
+            var authResult = await _authService.AuthorizeAsync(User, review, "CanEnterReview");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
             Request request = _requestService.GetRequest(review.RequestId);
             review.Approve(comments);
             request.UpdatedOn = DateTime.Now;
@@ -138,20 +150,24 @@ namespace PAM.Controllers
                     var processingUnit = _organizationService.GetProcessingUnit((int)processingUnitId);
                     _email.To(processingUnit.Email);
                 }
-                _email.SendAsync();
+                await _email.SendAsync();
             }
 
             return RedirectToAction(nameof(MyReviews));
         }
 
         [HttpPost]
-        public IActionResult Deny(int id, string password, string comments)
+        public async Task<IActionResult> Deny(int id, string password, string comments)
         {
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
             if (!_adService.Authenticate(username, password))
                 RedirectToAction(nameof(EditReview), new { id });
 
             Review review = _requestService.GetReview(id);
+            var authResult = await _authService.AuthorizeAsync(User, review, "CanEnterReview");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
             review.Deny(comments);
             Request request = _requestService.GetRequest(review.RequestId);
             request.RequestStatus = RequestStatus.Denied;
@@ -163,7 +179,7 @@ namespace PAM.Controllers
             var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request, Review = review };
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
             string receipient = request.RequestedBy.Email;
-            _email.To(receipient)
+            await _email.To(receipient)
                 .Subject(subject)
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();

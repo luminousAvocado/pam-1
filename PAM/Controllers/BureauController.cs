@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using PAM.Models;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class BureauController : Controller
     {
         private readonly OrganizationService _organizationService;
@@ -31,28 +33,28 @@ namespace PAM.Controllers
             return View(_organizationService.GetBureau(id));
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult AddBureau()
         {
             ViewData["BureauTypes"] = new SelectList(_organizationService.GetBureauTypes(), "BureauTypeId", "DisplayCode");
             return View(new Bureau());
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult AddBureau(Bureau bureau)
         {
             bureau = _organizationService.AddBureau(bureau);
             return RedirectToAction(nameof(ViewBureau), new { id = bureau.BureauId });
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult EditBureau(int id)
         {
             ViewData["BureauTypes"] = new SelectList(_organizationService.GetBureauTypes(), "BureauTypeId", "DisplayCode");
             return View(_organizationService.GetBureau(id));
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult EditBureau(int id, Bureau update)
         {
             var bureau = _organizationService.GetBureau(id);
@@ -61,6 +63,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewBureau), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveBureau(int id)
         {
             var bureau = _organizationService.GetBureau(id);

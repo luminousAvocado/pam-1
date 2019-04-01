@@ -1,4 +1,5 @@
-﻿using System.DirectoryServices;
+﻿using System;
+using System.DirectoryServices;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,12 @@ namespace PAM.Extensions
         {
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
             return claim?.Value;
+        }
+
+        public static int? GetClaimAsInt(this ClaimsIdentity identity, string claimType)
+        {
+            var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
+            return claim?.Value != null ? Int32.Parse(claim.Value) : (int?)null;
         }
     }
 

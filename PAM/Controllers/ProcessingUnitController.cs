@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using PAM.Models;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class ProcessingUnitController : Controller
     {
         private readonly UserService _userService;
@@ -38,14 +40,14 @@ namespace PAM.Controllers
             return View(_organizationService.GetProcessingUnit(id));
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult AddProcessingUnit()
         {
             ViewData["systems"] = JsonConvert.SerializeObject(_systemService.GetSystemsWithoutProcessingUnit());
             return View(new ProcessingUnit());
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult AddProcessingUnit(ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             unit = _organizationService.AddProcessingUnit(unit);
@@ -63,7 +65,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewProcessingUnit), new { id = unit.ProcessingUnitId });
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult EditProcessingUnit(int id)
         {
             ViewData["employees"] = _userService.GetEmployeesOfProcessingUnit(id);
@@ -72,7 +74,7 @@ namespace PAM.Controllers
             return View(_organizationService.GetProcessingUnit(id));
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult EditProcessingUnit(int id, ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             var processingUnit = _organizationService.GetProcessingUnit(id);
@@ -93,6 +95,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(ViewProcessingUnit), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveProcessingUnit(int id)
         {
             var unit = _organizationService.GetProcessingUnit(id);

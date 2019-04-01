@@ -19,7 +19,10 @@
   </ol>
 </nav>
 
-<p class="text-right"><a asp-action="EditProcessingUnit" asp-route-id="@Model.ProcessingUnitId" class="btn btn-primary">Edit Processing Unit</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p class="text-right"><a asp-action="EditProcessingUnit" asp-route-id="@Model.ProcessingUnitId" class="btn btn-primary">Edit Processing Unit</a></p>
+}
 
 <table class="table table-bordered">
   <tr><th>Id</th><td>@Model.ProcessingUnitId</td></tr>

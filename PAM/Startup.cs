@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using PAM.Security;
 using PAM.Services;
 
 namespace PAM
@@ -45,10 +47,14 @@ namespace PAM
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("CanProcessRequests", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
-                options.AddPolicy("CanReviewRequests", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
                 options.AddPolicy("IsAdmin", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
+                options.AddPolicy("IsApprover", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
+                options.AddPolicy("IsProcessor", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
+                options.AddPolicy("CanEditRequest", policyBuilder => policyBuilder.AddRequirements(new CanEditRequestRequirement()));
+                options.AddPolicy("CanEnterReview", policyBuilder => policyBuilder.AddRequirements(new CanEnterReviewRequirement()));
             });
+            services.AddSingleton<IAuthorizationHandler, CanEditRequestHandler>();
+            services.AddSingleton<IAuthorizationHandler, CanEnterReviewHandler>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services

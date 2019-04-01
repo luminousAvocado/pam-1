@@ -6,8 +6,7 @@ using PAM.Models;
 
 namespace PAM.Controllers
 {
-    [ApiController]
-    [Authorize]
+    [ApiController, Authorize]
     public class WebApiController : ControllerBase
     {
         private readonly UserService _userService;
@@ -31,13 +30,13 @@ namespace PAM.Controllers
             return systems;
         }
 
-        [Route("api/employee/search")]
+        [Route("api/employee/search"), Authorize("IsAdmin")]
         public IList<Employee> SearchEmployees(string term)
         {
             return _userService.SearchEmployees(term);
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize("IsAdmin")]
         [Route("api/processingUnit/{unitId}/employees/{employeeId}")]
         public IActionResult RemoveEmployeeFromProcessingUnit(int unitId, int employeeId)
         {
@@ -50,7 +49,7 @@ namespace PAM.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize("IsAdmin")]
         [Route("api/processingUnit/{unitId}/systems/{systemId}")]
         public IActionResult RemoveSystemFromProcessingUnit(int unitId, int systemId)
         {

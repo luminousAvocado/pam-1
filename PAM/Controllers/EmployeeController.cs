@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
@@ -8,6 +9,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize("IsAdmin")]
     public class EmployeeController : Controller
     {
         private readonly UserService _userService;

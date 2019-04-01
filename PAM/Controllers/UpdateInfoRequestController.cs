@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class UpdateInfoRequestController : Controller
     {
         private readonly UserService _userService;

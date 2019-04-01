@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize]
     public class UnitController : Controller
     {
         private readonly OrganizationService _organizationService;
@@ -35,7 +37,7 @@ namespace PAM.Controllers
             return View(id != null ? _organizationService.GetUnit((int)id) : null);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult AddUnit(int? parentId, int? bureauId)
         {
             if (parentId != null)
@@ -53,7 +55,7 @@ namespace PAM.Controllers
             return View(new Unit());
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult AddUnit(Unit unit, ICollection<int> systemIds)
         {
             unit.Systems = new List<UnitSystem>();
@@ -67,7 +69,7 @@ namespace PAM.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, Authorize("IsAdmin")]
         public IActionResult EditUnit(int id)
         {
             var unit = _organizationService.GetUnit(id);
@@ -78,7 +80,7 @@ namespace PAM.Controllers
             return View(unit);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize("IsAdmin")]
         public IActionResult EditUnit(int id, Unit update, ICollection<int> systemIds)
         {
             var unit = _organizationService.GetUnit(id);
@@ -96,6 +98,7 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(Units), new { id });
         }
 
+        [Authorize("IsAdmin")]
         public IActionResult RemoveUnit(int id)
         {
             var unit = _organizationService.GetUnit(id);
