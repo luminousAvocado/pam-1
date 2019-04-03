@@ -29,10 +29,10 @@ namespace PAM.Extensions
             return claim?.Value;
         }
 
-        public static int? GetClaimAsInt(this ClaimsIdentity identity, string claimType)
+        public static int GetClaimAsInt(this ClaimsIdentity identity, string claimType)
         {
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
-            return claim?.Value != null ? Int32.Parse(claim.Value) : (int?)null;
+            return claim?.Value != null ? Int32.Parse(claim.Value) : -1;
         }
     }
 

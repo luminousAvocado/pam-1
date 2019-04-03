@@ -22,20 +22,22 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
+        private readonly AuditLogService _auditLog;
         private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
         public ReviewController(IADService adService, UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
-            ILogger<ReviewController> logger)
+            OrganizationService organizationService, AuditLogService auditLog, IAuthorizationService authService,
+            IFluentEmail email, EmailHelper emailHelper, ILogger<ReviewController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
+            _auditLog = auditLog;
             _authService = authService;
             _email = email;
             _emailHelper = emailHelper;
@@ -98,6 +100,10 @@ namespace PAM.Controllers
             review.Approve(comments);
             request.UpdatedOn = DateTime.Now;
             _requestService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Approve, LogResourceType.Request, request.RequestId,
+                $"{identity.GetClaim(ClaimTypes.Name)} approved request with id {request.RequestId}");
 
             if (review.ReviewOrder < request.Reviews.Count - 1)
             {
@@ -174,6 +180,10 @@ namespace PAM.Controllers
             request.UpdatedOn = DateTime.Now;
             request.CompletedOn = DateTime.Now;
             _requestService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Deny, LogResourceType.Request, request.RequestId,
+                $"{identity.GetClaim(ClaimTypes.Name)} denied request with id {request.RequestId}");
 
             string emailName = "RequestDenied";
             var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request, Review = review };

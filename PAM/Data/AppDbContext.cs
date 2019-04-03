@@ -30,6 +30,7 @@ namespace PAM.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Form> Forms { get; set; }
+        public DbSet<AuditLogEntry> AuditLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -94,6 +95,13 @@ namespace PAM.Data
             modelBuilder.Entity<Form>().Property(l => l.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Form>().HasQueryFilter(l => !l.Deleted);
             modelBuilder.Entity<SystemForm>().HasKey(x => new { x.SystemId, x.FormId });
+
+            modelBuilder.Entity<AuditLogEntry>().Property(s => s.ActionType).HasConversion(
+                v => v.ToString(),
+                v => (LogActionType)Enum.Parse(typeof(LogActionType), v));
+            modelBuilder.Entity<AuditLogEntry>().Property(s => s.ResourceType).HasConversion(
+                v => v.ToString(),
+                v => (LogResourceType)Enum.Parse(typeof(LogResourceType), v));
         }
     }
 }

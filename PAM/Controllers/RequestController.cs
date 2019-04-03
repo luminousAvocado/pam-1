@@ -21,6 +21,7 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly AuditLogService _auditLog;
         private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
@@ -28,12 +29,13 @@ namespace PAM.Controllers
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper, IMapper mapper,
-            ILogger<RequestController> logger)
+            AuditLogService auditLog, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
+            IMapper mapper, ILogger<RequestController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
+            _auditLog = auditLog;
             _authService = authService;
             _email = email;
             _emailHelper = emailHelper;
@@ -133,6 +135,10 @@ namespace PAM.Controllers
             request.RequestStatus = RequestStatus.UnderReview;
             request.SubmittedOn = DateTime.Now;
             _requestService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Submit, LogResourceType.Request, id,
+                $"{identity.GetClaim(ClaimTypes.Name)} submitted request with id {id}");
 
             Employee reviewer = request.OrderedReviews[0].Reviewer;
             string receipient = reviewer.Email;

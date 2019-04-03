@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Security;
 using PAM.Services;
@@ -34,6 +35,12 @@ namespace PAM
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // This one is for using JsonConvert directly (as opposed to using the formatter configured in MVC)
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
             services.Configure<IISServerOptions>(options =>
             {
                 options.AutomaticAuthentication = false;
@@ -43,7 +50,12 @@ namespace PAM
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthorization(options =>
             {
@@ -92,6 +104,7 @@ namespace PAM
             services.AddScoped<RequestService>();
             services.AddScoped<SystemService>();
             services.AddScoped<TreeViewService>();
+            services.AddScoped<AuditLogService>();
         }
 
         public void Configure(IApplicationBuilder app)

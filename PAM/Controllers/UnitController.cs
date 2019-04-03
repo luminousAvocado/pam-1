@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
 
@@ -18,15 +21,17 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly SystemService _systemService;
         private readonly TreeViewService _treeViewService;
+        private readonly AuditLogService _auditLog;
         private readonly IMapper _mapper;
         private readonly ILogger<UnitController> _logger;
 
-        public UnitController(OrganizationService organizationService, SystemService systemService,
-            TreeViewService treeViewService, IMapper mapper, ILogger<UnitController> logger)
+        public UnitController(OrganizationService organizationService, SystemService systemService, TreeViewService treeViewService,
+            AuditLogService auditLog, IMapper mapper, ILogger<UnitController> logger)
         {
             _organizationService = organizationService;
             _systemService = systemService;
             _treeViewService = treeViewService;
+            _auditLog = auditLog;
             _mapper = mapper;
             _logger = logger;
         }
@@ -56,7 +61,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public IActionResult AddUnit(Unit unit, ICollection<int> systemIds)
+        public async Task<IActionResult> AddUnit(Unit unit, ICollection<int> systemIds)
         {
             unit.Systems = new List<UnitSystem>();
             foreach (var systemId in systemIds.OrderBy(v => v).ToList())
@@ -65,6 +70,11 @@ namespace PAM.Controllers
                     SystemId = systemId
                 });
             unit = _organizationService.AddUnit(unit);
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Create, LogResourceType.Unit, unit.UnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} created unit with id {unit.UnitId}");
+
             return RedirectToAction(nameof(Units), new { id = unit.UnitId });
         }
 
@@ -81,9 +91,11 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public IActionResult EditUnit(int id, Unit update, ICollection<int> systemIds)
+        public async Task<IActionResult> EditUnit(int id, Unit update, ICollection<int> systemIds)
         {
             var unit = _organizationService.GetUnit(id);
+
+            var oldValue = JsonConvert.SerializeObject(unit);
             unit.Name = update.Name;
             unit.UnitTypeId = update.UnitTypeId;
             unit.DisplayOrder = update.DisplayOrder;
@@ -95,16 +107,27 @@ namespace PAM.Controllers
                     SystemId = systemId
                 });
             _organizationService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(unit);
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Unit, unit.UnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} updated unit with id {unit.UnitId}", oldValue, newValue);
+
             return RedirectToAction(nameof(Units), new { id });
         }
 
         [Authorize("IsAdmin")]
-        public IActionResult RemoveUnit(int id)
+        public async Task<IActionResult> RemoveUnit(int id)
         {
             var unit = _organizationService.GetUnit(id);
             unit.Deleted = true;
             removeChildren(unit);
             _organizationService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Remove, LogResourceType.Unit, unit.UnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} removed unit with id {unit.UnitId}");
+
             return RedirectToAction(nameof(Units), new { id = unit.ParentId });
         }
 

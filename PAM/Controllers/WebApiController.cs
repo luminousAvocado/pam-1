@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 
 namespace PAM.Controllers
@@ -12,12 +15,15 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationSevice;
+        private readonly AuditLogService _auditLog;
 
-        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService)
+        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService,
+            AuditLogService auditLog)
         {
             _userService = userService;
             _systemService = systemService;
             _organizationSevice = organizationService;
+            _auditLog = auditLog;
         }
 
         [Route("api/portfolio/{unitId}")]
@@ -38,26 +44,34 @@ namespace PAM.Controllers
 
         [HttpDelete, Authorize("IsAdmin")]
         [Route("api/processingUnit/{unitId}/employees/{employeeId}")]
-        public IActionResult RemoveEmployeeFromProcessingUnit(int unitId, int employeeId)
+        public async Task<IActionResult> RemoveEmployeeFromProcessingUnit(int unitId, int employeeId)
         {
             var employee = _userService.GetEmployee(employeeId);
             if (employee.ProcessingUnitId == unitId)
             {
                 employee.ProcessingUnitId = null;
                 _userService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.ProcessingUnit, unitId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed employee {employeeId} from processing unit {unitId}");
             }
             return Ok();
         }
 
         [HttpDelete, Authorize("IsAdmin")]
         [Route("api/processingUnit/{unitId}/systems/{systemId}")]
-        public IActionResult RemoveSystemFromProcessingUnit(int unitId, int systemId)
+        public async Task<IActionResult> RemoveSystemFromProcessingUnit(int unitId, int systemId)
         {
             var system = _systemService.GetSystem(systemId);
             if (system.ProcessingUnitId == unitId)
             {
                 system.ProcessingUnitId = null;
                 _systemService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.ProcessingUnit, unitId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from processing unit {unitId}");
             }
             return Ok();
         }

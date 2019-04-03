@@ -173,6 +173,22 @@ CREATE TABLE [Units] (
 
 GO
 
+CREATE TABLE [AuditLog] (
+    [AuditLogEntryId] int NOT NULL IDENTITY,
+    [EmployeeId] int NOT NULL,
+    [ActionType] nvarchar(max) NOT NULL,
+    [ResourceType] nvarchar(max) NOT NULL,
+    [ResourceId] int NOT NULL,
+    [Message] nvarchar(max) NULL,
+    [Timestamp] datetime2 NOT NULL,
+    [OldValue] nvarchar(max) NULL,
+    [NewValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AuditLog] PRIMARY KEY ([AuditLogEntryId]),
+    CONSTRAINT [FK_AuditLog_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE CASCADE
+);
+
+GO
+
 CREATE TABLE [SytemForms] (
     [SystemId] int NOT NULL,
     [FormId] int NOT NULL,
@@ -323,6 +339,10 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId'
 
 GO
 
+CREATE INDEX [IX_AuditLog_EmployeeId] ON [AuditLog] ([EmployeeId]);
+
+GO
+
 CREATE INDEX [IX_Bureaus_BureauTypeId] ON [Bureaus] ([BureauTypeId]);
 
 GO
@@ -424,7 +444,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190325214311_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190402165059_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 
