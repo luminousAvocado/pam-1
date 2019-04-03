@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
@@ -13,12 +14,15 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationSevice;
+        private readonly FileService _fileService;
 
-        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService)
+        public WebApiController(UserService userService, SystemService systemService,
+            OrganizationService organizationService, FileService fileService)
         {
             _userService = userService;
             _systemService = systemService;
             _organizationSevice = organizationService;
+            _fileService = fileService;
         }
 
         [Route("api/portfolio/{unitId}")]
@@ -62,5 +66,15 @@ namespace PAM.Controllers
             }
             return Ok();
         }
+
+        /*
+        [Route("api/forms/{fileid}")]
+        public ActionResult DownloadForm(int id)
+        {
+            var fileData = _fileService.GetFileById(id);
+            Stream stream = new MemoryStream(fileData.Content);
+            return File(stream, "application/pdf", fileData.Name);
+        }
+        */
     }
 }

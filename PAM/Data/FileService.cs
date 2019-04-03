@@ -1,4 +1,8 @@
-﻿using PAM.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using PAM.Models;
 
 namespace PAM.Data
 {
@@ -15,6 +19,21 @@ namespace PAM.Data
         {
             _dbContext.Files.Add(file);
             _dbContext.SaveChanges();
+        }
+
+        public File GetFileByName(string name)
+        {
+            return _dbContext.Files.Where(f => f.Name == name).FirstOrDefault();
+        }
+
+        public File GetFileById(int id)
+        {
+            return _dbContext.Files.Where(f => f.FileId == id).FirstOrDefault();
+        }
+
+        public ICollection<File> GetAllFiles()
+        {
+            return _dbContext.Files.ToList();
         }
 
         public void SaveChanges()

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Web;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -67,37 +72,47 @@ namespace PAM.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public ActionResult Download(){
+            var test = _fileService.GetFileByName("ad_contractor");
+            Stream stream = new MemoryStream(test.Content);
+            return File(stream, "application/pdf", "ad_contractor");
+            //return new FileStreamResult(stream, test.ContentType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile fileUpload)
         {
-            long size = file.Length;
+            long size = fileUpload.Length;
 
             var filePath = Path.GetTempFileName();
+            var pdfFileName = Path.GetFileNameWithoutExtension(fileUpload.FileName);
 
-            if (file.Length > 0)
+            if (fileUpload.Length > 0)
             {
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    await fileUpload.CopyToAsync(stream);
                 }
             }
-
             var saveFile = new PAM.Models.File
             {
-                Name = file.Name,
-                ContentType = file.ContentType,
-                Length = file.Length,
+                Name = pdfFileName,
+                ContentType = fileUpload.ContentType,
+                Length = fileUpload.Length,
             };
 
             using (var memoryStream = new MemoryStream())
             {
-                await file.CopyToAsync(memoryStream);
+                await fileUpload.CopyToAsync(memoryStream);
                 saveFile.Content = memoryStream.ToArray();
             }
             _fileService.AddFile(saveFile);
 
             return Ok(new { size, filePath });
         }
+        */
 
         public async Task<IActionResult> Logout()
         {

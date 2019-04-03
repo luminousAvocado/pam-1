@@ -86,6 +86,7 @@ namespace PAM
             services.AddScoped<RequestService>();
             services.AddScoped<SystemService>();
             services.AddScoped<TreeViewService>();
+            services.AddScoped<FileService>();
         }
 
         public void Configure(IApplicationBuilder app)

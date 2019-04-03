@@ -65,7 +65,7 @@ namespace PAM.Models
         public File File { get; set; }
     }
 
-    [Table("SytemForms")]
+    [Table("SystemForms")]
     public class SystemForm
     {
         public int SystemId { get; set; }

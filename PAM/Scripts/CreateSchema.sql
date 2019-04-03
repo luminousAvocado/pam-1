@@ -173,7 +173,7 @@ CREATE TABLE [Units] (
 
 GO
 
-CREATE TABLE [SytemForms] (
+CREATE TABLE [SystemForms] (
     [SystemId] int NOT NULL,
     [FormId] int NOT NULL,
     CONSTRAINT [PK_SytemForms] PRIMARY KEY ([SystemId], [FormId]),

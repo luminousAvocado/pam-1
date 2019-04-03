@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,15 +16,18 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
+        private readonly FileService _fileService;
         private readonly ILogger _logger;
 
         public PortfolioAssignmentRequestController(UserService userService, RequestService requestService,
-            OrganizationService organizationService, TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
+            OrganizationService organizationService, TreeViewService treeViewService,
+            FileService fileService, ILogger<PortfolioAssignmentRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
+            _fileService = fileService;
             _logger = logger;
         }
 
@@ -86,7 +90,32 @@ namespace PAM.Controllers
             request.CaseloadNumber = update.CaseloadNumber;
             _requestService.SaveChanges();
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
+                RedirectToAction("Forms", new { id });
+        }
+
+        [HttpGet]
+        public IActionResult Forms(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var requiredForms = _fileService.GetAllFiles();
+            ViewData["request"] = request;
+            ViewData["requiredForms"] = requiredForms;
+            return View(request);
+        }
+
+        [HttpPost]
+        public IActionResult Forms(int id,bool saveDraft)
+        {
+            var request = _requestService.GetRequest(id);
+            return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
+        }
+
+        public ActionResult DownloadForm(int id)
+        {
+            var fileData = _fileService.GetFileById(id);
+            Stream stream = new MemoryStream(fileData.Content);
+            return File(stream, "application/pdf", fileData.Name);
         }
 
         [HttpGet]
