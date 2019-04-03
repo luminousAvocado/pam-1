@@ -24,10 +24,10 @@ namespace PAM.Controllers
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
-        private readonly FileService _fileService;
+        private readonly FormService _fileService;
         private readonly ILogger _logger;
 
-        public AccountController(IADService adService, UserService userService, FileService fileService, ILogger<AccountController> logger)
+        public AccountController(IADService adService, UserService userService, FormService fileService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;

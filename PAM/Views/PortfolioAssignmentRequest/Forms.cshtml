@@ -1,6 +1,6 @@
 ﻿@model Request
 @{
-  var requiredForms = (List<File>)ViewData["requiredForms"];
+  var requiredForms = (List<Form>)ViewData["requiredForms"];
   ViewData["Title"] = "Forms";
   ViewData["id"] = @Model.RequestId;
 }
@@ -22,7 +22,7 @@
       $('#uploadFile').change(function (f) {
         var fileName = f.target.files[0].name;
         $('#uploadBtn').hide();
-        $("<a href=" + fileName + "\" id=\"uploadName\" target=\"_blank\">" + fileName + "</a>").insertAfter("#uploadBtn");
+        $("<a href=\"ViewForm\" id=\"uploadName\" target=\"_blank\">" + fileName + "</a>").insertAfter("#uploadBtn");
         $('#removeBtn').show();
       });
       $('#removeBtn').click(function () {
@@ -68,13 +68,15 @@
           <tr>
             <td>@form.Name</td>
             <td>
-              <label class="btn btn-info" id="uploadBtn">
-                Upload <input type="file" id="uploadFile" hidden />
+              <label class="btn btn-primary float-right m-1">
+                <a asp-controller="Forms" asp-action="DownloadForm" asp-route-id="@form.FileId" class="text-white">Download</a>
               </label>
-              <label class="btn btn-danger" id="removeBtn">
+              <label class="btn btn-danger float-right m-1" id="removeBtn">
                 Remove
               </label>
-              <a class="btn btn-primary" asp-action="DownloadForm" asp-route-id="@form.FileId">Download</a>
+              <label class="btn btn-info float-right m-1" id="uploadBtn">
+                Upload <input type="file" id="uploadFile" hidden />
+              </label>
             </td>
           </tr>
         }
