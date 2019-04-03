@@ -19,9 +19,9 @@ namespace PAM.Controllers
             _logger = logger;
         }
 
-        public IActionResult ListLogs()
+        public IActionResult AuditLogs()
         {
             return View(_auditService.GetAllLogs());
-        } 
+        }
     }
 }

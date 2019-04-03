@@ -20,6 +20,14 @@ namespace PAM.Data
             return _dbContext.AuditLogs.OrderByDescending(x => x.AuditLogId).ToList();
         }
 
+        public ICollection<AuditLog> GetLogsInRange(DateTime start, DateTime end)
+        {
+            return _dbContext.AuditLogs.OrderByDescending(x => x.AuditLogId)
+                .Where(x => x.Timestamp >= start)
+                .Where(x => x.Timestamp <= end)
+                .ToList();
+        }
+
         public AuditLog CreateAuditLog(Int32 empId, Models.Action action, ResourceType resType, int resId, string oldValue, string newValue)
         {
             AuditLog newLog = new AuditLog

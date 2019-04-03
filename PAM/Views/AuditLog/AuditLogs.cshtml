@@ -1,0 +1,180 @@
+﻿@model ICollection<AuditLog>
+@{
+  ViewData["Title"] = "List Logs";
+}
+
+@section StyleSheets{
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.min.css" />
+}
+@section Scripts{
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+  <script>
+    $('#daterange .input-daterange').datepicker({
+      format: "mm-dd-yyyy",
+      endDate: "0d",
+      autoclose: true,
+      keepEmptyValues: true,
+    })
+      .on('changeDate', function (e) {
+        $.ajax({
+          url: "@Context.Request.PathBase/api/auditLogs/" + $('#start').val() + " 00:00:00 AM" + "/" +
+            $('#end').val() + " 11:59:00 PM",
+          success: function (data) {
+            console.log(data);
+            $("#searchResults").empty();
+            data.forEach(function (log) {
+              var oldVal = "";
+              var newVal = "";
+              if (log.oldValue != null) {
+                oldVal = "<button type=" + "\"button\"" + " class=" + "\"values btn btn-link\"" + " data-oldValue=\"\"" +
+                  " data-newValue=\"\"" + " data-toggle=" + "\"modal\"" + " data-target=" + "\"#valuesModal\"" + ">View</button>";
+
+                newVal = "<button type=" + "\"button\"" + " class=" + "\"values btn btn-link\"" + " data-oldValue=\"\"" +
+                  " data-newValue=\"\"" + " data-toggle=" + "\"modal\"" + " data-target=" + "\"#valuesModal\"" + ">View</button>";
+              }
+              $("#searchResults").append(
+                "<tr>" +
+                  "<td>" + log.auditLogId + "</td>" +
+                  "<td>" + new Date(log.timestamp).toLocaleString() + "</td>" +
+                  "<td>" + log.employeeId + "</td>" +
+                  "<td>" + log.action + "</td>" +
+                  "<td>" + log.resourceType + "</td>" +
+                  "<td>" + log.resourceId + "</td>" +
+                  "<td>" + oldVal + "</td>" +
+                  "<td>" + newVal + "</td>" +
+                "</tr>"
+              );
+              if (log.oldValue != null) {
+                $("button.values:last").attr("data-oldvalue", log.oldValue);
+                $("button.values:last").attr("data-newvalue", log.newValue);
+                $("button.values").eq(-2).attr("data-oldvalue", log.oldValue);
+                $("button.values").eq(-2).attr("data-newvalue", log.newValue);
+              }
+            });
+          }
+        })
+      });
+  </script>
+  <script>
+    $(function () {
+      $('body').on('click', 'button.values', (function () {
+        var oldVals = JSON.stringify($(this).data('oldvalue'), null, 2);
+        var newVals = JSON.stringify($(this).data('newvalue'), null, 2);
+        $('#oldValueModal').text(oldVals);
+        $('#newValueModal').text(newVals);
+      }));
+    });
+  </script>
+}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Audit Logs</li>
+  </ol>
+</nav>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#allLogs" role="tab" aria-controls="allLogs" aria-selected="true">All Logs</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="search-tab" data-toggle="tab" href="#searchLogs" role="tab" aria-controls="searchLogs" aria-selected="false">Search By Date</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="tabContent">
+
+  <div class="tab-pane fade show active" id="allLogs" role="tabpanel" aria-labelledby="logs-tab">
+    <table data-toggle="table" data-pagination="true" data-page-size="25">
+      <thead>
+        <tr>
+          <th data-sortable="true">AuditLog ID</th>
+          <th data-sortable="true">Timestamp</th>
+          <th data-sortable="true">Employee ID</th>
+          <th data-sortable="true">Action</th>
+          <th data-sortable="true">Resource Type</th>
+          <th data-sortable="true">Resource ID</th>
+          <th>Old Value</th>
+          <th>New Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var log in Model)
+        {
+          <tr>
+            <td>@log.AuditLogId</td>
+            <td>@log.Timestamp</td>
+            <td>@log.EmployeeId</td>
+            <td>@log.Action</td>
+            <td>@log.ResourceType</td>
+            <td>@log.ResourceId</td>
+            @if (log.OldValue != null)
+            {
+              <td><button type="button" class="values btn btn-link" data-oldValue="@log.OldValue" data-newValue="@log.NewValue" data-toggle="modal" data-target="#valuesModal">View</button></td>
+              <td><button type="button" class="values btn btn-link" data-oldValue="@log.OldValue" data-newValue="@log.NewValue" data-toggle="modal" data-target="#valuesModal">View</button></td>
+            }
+            else
+            {
+              <td></td>
+              <td></td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="searchLogs" role="tabpanel" aria-labelledby="search-tab">
+    <div id="daterange">
+      <div class="input-daterange input-group" id="datepicker">
+        <input type="text" class="input-sm form-control" id="start" />
+        <span class="input-group-addon">to</span>
+        <input type="text" class="input-sm form-control" id="end" />
+      </div>
+    </div>
+    <table id="searchTable" data-toggle="table" data-pagination="true" data-page-size="25">
+      <thead>
+        <tr>
+          <th data-sortable="true">AuditLog ID</th>
+          <th data-sortable="true">Timestamp</th>
+          <th data-sortable="true">Employee ID</th>
+          <th data-sortable="true">Action</th>
+          <th data-sortable="true">Resource Type</th>
+          <th data-sortable="true">Resource ID</th>
+          <th>Old Value</th>
+          <th>New Value</th>
+        </tr>
+      </thead>
+      <tbody id="searchResults"></tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="valuesModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Old Value / New Value</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <pre class="prettyprint" id="oldValueModal"></pre>
+              </div>
+              <div class="col">
+                <pre class="prettyprint" id="newValueModal"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

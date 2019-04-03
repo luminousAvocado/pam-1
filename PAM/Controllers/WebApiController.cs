@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
@@ -13,12 +14,20 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationSevice;
+        private readonly AuditLogService _auditService;
 
-        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService)
+        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService, AuditLogService auditService)
         {
             _userService = userService;
             _systemService = systemService;
             _organizationSevice = organizationService;
+            _auditService = auditService;
+        }
+
+        [Route("api/auditLogs/{start:datetime}/{end:datetime}")]
+        public ICollection<AuditLog> GetAuditLogsByDate(DateTime start, DateTime end)
+        {
+            return _auditService.GetLogsInRange(start, end); 
         }
 
         [Route("api/portfolio/{unitId}")]
