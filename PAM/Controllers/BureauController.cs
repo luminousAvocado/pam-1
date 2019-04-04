@@ -70,10 +70,10 @@ namespace PAM.Controllers
         {
             var bureau = _organizationService.GetBureau(id);
 
-            var oldValue = JsonConvert.SerializeObject(bureau);
+            var oldValue = JsonConvert.SerializeObject(bureau, Formatting.Indented);
             _mapper.Map(update, bureau);
             _organizationService.SaveChanges();
-            var newValue = JsonConvert.SerializeObject(bureau);
+            var newValue = JsonConvert.SerializeObject(bureau, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Bureau, bureau.BureauId,

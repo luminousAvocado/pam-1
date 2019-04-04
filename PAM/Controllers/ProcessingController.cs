@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
 using PAM.Extensions;
+using PAM.Models;
 using PAM.Services;
 
 namespace PAM.Controllers
@@ -19,17 +21,19 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
+        private readonly AuditLogService _auditLog;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly ILogger _logger;
 
-        public ProcessingController(UserService userService, RequestService requestService, SystemService systemService,
-            OrganizationService organizationService, IFluentEmail email, EmailHelper emailHelper, ILogger<ProcessingController> logger)
+        public ProcessingController(UserService userService, RequestService requestService, SystemService systemService, OrganizationService organizationService,
+            AuditLogService auditLog, IFluentEmail email, EmailHelper emailHelper, ILogger<ProcessingController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = organizationService;
+            _auditLog = auditLog;
             _email = email;
             _emailHelper = emailHelper;
             _logger = logger;
@@ -54,14 +58,18 @@ namespace PAM.Controllers
             return View(_requestService.GetRequest(id));
         }
 
-        public IActionResult ProcessSystemAccesses(List<int> systemAccessIds)
+        public async Task<IActionResult> ProcessSystemAccesses(List<int> systemAccessIds)
         {
-            int employeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
+            var identity = (ClaimsIdentity)User.Identity;
+            int employeeId = Int32.Parse(identity.GetClaim("EmployeeId"));
+            string employeeName = identity.GetClaim(ClaimTypes.Name);
             var systemAccesses = _systemService.GetSystemAccesses(systemAccessIds);
             foreach (var systemAccess in systemAccesses)
             {
                 systemAccess.ProcessedById = employeeId;
                 systemAccess.ProcessedOn = DateTime.Now;
+                await _auditLog.Append(employeeId, LogActionType.Process, LogResourceType.SystemAccess, systemAccess.SystemAccessId,
+                    $"{employeeName} processed system access with id {systemAccess.SystemAccessId}");
             }
             _systemService.SaveChanges();
 
@@ -86,14 +94,18 @@ namespace PAM.Controllers
             return RedirectToAction(nameof(MyProcessings));
         }
 
-        public IActionResult ConfirmSystemAccesses(List<int> systemAccessIds)
+        public async Task<IActionResult> ConfirmSystemAccesses(List<int> systemAccessIds)
         {
-            int employeeId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("EmployeeId"));
+            var identity = (ClaimsIdentity)User.Identity;
+            int employeeId = Int32.Parse(identity.GetClaim("EmployeeId"));
+            string employeeName = identity.GetClaim(ClaimTypes.Name);
             var systemAccesses = _systemService.GetSystemAccesses(systemAccessIds);
             foreach (var systemAccess in systemAccesses)
             {
                 systemAccess.ConfirmedById = employeeId;
                 systemAccess.ConfirmedOn = DateTime.Now;
+                await _auditLog.Append(employeeId, LogActionType.Process, LogResourceType.SystemAccess, systemAccess.SystemAccessId,
+                    $"{employeeName} confirmed system access with id {systemAccess.SystemAccessId}");
             }
             _systemService.SaveChanges();
 

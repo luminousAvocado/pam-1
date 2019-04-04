@@ -95,7 +95,7 @@ namespace PAM.Controllers
         {
             var unit = _organizationService.GetUnit(id);
 
-            var oldValue = JsonConvert.SerializeObject(unit);
+            var oldValue = JsonConvert.SerializeObject(unit, Formatting.Indented);
             unit.Name = update.Name;
             unit.UnitTypeId = update.UnitTypeId;
             unit.DisplayOrder = update.DisplayOrder;
@@ -107,7 +107,7 @@ namespace PAM.Controllers
                     SystemId = systemId
                 });
             _organizationService.SaveChanges();
-            var newValue = JsonConvert.SerializeObject(unit);
+            var newValue = JsonConvert.SerializeObject(unit, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Unit, unit.UnitId,

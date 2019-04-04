@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PAM.Data;
 
 namespace PAM.Controllers
 {
+    [Authorize("IsAdmin")]
     public class AuditLogController : Controller
     {
         private readonly AuditLogService _auditLog;
@@ -12,14 +15,18 @@ namespace PAM.Controllers
             _auditLog = auditLog;
         }
 
-        public IActionResult ViewLog()
+        public IActionResult SearchLog(DateTime? startDate, DateTime? endDate, string term)
         {
-            int days = 7;
-            var recentLog = _auditLog.GetRecentEntries(days);
+            if (startDate == null)
+                startDate = DateTime.Now.AddDays(-7);
 
-            ViewData["days"] = days;
-            ViewData["recentLog"] = recentLog;
-            return View();
+            ViewData["startDate"] = ((DateTime)startDate).ToString("yyyy-MM-dd");
+            return View(_auditLog.Search((DateTime)startDate, endDate, term));
+        }
+
+        public IActionResult ViewLogEntry(int id)
+        {
+            return View(_auditLog.GetAuditLogEntry(id));
         }
     }
 }

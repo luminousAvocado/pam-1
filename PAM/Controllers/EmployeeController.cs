@@ -57,10 +57,10 @@ namespace PAM.Controllers
         {
             var employee = _userService.GetEmployee(id);
 
-            var oldValue = JsonConvert.SerializeObject(employee);
+            var oldValue = JsonConvert.SerializeObject(employee, Formatting.Indented);
             _mapper.Map(update, employee);
             _userService.SaveChanges();
-            var newValue = JsonConvert.SerializeObject(employee);
+            var newValue = JsonConvert.SerializeObject(employee, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.User, employee.EmployeeId,

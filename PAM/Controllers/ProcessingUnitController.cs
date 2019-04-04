@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 
 namespace PAM.Controllers
@@ -15,15 +18,17 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationService;
+        private readonly AuditLogService _auditLog;
         private readonly IMapper _mapper;
         private readonly ILogger<ProcessingUnitController> _logger;
 
         public ProcessingUnitController(UserService userService, SystemService systemSerivce, OrganizationService organizationService,
-            IMapper mapper, ILogger<ProcessingUnitController> logger)
+            AuditLogService auditLog, IMapper mapper, ILogger<ProcessingUnitController> logger)
         {
             _userService = userService;
             _systemService = systemSerivce;
             _organizationService = organizationService;
+            _auditLog = auditLog;
             _mapper = mapper;
             _logger = logger;
         }
@@ -48,7 +53,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public IActionResult AddProcessingUnit(ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
+        public async Task<IActionResult> AddProcessingUnit(ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             unit = _organizationService.AddProcessingUnit(unit);
 
@@ -61,6 +66,10 @@ namespace PAM.Controllers
             foreach (var system in systems)
                 system.ProcessingUnitId = unit.ProcessingUnitId;
             _systemService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Create, LogResourceType.ProcessingUnit, unit.ProcessingUnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} created processing unit with id {unit.ProcessingUnitId}");
 
             return RedirectToAction(nameof(ViewProcessingUnit), new { id = unit.ProcessingUnitId });
         }
@@ -75,32 +84,42 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public IActionResult EditProcessingUnit(int id, ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
+        public async Task<IActionResult> EditProcessingUnit(int id, ProcessingUnit unit, List<int> employeeIds, List<int> systemIds)
         {
             var processingUnit = _organizationService.GetProcessingUnit(id);
+            var oldValue = JsonConvert.SerializeObject(processingUnit, Formatting.Indented);
             processingUnit.Name = unit.Name;
             processingUnit.Email = unit.Email;
             _organizationService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(processingUnit, Formatting.Indented);
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.ProcessingUnit, processingUnit.ProcessingUnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} updated processing unit with id {processingUnit.ProcessingUnitId}", oldValue, newValue);
 
             var employees = _userService.GetEmployees(employeeIds);
             foreach (var employee in employees)
-                employee.ProcessingUnitId = unit.ProcessingUnitId;
+                employee.ProcessingUnitId = processingUnit.ProcessingUnitId;
             _userService.SaveChanges();
 
             var systems = _systemService.GetSystems(systemIds);
             foreach (var system in systems)
-                system.ProcessingUnitId = unit.ProcessingUnitId;
+                system.ProcessingUnitId = processingUnit.ProcessingUnitId;
             _systemService.SaveChanges();
 
             return RedirectToAction(nameof(ViewProcessingUnit), new { id });
         }
 
         [Authorize("IsAdmin")]
-        public IActionResult RemoveProcessingUnit(int id)
+        public async Task<IActionResult> RemoveProcessingUnit(int id)
         {
             var unit = _organizationService.GetProcessingUnit(id);
             unit.Deleted = true;
             _organizationService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Remove, LogResourceType.ProcessingUnit, unit.ProcessingUnitId,
+                $"{identity.GetClaim(ClaimTypes.Name)} removed processing unit with id {unit.ProcessingUnitId}");
 
             var employees = _userService.GetEmployeesOfProcessingUnit(unit.ProcessingUnitId);
             foreach (var employee in employees)

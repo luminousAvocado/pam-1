@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PAM.Models;
 
 namespace PAM.Data
@@ -9,10 +11,18 @@ namespace PAM.Data
     public class AuditLogService
     {
         private readonly AppDbContext _dbContext;
+        private readonly ILogger<AuditLogService> _logger;
 
-        public AuditLogService(AppDbContext dbContext)
+        public AuditLogService(AppDbContext dbContext, ILogger<AuditLogService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
+        }
+
+        public AuditLogEntry GetAuditLogEntry(int id)
+        {
+            return _dbContext.AuditLog.Include(e => e.Employee)
+                .Where(e => e.AuditLogEntryId == id).FirstOrDefault();
         }
 
         public async Task Append(int employeeId, LogActionType actionType, LogResourceType resourceType, int resourceId, string message,
@@ -23,11 +33,15 @@ namespace PAM.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        public IList<AuditLogEntry> GetRecentEntries(int days)
+        public IList<AuditLogEntry> Search(DateTime startTime, DateTime? endTime = null, string term = null)
         {
-            return _dbContext.AuditLog.Where(e => e.Timestamp > DateTime.Now.AddDays(-days))
-                .OrderByDescending(e => e.Timestamp)
-                .ToList();
+            _logger.LogInformation(startTime + " " + endTime + " " + term);
+            var query = _dbContext.AuditLog.Where(e => e.Timestamp >= startTime);
+            if (endTime != null)
+                query = query.Where(e => e.Timestamp <= endTime);
+            if (!string.IsNullOrWhiteSpace(term))
+                query = query.Where(e => EF.Functions.FreeText(e.Message, term));
+            return query.OrderByDescending(e => e.Timestamp).ToList();
         }
     }
 }

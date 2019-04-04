@@ -73,10 +73,10 @@ namespace PAM.Controllers
         {
             var system = _systemService.GetSystem(id);
 
-            var oldValue = JsonConvert.SerializeObject(system);
+            var oldValue = JsonConvert.SerializeObject(system, Formatting.Indented);
             _mapper.Map(update, system);
             _systemService.SaveChanges();
-            var newValue = JsonConvert.SerializeObject(system);
+            var newValue = JsonConvert.SerializeObject(system, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, system.SystemId,

@@ -66,10 +66,10 @@ namespace PAM.Controllers
         {
             var location = _organizationService.GetLocation(id);
 
-            var oldValue = JsonConvert.SerializeObject(location);
+            var oldValue = JsonConvert.SerializeObject(location, Formatting.Indented);
             _mapper.Map(update, location);
             _organizationService.SaveChanges();
-            var newValue = JsonConvert.SerializeObject(location);
+            var newValue = JsonConvert.SerializeObject(location, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Location, location.LocationId,
