@@ -110,9 +110,14 @@ namespace PAM.Controllers
             return RedirectEditRequest(request.RequestId, requestType);
         }
 
-        public IActionResult ViewRequest(int id)
+        public async Task<IActionResult> ViewRequest(int id)
         {
-            return View(_requestService.GetRequest(id));
+            var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanViewRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            return View(request);
         }
 
         public async Task<IActionResult> EditRequest(int id)

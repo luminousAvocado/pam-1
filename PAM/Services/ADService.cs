@@ -237,6 +237,7 @@ namespace PAM.Services
                 FirstName = "Bob",
                 LastName = "Lee",
                 Email = "blee1@localhost.localdomain",
+                SupervisorName = "Tom Smith (e345678)"
             },
             new Employee()
             {
@@ -245,6 +246,7 @@ namespace PAM.Services
                 FirstName = "Bob",
                 LastName = "Lee",
                 Email = "blee2@localhost.localdomain",
+                SupervisorName = "Tom Smith (e345678)"
             }
         };
 

@@ -64,10 +64,15 @@ namespace PAM.Controllers
             return View();
         }
 
-        public IActionResult ViewRequest(int id)
+        public async Task<IActionResult> ViewRequest(int id)
         {
             var review = _requestService.GetReview(id);
-            return View(_requestService.GetRequest(review.RequestId));
+            var request = _requestService.GetRequest(review.RequestId);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanViewRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            return View(request);
         }
 
         [HttpGet]

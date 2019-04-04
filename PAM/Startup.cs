@@ -63,9 +63,11 @@ namespace PAM
                 options.AddPolicy("IsApprover", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
                 options.AddPolicy("IsProcessor", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
                 options.AddPolicy("CanEditRequest", policyBuilder => policyBuilder.AddRequirements(new CanEditRequestRequirement()));
+                options.AddPolicy("CanViewRequest", policyBuilder => policyBuilder.AddRequirements(new CanViewRequestRequirement()));
                 options.AddPolicy("CanEnterReview", policyBuilder => policyBuilder.AddRequirements(new CanEnterReviewRequirement()));
             });
             services.AddSingleton<IAuthorizationHandler, CanEditRequestHandler>();
+            services.AddSingleton<IAuthorizationHandler, CanViewRequestHandler>();
             services.AddSingleton<IAuthorizationHandler, CanEnterReviewHandler>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -79,7 +81,8 @@ namespace PAM
                         Port = Configuration.GetValue<int>("SMTP:Port"),
                         Credentials = new NetworkCredential(
                             Configuration.GetValue<string>("SMTP:Username"),
-                            Configuration.GetValue<string>("SMTP:Password"))
+                            Configuration.GetValue<string>("SMTP:Password")),
+                        EnableSsl = Configuration.GetValue<bool>("SMTP:EnableSSL")
                     }
                 );
             services.AddSingleton(
