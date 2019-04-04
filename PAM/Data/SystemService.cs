@@ -16,7 +16,7 @@ namespace PAM.Data
 
         public IList<Models.System> GetSystems()
         {
-            return _dbContext.Systems.Include(s => s.ProcessingUnit).OrderBy(s => s.Name).ToList();
+            return _dbContext.Systems.Include(s => s.ProcessingUnit).Include(s => s.Forms).OrderBy(s => s.Name).ToList();
         }
 
         public IList<Models.System> GetSystems(List<int> ids)
