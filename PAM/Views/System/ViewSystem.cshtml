@@ -18,4 +18,13 @@
   <tr><th>Description</th><td>@Model.Description</td></tr>
   <tr><th>Owner</th><td>@Model.Owner</td></tr>
   <tr><th>Processing Unit</th><td>@Model.ProcessingUnit?.Name</td></tr>
+  <tr>
+    <th>Forms</th>
+    <td>
+      @foreach (var form in Model.Forms)
+      {
+        <p>@form.Form.Name</p>
+      }
+    </td>
+  </tr>
 </table>

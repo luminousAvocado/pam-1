@@ -36,7 +36,7 @@ namespace PAM.Data
 
         public Models.System GetSystem(int id)
         {
-            return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.ProcessingUnit).FirstOrDefault();
+            return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.ProcessingUnit).Include(s => s.Forms).ThenInclude(r => r.Form).FirstOrDefault();
         }
 
         public Models.System AddSystem(Models.System system)
