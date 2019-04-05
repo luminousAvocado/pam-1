@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,15 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationService;
         private readonly IMapper _mapper;
         private readonly ILogger<SystemController> _logger;
+        private readonly FormService _formService;
 
-        public SystemController(SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger)
+        public SystemController(SystemService systemService, OrganizationService organizationService, IMapper mapper, ILogger<SystemController> logger, FormService formService)
         {
             _systemService = systemService;
             _organizationService = organizationService;
             _mapper = mapper;
             _logger = logger;
+            _formService = formService;
         }
 
 
@@ -54,11 +57,17 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditSystem(int id, Models.System update)
+        public IActionResult EditSystem(int id, Models.System update, List<int> formIds)
         {
             var system = _systemService.GetSystem(id);
             _mapper.Map(update, system);
             _systemService.SaveChanges();
+
+            //var forms = _formService.GetForms(formIds);
+            //foreach (var form in forms)
+            //    system.ProcessingUnitId = unit.ProcessingUnitId;
+            //_systemService.SaveChanges();
+
             return RedirectToAction(nameof(ViewSystem), new { id });
         }
 
