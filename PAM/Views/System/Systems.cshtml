@@ -32,7 +32,7 @@
       <th>Name</th>
       <th class="d-none d-lg-table-cell">Description</th>
       <th class="d-none d-md-table-cell">Owner</th>
-      <th class="d-none d-md-table-cell">Processing Unit</th>
+      <th class="d-none d-md-table-cell">Support Unit</th>
       @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
       {
         <th></th>
@@ -48,7 +48,7 @@
         </td>
         <td class="d-none d-lg-table-cell">@system.Description</td>
         <td class="d-none d-md-table-cell">@system.Owner</td>
-        <td class="d-none d-md-table-cell">@system.ProcessingUnit?.Name</td>
+        <td class="d-none d-md-table-cell">@system.SupportUnit?.Name</td>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
         {
           <td>

@@ -155,11 +155,11 @@ namespace PAM.Controllers
                 _email.Subject(_emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer))
                     .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model);
                 _email.Data.ToAddresses.Clear();
-                var processingUnitIds = request.Systems.GroupBy(s => s.System.ProcessingUnitId, s => s).Select(g => g.Key).ToList();
-                foreach (var processingUnitId in processingUnitIds)
+                var supportUnitIds = request.Systems.GroupBy(s => s.System.SupportUnitId, s => s).Select(g => g.Key).ToList();
+                foreach (var supportUnitId in supportUnitIds)
                 {
-                    var processingUnit = _organizationService.GetProcessingUnit((int)processingUnitId);
-                    _email.To(processingUnit.Email);
+                    var supportUnit = _organizationService.GetSupportUnit((int)supportUnitId);
+                    _email.To(supportUnit.Email);
                 }
                 await _email.SendAsync();
             }

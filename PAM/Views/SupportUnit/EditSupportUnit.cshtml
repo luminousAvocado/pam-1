@@ -1,6 +1,6 @@
-﻿@model ProcessingUnit
+﻿@model SupportUnit
 @{
-  ViewData["Title"] = "Edit Processing Unit";
+  ViewData["Title"] = "Edit Support Unit";
   var employees = (List<Employee>)ViewData["employees"];
   var systems = (List<PAM.Models.System>)ViewData["systems"];
 }
@@ -18,7 +18,7 @@
             success: function (results) {
               var employees = [];
               results.forEach(function (r) {
-                if (!r.processingUnitId) employees.push(r);
+                if (!r.supportUnitId) employees.push(r);
               });
               return process(employees);
             }
@@ -65,10 +65,10 @@
       $(".delEmployee").click(function (event) {
         event.preventDefault();
         var row = $(this).closest("tr");
-        var unitId = "@Model.ProcessingUnitId";
+        var unitId = "@Model.SupportUnitId";
         var employeeId = row.attr("data-employee-id");
         $.ajax({
-          url: "@Context.Request.PathBase/api/processingUnit/" + unitId + "/employees/" + employeeId,
+          url: "@Context.Request.PathBase/api/supportUnit/" + unitId + "/employees/" + employeeId,
           method: "DELETE",
           success: function () {
             row.remove();
@@ -78,10 +78,10 @@
       $(".delSystem").click(function (event) {
         event.preventDefault();
         var row = $(this).closest("tr");
-        var unitId = "@Model.ProcessingUnitId";
+        var unitId = "@Model.SupportUnitId";
         var systemId = row.attr("data-system-id");
         $.ajax({
-          url: "@Context.Request.PathBase/api/processingUnit/" + unitId + "/systems/" + systemId,
+          url: "@Context.Request.PathBase/api/supportUnit/" + unitId + "/systems/" + systemId,
           method: "DELETE",
           success: function () {
             row.remove();
@@ -92,15 +92,15 @@
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this processing unit?";
       if (confirm(msg))
-        window.location.href = "@Context.Request.PathBase/ProcessingUnit/RemoveProcessingUnit/@Model.ProcessingUnitId";
+        window.location.href = "@Context.Request.PathBase/SupportUnit/RemoveSupportUnit/@Model.SupportUnitId";
     }
   </script>
 }
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Processing Units</a></li>
-    <li class="breadcrumb-item"><a asp-action="ViewProcessingUnit" asp-route-id="@Model.ProcessingUnitId">@Model.Name</a></li>
+    <li class="breadcrumb-item"><a asp-action="SupportUnits">Support Units</a></li>
+    <li class="breadcrumb-item"><a asp-action="ViewSupportUnit" asp-route-id="@Model.SupportUnitId">@Model.Name</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
   </ol>
 </nav>
@@ -169,7 +169,7 @@
   </div>
   <div class="form-row">
     <div class="col-6">
-      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Processing Unit</a>
+      <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Support Unit</a>
     </div>
     <div class="col-6 text-right">
       <button type="submit" class="btn btn-primary">Save</button>

@@ -14,7 +14,7 @@ using PAM.Services;
 
 namespace PAM.Controllers
 {
-    [Authorize("IsProcessor")]
+    [Authorize("IsSupport")]
     public class ProcessingController : Controller
     {
         private readonly UserService _userService;
@@ -42,8 +42,8 @@ namespace PAM.Controllers
         [HttpGet]
         public IActionResult MyProcessings()
         {
-            int processingUnitId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("ProcessingUnitId"));
-            var systemAccesses = _systemService.GetCurrentSystemAccessesByProcessingUnitId(processingUnitId);
+            int supportUnitId = Int32.Parse(((ClaimsIdentity)User.Identity).GetClaim("SupportUnitId"));
+            var systemAccesses = _systemService.GetCurrentSystemAccessesBySupportUnitId(supportUnitId);
             var systemsToProcess = systemAccesses.Where(s => s.ProcessedOn == null).ToList();
             var systemsToConfirm = systemAccesses.Where(s => !systemsToProcess.Contains(s)).ToList();
 

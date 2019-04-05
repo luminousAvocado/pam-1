@@ -1,6 +1,6 @@
-﻿@model ProcessingUnit
+﻿@model SupportUnit
 @{
-  ViewData["Title"] = "Add Processing Unit";
+  ViewData["Title"] = "Add Support Unit";
 }
 @section Scripts{
   <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
@@ -16,7 +16,7 @@
             success: function (results) {
               var employees = [];
               results.forEach(function (r) {
-                if (!r.processingUnitId) employees.push(r);
+                if (!r.supportUnitId) employees.push(r);
               });
               return process(employees);
             }
@@ -67,8 +67,8 @@
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Processing Units</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Add Processing Unit</li>
+    <li class="breadcrumb-item"><a asp-action="SupportUnits">Support Units</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Support Unit</li>
   </ol>
 </nav>
 

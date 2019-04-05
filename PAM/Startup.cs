@@ -61,7 +61,7 @@ namespace PAM
             {
                 options.AddPolicy("IsAdmin", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
                 options.AddPolicy("IsApprover", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
-                options.AddPolicy("IsProcessor", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
+                options.AddPolicy("IsSupport", policyBuilder => policyBuilder.RequireClaim("SupportUnitId"));
                 options.AddPolicy("CanEditRequest", policyBuilder => policyBuilder.AddRequirements(new CanEditRequestRequirement()));
                 options.AddPolicy("CanViewRequest", policyBuilder => policyBuilder.AddRequirements(new CanViewRequestRequirement()));
                 options.AddPolicy("CanEnterReview", policyBuilder => policyBuilder.AddRequirements(new CanEnterReviewRequirement()));

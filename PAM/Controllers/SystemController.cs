@@ -45,7 +45,7 @@ namespace PAM.Controllers
         [HttpGet, Authorize("IsAdmin")]
         public IActionResult AddSystem()
         {
-            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
+            ViewData["supportUnits"] = new SelectList(_organizationService.GetSupportUnits(), "SupportUnitId", "Name");
             return View(new Models.System());
         }
 
@@ -64,7 +64,7 @@ namespace PAM.Controllers
         [HttpGet, Authorize("IsAdmin")]
         public IActionResult EditSystem(int id)
         {
-            ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
+            ViewData["supportUnits"] = new SelectList(_organizationService.GetSupportUnits(), "SupportUnitId", "Name");
             return View(_systemService.GetSystem(id));
         }
 

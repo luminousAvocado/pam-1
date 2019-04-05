@@ -1,6 +1,6 @@
-﻿@model ICollection<PAM.Models.ProcessingUnit>
+﻿@model ICollection<PAM.Models.SupportUnit>
 @{
-  ViewData["Title"] = "Processing Units";
+  ViewData["Title"] = "Support Units";
 }
 @section StyleSheets{
   <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
@@ -12,13 +12,13 @@
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page">Processing Units</li>
+    <li class="breadcrumb-item active" aria-current="page">Support Units</li>
   </ol>
 </nav>
 
 @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
 {
-  <p><a asp-action="AddProcessingUnit" class="btn btn-primary float-right">Add Processing Unit</a></p>
+  <p><a asp-action="AddSupportUnit" class="btn btn-primary float-right">Add Support Unit</a></p>
 }
 
 <p class="clearfix">
@@ -38,13 +38,13 @@
       {
         <tr>
           <td>
-            <a asp-action="ViewProcessingUnit" asp-route-id="@unit.ProcessingUnitId">@unit.Name</a>
+            <a asp-action="ViewSupportUnit" asp-route-id="@unit.SupportUnitId">@unit.Name</a>
           </td>
           <td class="d-none d-md-table-cell">@unit.Email</td>
           @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
           {
             <td>
-              <a asp-action="EditProcessingUnit" asp-route-id="@unit.ProcessingUnitId" class="btn btn-primary">
+              <a asp-action="EditSupportUnit" asp-route-id="@unit.SupportUnitId" class="btn btn-primary">
                 <i class="fas fa-edit"></i>
                 <span class="d-none d-sm-inline">Edit</span>
               </a>

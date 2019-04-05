@@ -43,34 +43,34 @@ namespace PAM.Controllers
         }
 
         [HttpDelete, Authorize("IsAdmin")]
-        [Route("api/processingUnit/{unitId}/employees/{employeeId}")]
-        public async Task<IActionResult> RemoveEmployeeFromProcessingUnit(int unitId, int employeeId)
+        [Route("api/supportUnit/{unitId}/employees/{employeeId}")]
+        public async Task<IActionResult> RemoveEmployeeFromSupportUnit(int unitId, int employeeId)
         {
             var employee = _userService.GetEmployee(employeeId);
-            if (employee.ProcessingUnitId == unitId)
+            if (employee.SupportUnitId == unitId)
             {
-                employee.ProcessingUnitId = null;
+                employee.SupportUnitId = null;
                 _userService.SaveChanges();
 
                 var identity = (ClaimsIdentity)User.Identity;
-                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.ProcessingUnit, unitId,
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.SupportUnit, unitId,
                     $"{identity.GetClaim(ClaimTypes.Name)} removed employee {employeeId} from processing unit {unitId}");
             }
             return Ok();
         }
 
         [HttpDelete, Authorize("IsAdmin")]
-        [Route("api/processingUnit/{unitId}/systems/{systemId}")]
-        public async Task<IActionResult> RemoveSystemFromProcessingUnit(int unitId, int systemId)
+        [Route("api/supportUnit/{unitId}/systems/{systemId}")]
+        public async Task<IActionResult> RemoveSystemFromSupportUnit(int unitId, int systemId)
         {
             var system = _systemService.GetSystem(systemId);
-            if (system.ProcessingUnitId == unitId)
+            if (system.SupportUnitId == unitId)
             {
-                system.ProcessingUnitId = null;
+                system.SupportUnitId = null;
                 _systemService.SaveChanges();
 
                 var identity = (ClaimsIdentity)User.Identity;
-                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.ProcessingUnit, unitId,
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.SupportUnit, unitId,
                     $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from processing unit {unitId}");
             }
             return Ok();

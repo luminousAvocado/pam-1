@@ -27,7 +27,7 @@
             {
               <a class="dropdown-item" asp-controller="Review" asp-action="MyReviews">Review Requests</a>
             }
-            @if ((await AuthorizationService.AuthorizeAsync(User, "IsProcessor")).Succeeded)
+            @if ((await AuthorizationService.AuthorizeAsync(User, "IsSupport")).Succeeded)
             {
               <a class="dropdown-item" asp-controller="Processing" asp-action="MyProcessings">Process Requests</a>
             }
@@ -40,7 +40,7 @@
             <a class="dropdown-item" asp-controller="Bureau" asp-action="Bureaus">Bureaus</a>
             <a class="dropdown-item" asp-controller="Unit" asp-action="Units">Units</a>
             <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
-            <a class="dropdown-item" asp-controller="ProcessingUnit" asp-action="ProcessingUnits">Processing Units</a>
+            <a class="dropdown-item" asp-controller="SupportUnit" asp-action="SupportUnits">Support Units</a>
           </div>
         </li>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)

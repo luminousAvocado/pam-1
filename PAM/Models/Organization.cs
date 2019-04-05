@@ -98,10 +98,10 @@ namespace PAM.Models
         public bool Deleted { get; set; } = false;
     }
 
-    [Table("ProcessingUnits")]
-    public class ProcessingUnit
+    [Table("SupportUnits")]
+    public class SupportUnit
     {
-        public int ProcessingUnitId { get; set; }
+        public int SupportUnitId { get; set; }
 
         [Required]
         public string Name { get; set; }

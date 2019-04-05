@@ -35,7 +35,6 @@ namespace PAM.Models
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
         public int DisplayOrder { get; set; } = 50;
 
         public bool ForEmployeeOnly { get; set; } = false;
@@ -61,7 +60,7 @@ namespace PAM.Models
         public File File { get; set; }
     }
 
-    [Table("SytemForms")]
+    [Table("SystemForms")]
     public class SystemForm
     {
         public int SystemId { get; set; }

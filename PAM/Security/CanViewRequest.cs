@@ -20,7 +20,7 @@ namespace PAM.Security
             int currentUserId = identity.GetClaimAsInt("EmployeeId");
             bool isRequestedBy = currentUserId == request.RequestedBy.EmployeeId;
             bool isRequester = isRequestedBy || currentUserId == request.RequestedFor.EmployeeId;
-            bool hasRequiredClaim = identity.HasClaim(c => c.Type == "IsAdmin") || identity.HasClaim(c => c.Type == "ProcessingUnitId");
+            bool hasRequiredClaim = identity.HasClaim(c => c.Type == "IsAdmin") || identity.HasClaim(c => c.Type == "SupportUnitId");
             bool isReviewer = hasRequiredClaim || request.Reviews.Any(r => r.ReviewerId == currentUserId);
 
             if (request.RequestStatus == RequestStatus.Draft && isRequestedBy
