@@ -62,5 +62,19 @@ namespace PAM.Controllers
             }
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("api/system/{systemId}/form/{formId}")]
+        public IActionResult RemoveFormFromSystem(int systemId, int formId)
+        {
+            var system = _systemService.GetSystem(systemId);
+
+            foreach (SystemForm sysForm in system.Forms)
+            {
+                system.ProcessingUnitId = null;
+                _systemService.SaveChanges();
+            }
+            return Ok();
+        }
     }
 }

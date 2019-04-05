@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using Newtonsoft.Json;
 
 namespace PAM.Controllers
 {
@@ -53,6 +54,7 @@ namespace PAM.Controllers
         public IActionResult EditSystem(int id)
         {
             ViewData["processingUnits"] = new SelectList(_organizationService.GetProcessingUnits(), "ProcessingUnitId", "Name");
+            ViewData["allForms"] = JsonConvert.SerializeObject(_formService.GetForms());
             return View(_systemService.GetSystem(id));
         }
 

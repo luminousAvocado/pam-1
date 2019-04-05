@@ -15,9 +15,9 @@ namespace PAM.Data
             _dbContext = dbContext;
         }
 
-        public IList<Form> GetForms(List<int> ids)
+        public IList<Form> GetForms()
         {
-            return _dbContext.Forms.Where(s => ids.Contains(s.FormId)).ToList();
+            return _dbContext.Forms.ToList();
         }
     }
 }
