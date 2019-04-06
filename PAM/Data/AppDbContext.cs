@@ -30,6 +30,7 @@ namespace PAM.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Form> Forms { get; set; }
+        public DbSet<SystemForm> SystemForms { get; set; }
         public DbSet<AuditLogEntry> AuditLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -8,18 +8,17 @@
   <script>
     $(function () {
       var forms = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name"),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: @Html.Raw(@ViewData["allForms"])
       });
       $("#addForm").typeahead({
         source: forms.ttAdapter(),
         displayText: function (item) {
-          return item.Name + (item.Description ? " - " + item.Description : "");
+          return item.Name ;
         },
         afterSelect: function (item) {
-          var row = $("<tr><td>" + item.FormId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
-            + (item.Description ? item.Description : "") + "</td></tr>");
+          var row = $("<tr><td>" + item.FormId + "</td><td>" + item.Name + "</td> </tr>");
           var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
           btn.click(function () {
             row.remove();
@@ -87,23 +86,22 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="addForm">Add Form</label>
-      <input id="addForm" type="text" class="form-control" placeholder="Search forms by name or description">
+      <input id="addForm" type="text" class="form-control" placeholder="Search forms by name">
     </div>
   </div>
   <div class="card mt-3 mb-3">
     <div class="card-header">Forms</div>
     <div class="card-body">
       <table class="table table-hover">
-        <thead><tr><th>Id</th><th>Name</th><th class="d-none d-md-table-cell">Description</th><th></th></tr></thead>
+        <thead><tr><th>Id</th><th>Name</th></tr></thead>
         <tbody id="forms">
           @foreach (var form in Model.Forms)
           {
             <tr data-form-id="@form.FormId" data-system-id="@form.SystemId">
               <td>@form.FormId</td>
               <td>@form.Form.Name</td>
-              <td class="d-none d-md-table-cell">@form.Form.Description</td>
               <td>
-                <button class="btn btn-danger delForm"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger float-right delForm"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           }

@@ -19,5 +19,11 @@ namespace PAM.Data
         {
             return _dbContext.Forms.ToList();
         }
+
+        public void DeleteSystemForm(int sysId, int formId)
+        {
+            var sysForm = _dbContext.SystemForms.Where(s => s.SystemId == sysId && s.FormId == formId).First();
+            _dbContext.SystemForms.Remove(sysForm);
+        }
     }
 }

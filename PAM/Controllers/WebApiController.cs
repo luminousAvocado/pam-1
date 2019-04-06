@@ -16,14 +16,16 @@ namespace PAM.Controllers
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationSevice;
         private readonly AuditLogService _auditLog;
+        private readonly FormService _formService;
 
         public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService,
-            AuditLogService auditLog)
+            AuditLogService auditLog, FormService formService)
         {
             _userService = userService;
             _systemService = systemService;
             _organizationSevice = organizationService;
             _auditLog = auditLog;
+            _formService = formService;
         }
 
         [Route("api/portfolio/{unitId}")]
@@ -78,15 +80,14 @@ namespace PAM.Controllers
 
         [HttpDelete]
         [Route("api/system/{systemId}/form/{formId}")]
-        public IActionResult RemoveFormFromSystem(int systemId, int formId)
+        public async Task<IActionResult> RemoveFormFromSystemAsync(int systemId, int formId)
         {
-            var system = _systemService.GetSystem(systemId);
+            _formService.DeleteSystemForm(systemId, formId);
 
-            foreach (SystemForm sysForm in system.Forms)
-            {
-                system.SupportUnitId = null;
-                _systemService.SaveChanges();
-            }
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
+                $"{identity.GetClaim(ClaimTypes.Name)} deleted SystemForm with SystemId: {systemId} and FormId: {formId}");
+
             return Ok();
         }
     }
