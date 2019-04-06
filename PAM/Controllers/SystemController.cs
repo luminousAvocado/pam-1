@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -80,15 +81,15 @@ namespace PAM.Controllers
 
             var oldValue = JsonConvert.SerializeObject(system, Formatting.Indented);
             _mapper.Map(update, system);
-            _systemService.SaveChanges();
 
-            if (formIds.Count > 0)
-            {
-                foreach (int formId in formIds)
+            system.Forms.Clear();
+            foreach (var formId in formIds.OrderBy(v => v).ToList())
+                system.Forms.Add(new SystemForm()
                 {
-                    _formService.AddSystemForm(new SystemForm { FormId = formId, SystemId = id });
-                }
-            }
+                    FormId = formId,
+                    SystemId = id
+                });
+            _systemService.SaveChanges();
 
             var newValue = JsonConvert.SerializeObject(system, Formatting.Indented);
 

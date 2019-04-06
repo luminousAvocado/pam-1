@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PAM.Data;
 using PAM.Extensions;
 using PAM.Models;
@@ -82,11 +83,16 @@ namespace PAM.Controllers
         [Route("api/system/{systemId}/form/{formId}")]
         public async Task<IActionResult> RemoveFormFromSystemAsync(int systemId, int formId)
         {
+            var system = _systemService.GetSystem(systemId);
+
+            var oldValue = JsonConvert.SerializeObject(system, Formatting.Indented);
             _formService.DeleteSystemForm(systemId, formId);
+            _formService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(_systemService.GetSystem(systemId), Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
-                $"{identity.GetClaim(ClaimTypes.Name)} removed form {formId} from system {systemId}");
+                $"{identity.GetClaim(ClaimTypes.Name)} removed form {formId} from system {systemId}", oldValue, newValue);
 
             return Ok();
         }

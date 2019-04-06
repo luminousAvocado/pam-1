@@ -32,5 +32,10 @@ namespace PAM.Data
             var sysForm = _dbContext.SystemForms.Where(s => s.SystemId == sysId && s.FormId == formId).First();
             _dbContext.SystemForms.Remove(sysForm);
         }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
+        }
     }
 }
