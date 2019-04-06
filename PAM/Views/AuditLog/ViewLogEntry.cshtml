@@ -1,0 +1,29 @@
+﻿@model AuditLogEntry
+@{
+  ViewData["Title"] = "View Log Entry";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="SearchLog">Audit Log</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Log Entry #@Model.AuditLogEntryId</li>
+  </ol>
+</nav>
+
+<table class="table table-bordered">
+  <tr><th>Id</th><td>@Model.AuditLogEntryId</td></tr>
+  <tr><th>Timestamp</th><td>@Model.Timestamp</td></tr>
+  <tr><th>User</th><td>@Model.Employee.Name</td></tr>
+  <tr><th>Action Type</th><td>@Model.ActionType</td></tr>
+  <tr><th>Resource Type</th><td>@Model.ResourceType</td></tr>
+  <tr><th>Resource Id</th><td>@Model.ResourceId</td></tr>
+  <tr><th>Message</th><td>@Model.Message</td></tr>
+  @if (Model.OldValue != null)
+  {
+    <tr><th>Old Value</th><td><pre>@Model.OldValue</pre></td></tr>
+  }
+  @if (Model.NewValue != null)
+  {
+    <tr><th>New Value</th><td><pre>@Model.NewValue</pre></td></tr>
+  }
+</table>

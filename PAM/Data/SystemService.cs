@@ -16,7 +16,7 @@ namespace PAM.Data
 
         public IList<Models.System> GetSystems()
         {
-            return _dbContext.Systems.Include(s => s.ProcessingUnit).Include(s => s.Forms).OrderBy(s => s.Name).ToList();
+            return _dbContext.Systems.Include(s => s.SupportUnit).Include(s => s.Forms).OrderBy(s => s.Name).ToList();
         }
 
         public IList<Models.System> GetSystems(List<int> ids)
@@ -24,19 +24,19 @@ namespace PAM.Data
             return _dbContext.Systems.Where(s => ids.Contains(s.SystemId)).ToList();
         }
 
-        public IList<Models.System> GetSystemsWithoutProcessingUnit()
+        public IList<Models.System> GetSystemsWithoutSupportUnit()
         {
-            return _dbContext.Systems.Where(s => s.ProcessingUnitId == null).OrderBy(s => s.Name).ToList();
+            return _dbContext.Systems.Where(s => s.SupportUnitId == null).OrderBy(s => s.Name).ToList();
         }
 
-        public IList<Models.System> GetSystemsOfProcessingUnit(int processingUnitId)
+        public IList<Models.System> GetSystemsOfSupportUnit(int supportUnitId)
         {
-            return _dbContext.Systems.Where(s => s.ProcessingUnitId == processingUnitId).ToList();
+            return _dbContext.Systems.Where(s => s.SupportUnitId == supportUnitId).ToList();
         }
 
         public Models.System GetSystem(int id)
         {
-            return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.ProcessingUnit).Include(s => s.Forms).ThenInclude(r => r.Form).FirstOrDefault();
+            return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.SupportUnit).Include(s => s.Forms).ThenInclude(r => r.Form).FirstOrDefault();
         }
 
         public Models.System AddSystem(Models.System system)
@@ -75,13 +75,13 @@ namespace PAM.Data
                 .Select(a => a.Value).ToList();
         }
 
-        public IList<SystemAccess> GetCurrentSystemAccessesByProcessingUnitId(int processingUnitId)
+        public IList<SystemAccess> GetCurrentSystemAccessesBySupportUnitId(int supportUnitId)
         {
             return _dbContext.SystemAccesses.Include(s => s.System)
                 .Include(s => s.Request).ThenInclude(r => r.RequestType)
                 .Include(s => s.Request).ThenInclude(r => r.RequestedFor)
                 .Include(s => s.ProcessedBy).Include(s => s.ConfirmedBy)
-                .Where(s => s.System.ProcessingUnitId == processingUnitId && (s.ProcessedOn == null || s.ConfirmedOn == null))
+                .Where(s => s.System.SupportUnitId == supportUnitId && (s.ProcessedOn == null || s.ConfirmedOn == null))
                 .OrderBy(s => s.RequestId)
                 .ToList();
         }

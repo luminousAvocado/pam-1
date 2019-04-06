@@ -19,7 +19,7 @@ namespace PAM.Data
         public DbSet<Bureau> Bureaus { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<Unit> Units { get; set; }
-        public DbSet<ProcessingUnit> ProcessingUnits { get; set; }
+        public DbSet<SupportUnit> SupportUnits { get; set; }
         public DbSet<Models.System> Systems { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
@@ -30,6 +30,7 @@ namespace PAM.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Form> Forms { get; set; }
+        public DbSet<AuditLogEntry> AuditLog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,8 +44,8 @@ namespace PAM.Data
             modelBuilder.Entity<Unit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Unit>().HasQueryFilter(u => !u.Deleted);
 
-            modelBuilder.Entity<ProcessingUnit>().Property(u => u.Deleted).HasDefaultValue(false);
-            modelBuilder.Entity<ProcessingUnit>().HasQueryFilter(u => !u.Deleted);
+            modelBuilder.Entity<SupportUnit>().Property(u => u.Deleted).HasDefaultValue(false);
+            modelBuilder.Entity<SupportUnit>().HasQueryFilter(u => !u.Deleted);
 
             modelBuilder.Entity<Models.System>().Property(s => s.Retired).HasDefaultValue(false);
             modelBuilder.Entity<Models.System>().HasQueryFilter(s => !s.Retired);
@@ -94,6 +95,13 @@ namespace PAM.Data
             modelBuilder.Entity<Form>().Property(l => l.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Form>().HasQueryFilter(l => !l.Deleted);
             modelBuilder.Entity<SystemForm>().HasKey(x => new { x.SystemId, x.FormId });
+
+            modelBuilder.Entity<AuditLogEntry>().Property(s => s.ActionType).HasConversion(
+                v => v.ToString(),
+                v => (LogActionType)Enum.Parse(typeof(LogActionType), v));
+            modelBuilder.Entity<AuditLogEntry>().Property(s => s.ResourceType).HasConversion(
+                v => v.ToString(),
+                v => (LogResourceType)Enum.Parse(typeof(LogResourceType), v));
         }
     }
 }

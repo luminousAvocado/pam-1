@@ -1,27 +1,35 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
 
 namespace PAM.Controllers
 {
+    [Authorize("IsAdmin")]
     public class EmployeeController : Controller
     {
         private readonly UserService _userService;
         private readonly SystemService _systemService;
         private readonly IADService _adService;
+        private readonly AuditLogService _auditLog;
         private readonly IMapper _mapper;
         private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(UserService userService, SystemService systemSerivce,
-            IADService adService, IMapper mapper, ILogger<EmployeeController> logger)
+        public EmployeeController(UserService userService, SystemService systemSerivce, IADService adService,
+            AuditLogService auditLog, IMapper mapper, ILogger<EmployeeController> logger)
         {
             _userService = userService;
             _systemService = systemSerivce;
             _adService = adService;
+            _auditLog = auditLog;
             _mapper = mapper;
             _logger = logger;
         }
@@ -45,11 +53,19 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditEmployee(int id, Employee update)
+        public async Task<IActionResult> EditEmployee(int id, Employee update)
         {
             var employee = _userService.GetEmployee(id);
+
+            var oldValue = JsonConvert.SerializeObject(employee, Formatting.Indented);
             _mapper.Map(update, employee);
             _userService.SaveChanges();
+            var newValue = JsonConvert.SerializeObject(employee, Formatting.Indented);
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.User, employee.EmployeeId,
+                $"{identity.GetClaim(ClaimTypes.Name)} updated user with id {employee.EmployeeId}", oldValue, newValue);
+
             return RedirectToAction(nameof(ViewEmployee), new { id });
         }
 
