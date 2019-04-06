@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-﻿using System.Security.Claims;
+using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +74,7 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public async Task<IActionResult> EditSystem(int id, Models.System update)
+        public async Task<IActionResult> EditSystem(int id, Models.System update, List<int> formIds)
         {
             var system = _systemService.GetSystem(id);
 
@@ -81,11 +82,14 @@ namespace PAM.Controllers
             _mapper.Map(update, system);
             _systemService.SaveChanges();
 
-            //var forms = _formService.GetForms(formIds);
-            //foreach (var form in forms)
-            //    system.ProcessingUnitId = unit.ProcessingUnitId;
-            //_systemService.SaveChanges();
-            
+            if (formIds.Count > 0)
+            {
+                foreach (int formId in formIds)
+                {
+                    _formService.AddSystemForm(new SystemForm { FormId = formId, SystemId = id });
+                }
+            }
+
             var newValue = JsonConvert.SerializeObject(system, Formatting.Indented);
 
             var identity = (ClaimsIdentity)User.Identity;

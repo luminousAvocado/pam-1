@@ -20,6 +20,13 @@ namespace PAM.Data
             return _dbContext.Forms.ToList();
         }
 
+        public SystemForm AddSystemForm(SystemForm sysForm)
+        {
+            _dbContext.SystemForms.Add(sysForm);
+            _dbContext.SaveChanges();
+            return sysForm;
+        }
+
         public void DeleteSystemForm(int sysId, int formId)
         {
             var sysForm = _dbContext.SystemForms.Where(s => s.SystemId == sysId && s.FormId == formId).First();

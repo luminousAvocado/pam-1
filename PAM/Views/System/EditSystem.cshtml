@@ -19,14 +19,14 @@
         },
         afterSelect: function (item) {
           var row = $("<tr><td>" + item.FormId + "</td><td>" + item.Name + "</td> </tr>");
-          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          var btn = $("<button class='btn btn-danger float-right'><i class='fas fa-trash-alt'></i></button>");
           btn.click(function () {
             row.remove();
           });
-          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.FormId + "'>");
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='formIds' value='" + item.FormId + "'>");
           row.append(cell);
-          $("#systems").append(row);
-          $("#addSystem").val("");
+          $("#forms").append(row);
+          $("#addForm").val("");
         }
       });
       $(".delForm").click(function (event) {

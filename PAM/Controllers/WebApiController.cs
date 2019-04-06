@@ -86,7 +86,7 @@ namespace PAM.Controllers
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
-                $"{identity.GetClaim(ClaimTypes.Name)} deleted SystemForm with SystemId: {systemId} and FormId: {formId}");
+                $"{identity.GetClaim(ClaimTypes.Name)} removed form {formId} from system {systemId}");
 
             return Ok();
         }
