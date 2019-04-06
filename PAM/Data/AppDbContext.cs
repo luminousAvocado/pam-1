@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PAM.Models;
@@ -31,6 +32,7 @@ namespace PAM.Data
         public DbSet<File> Files { get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<AuditLogEntry> AuditLog { get; set; }
+        public DbSet<SystemForm> SystemForms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

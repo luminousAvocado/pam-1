@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,9 +16,11 @@ namespace PAM.Controllers
         private readonly AuditLogService _auditLog;
         private readonly IMapper _mapper;
         private readonly ILogger<BureauController> _logger;
+        private readonly SystemService _systemService;
 
-        public FormController(OrganizationService organizationService, AuditLogService auditLog, IMapper mapper, ILogger<BureauController> logger)
+        public FormController(SystemService systemService, OrganizationService organizationService, AuditLogService auditLog, IMapper mapper, ILogger<BureauController> logger)
         {
+            _systemService = systemService;
             _organizationService = organizationService;
             _auditLog = auditLog;
             _mapper = mapper;
@@ -30,9 +33,15 @@ namespace PAM.Controllers
             return View( _organizationService.GetForms() );
         }
 
-        public IActionResult ViewForm()
+        public IActionResult ViewForm(int id)
         {
-            return View();
+            //var forms = _systemService.GetSystemsByFormId(id);
+            //foreach (var form in forms)
+            //{
+            //    Debug.WriteLine(form);
+            //}
+            ViewData["Systems"] = _systemService.GetSystemsByFormId(id);
+            return View(_organizationService.GetForm(id));
         }
         public IActionResult AddForm()
         {

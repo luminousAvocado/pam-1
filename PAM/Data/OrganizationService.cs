@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,9 +23,13 @@ namespace PAM.Data
         //-------------------------------------------------------------------------------------------------
         public ICollection<Form> GetForms()
         {
-            return _dbContext.Forms.OrderBy(form => form.Name).ToList();
+            return _dbContext.Forms.OrderBy(form => form.DisplayOrder).ToList();
         }
-
+        public Form GetForm(int id)
+        {
+            return _dbContext.Forms.Find(id);
+        }
+        
 
 
         //-------------------------------------------------------------------------------------------------
@@ -32,7 +37,7 @@ namespace PAM.Data
         {
             return _dbContext.Locations.OrderBy(l => l.Name).ToList();
         }
-
+        
         public Location GetLocation(int id)
         {
             return _dbContext.Locations.Find(id);

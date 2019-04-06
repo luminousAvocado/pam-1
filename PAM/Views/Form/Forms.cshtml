@@ -27,7 +27,7 @@
     <tr>
       <th>ID</th>
       <th class="d-none d-md-table-cell text-nowrap">Name</th>
-      <th class="d-none d-sm-table-cell">Description</th>
+      <th class="d-none d-sm-table-cell">Display Order</th>
 
       @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
       {
@@ -44,7 +44,7 @@
         </td>
 
         <td class="d-none d-sm-table-cell">@Form.Name</td>
-        <td class="d-none d-sm-table-cell">@Form.Description</td>
+        <td class="d-none d-sm-table-cell">@Form.DisplayOrder</td>
 
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
         {

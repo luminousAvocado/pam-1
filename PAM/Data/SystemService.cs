@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using PAM.Models;
@@ -29,6 +30,7 @@ namespace PAM.Data
             return _dbContext.Systems.Where(s => s.ProcessingUnitId == null).OrderBy(s => s.Name).ToList();
         }
 
+
         public IList<Models.System> GetSystemsOfProcessingUnit(int processingUnitId)
         {
             return _dbContext.Systems.Where(s => s.ProcessingUnitId == processingUnitId).ToList();
@@ -37,6 +39,11 @@ namespace PAM.Data
         public Models.System GetSystem(int id)
         {
             return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.ProcessingUnit).FirstOrDefault();
+        }
+
+        internal IList<Models.SystemForm> GetSystemsByFormId(int id)
+        {
+            return _dbContext.SystemForms.Include(a => a.System).Include(a => a.Form).Where(a => a.FormId == id).ToList();
         }
 
         public Models.System AddSystem(Models.System system)
