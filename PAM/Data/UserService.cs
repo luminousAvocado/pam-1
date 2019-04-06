@@ -62,9 +62,9 @@ namespace PAM.Data
                 .FirstOrDefault();
         }
 
-        public IList<Employee> GetEmployeesOfProcessingUnit(int processingUnitId)
+        public IList<Employee> GetEmployeesOfSupportUnit(int supportUnitId)
         {
-            return _dbContext.Employees.Where(e => e.ProcessingUnitId == processingUnitId)
+            return _dbContext.Employees.Where(e => e.SupportUnitId == supportUnitId)
                 .OrderBy(e => e.Username).ToList();
         }
 

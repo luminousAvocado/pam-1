@@ -35,7 +35,6 @@ namespace PAM.Models
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
         public int DisplayOrder { get; set; } = 50;
 
         public bool ForEmployeeOnly { get; set; } = false;

@@ -21,7 +21,10 @@
   </ol>
 </nav>
 
-<p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+}
 
 <table data-toggle="table" data-search="true" data-search-align="left" data-pagination="true" data-page-size="25">
   <thead>
@@ -29,9 +32,12 @@
       <th>Name</th>
       <th class="d-none d-lg-table-cell">Description</th>
       <th class="d-none d-md-table-cell">Owner</th>
-      <th class="d-none d-md-table-cell">Processing Unit</th>
       <th class="d-none d-md-table-cell">Forms</th>
-      <th></th>
+      <th class="d-none d-md-table-cell">Support Unit</th>
+      @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+      {
+        <th></th>
+      }
     </tr>
   </thead>
   <tbody>
@@ -43,14 +49,17 @@
         </td>
         <td class="d-none d-lg-table-cell">@system.Description</td>
         <td class="d-none d-md-table-cell">@system.Owner</td>
-        <td class="d-none d-md-table-cell">@system.ProcessingUnit?.Name</td>
         <td class="d-none d-md-table-cell">@system.Forms.Count</td>
-        <td>
-          <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
-            <i class="fas fa-edit"></i>
-            <span class="d-none d-md-inline">Edit</span>
-          </a>
-        </td>
+        <td class="d-none d-md-table-cell">@system.SupportUnit?.Name</td>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <td>
+            <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+              <span class="d-none d-md-inline">Edit</span>
+            </a>
+          </td>
+        }
       </tr>
     }
   </tbody>

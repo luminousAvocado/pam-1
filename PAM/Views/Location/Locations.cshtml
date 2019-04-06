@@ -16,7 +16,10 @@
   </ol>
 </nav>
 
-<p><a asp-action="AddLocation" class="btn btn-primary float-right">Add Location</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddLocation" class="btn btn-primary float-right">Add Location</a></p>
+}
 
 <table data-toggle="table" data-pagination="true" data-page-size="25" data-search="true" data-search-align="left">
   <thead>
@@ -26,7 +29,10 @@
       <th class="d-none d-md-table-cell" data-sortable="true">City</th>
       <th class="d-none d-md-table-cell">State</th>
       <th class="d-none d-md-table-cell" data-sortable="true">Zip</th>
-      <th></th>
+      @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+      {
+        <th></th>
+      }
     </tr>
   </thead>
   <tbody>
@@ -40,11 +46,15 @@
         <td class="d-none d-md-table-cell">@location.City</td>
         <td class="d-none d-md-table-cell">@location.State</td>
         <td class="d-none d-md-table-cell">@location.Zip</td>
-        <td>
-          <a asp-action="EditLocation" asp-route-id="@location.LocationId" class="btn btn-primary">
-            <i class="fas fa-edit"></i>
-            <span class="d-none d-sm-inline">Edit</span></a>
-        </td>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <td>
+            <a asp-action="EditLocation" asp-route-id="@location.LocationId" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+              <span class="d-none d-sm-inline">Edit</span>
+            </a>
+          </td>
+        }
       </tr>
     }
   </tbody>

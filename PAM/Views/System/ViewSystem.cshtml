@@ -10,14 +10,17 @@
   </ol>
 </nav>
 
-<p class="text-right"><a asp-action="EditSystem" asp-route-id="@Model.SystemId" class="btn btn-primary">Edit System</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p class="text-right"><a asp-action="EditSystem" asp-route-id="@Model.SystemId" class="btn btn-primary">Edit System</a></p>
+}
 
 <table class="table table-bordered">
   <tr><th>Id</th><td>@Model.SystemId</td></tr>
   <tr><th>Name</th><td>@Model.Name</td></tr>
   <tr><th>Description</th><td>@Model.Description</td></tr>
   <tr><th>Owner</th><td>@Model.Owner</td></tr>
-  <tr><th>Processing Unit</th><td>@Model.ProcessingUnit?.Name</td></tr>
+  <tr><th>Support Unit</th><td>@Model.SupportUnit?.Name</td></tr>
   <tr>
     <th>Forms</th>
     <td>

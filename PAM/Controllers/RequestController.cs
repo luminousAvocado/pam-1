@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -20,17 +21,22 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly AuditLogService _auditLog;
+        private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
         private readonly EmailHelper _emailHelper;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService,
-            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<RequestController> logger)
+            AuditLogService auditLog, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
+            IMapper mapper, ILogger<RequestController> logger)
         {
             _adService = adService;
             _userService = userService;
             _requestService = requestService;
+            _auditLog = auditLog;
+            _authService = authService;
             _email = email;
             _emailHelper = emailHelper;
             _mapper = mapper;
@@ -104,33 +110,47 @@ namespace PAM.Controllers
             return RedirectEditRequest(request.RequestId, requestType);
         }
 
-        public IActionResult ViewRequest(int id)
-        {
-            return View(_requestService.GetRequest(id));
-        }
-
-        public IActionResult EditRequest(int id)
+        public async Task<IActionResult> ViewRequest(int id)
         {
             var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanViewRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            return View(request);
+        }
+
+        public async Task<IActionResult> EditRequest(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
             return RedirectEditRequest(id, request.RequestType);
         }
 
-        public IActionResult SubmitRequest(int id)
+        public async Task<IActionResult> SubmitRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            if (request.RequestStatus != RequestStatus.Draft)
-                throw new InvalidOperationException();
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
 
             request.RequestStatus = RequestStatus.UnderReview;
             request.SubmittedOn = DateTime.Now;
             _requestService.SaveChanges();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Submit, LogResourceType.Request, id,
+                $"{identity.GetClaim(ClaimTypes.Name)} submitted request with id {id}");
 
             Employee reviewer = request.OrderedReviews[0].Reviewer;
             string receipient = reviewer.Email;
             string emailName = "ReviewRequest";
             var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
             string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
-            _email.To(receipient)
+            await _email.To(receipient)
                 .Subject(subject)
                 .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
                 .SendAsync();
@@ -138,11 +158,12 @@ namespace PAM.Controllers
             return RedirectToAction("MyRequests");
         }
 
-        public IActionResult DeleteRequest(int id)
+        public async Task<IActionResult> DeleteRequest(int id)
         {
             var request = _requestService.GetRequest(id);
-            if (request.RequestStatus != RequestStatus.Draft)
-                throw new InvalidOperationException();
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
 
             request.Deleted = true;
             _requestService.SaveChanges();

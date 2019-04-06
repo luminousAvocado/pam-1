@@ -3,13 +3,54 @@
   ViewData["Title"] = "Edit System";
 }
 @section Scripts{
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
   <script>
+    $(function () {
+      var forms = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["allForms"])
+      });
+      $("#addForm").typeahead({
+        source: forms.ttAdapter(),
+        displayText: function (item) {
+          return item.Name + (item.Description ? " - " + item.Description : "");
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.FormId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
+            + (item.Description ? item.Description : "") + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.FormId + "'>");
+          row.append(cell);
+          $("#systems").append(row);
+          $("#addSystem").val("");
+        }
+      });
+      $(".delForm").click(function (event) {
+        event.preventDefault();
+        var row = $(this).closest("tr");
+        var formId = row.attr("data-form-id");
+        var systemId = row.attr("data-system-id");
+        $.ajax({
+          url: "@Context.Request.PathBase/api/system/" + systemId + "/form/" + formId,
+          method: "DELETE",
+          success: function () {
+            row.remove();
+          }
+        });
+      });
+    });
     function confirmRemoval() {
       var msg = "Are you sure you want to remove this system?";
       if (confirm(msg))
         window.location.href = "@Context.Request.PathBase/System/RemoveSystem/@Model.SystemId";
     }
   </script>
+
 }
 
 <nav aria-label="breadcrumb">
@@ -37,8 +78,8 @@
       <input asp-for="Owner" type="text" class="form-control">
     </div>
     <div class="form-group col-md-6">
-      <label asp-for="ProcessingUnitId" class="form-label">Processing Unit</label>
-      <select asp-for="ProcessingUnitId" class="form-control" asp-items="ViewBag.processingUnits">
+      <label asp-for="SupportUnitId" class="form-label">Support Unit</label>
+      <select asp-for="SupportUnitId" class="form-control" asp-items="ViewBag.supportUnits">
         <option value="">- NONE -</option>
       </select>
     </div>
@@ -57,12 +98,12 @@
         <tbody id="forms">
           @foreach (var form in Model.Forms)
           {
-            <tr data-form-id="@form.FormId">
+            <tr data-form-id="@form.FormId" data-system-id="@form.SystemId">
               <td>@form.FormId</td>
               <td>@form.Form.Name</td>
               <td class="d-none d-md-table-cell">@form.Form.Description</td>
               <td>
-                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger delForm"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           }
