@@ -1,0 +1,61 @@
+﻿@model ICollection<Form>
+@{
+  ViewData["Title"] = "Forms";
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
+}
+@section Scripts{
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Forms</li>
+  </ol>
+</nav>
+
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddForm" class="btn btn-primary float-right">Add Form</a></p>
+}
+
+
+<table data-toggle="table" data-search="true" data-search-align="left">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th class="d-none d-md-table-cell text-nowrap">Name</th>
+      <th class="d-none d-sm-table-cell">Description</th>
+
+      @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+      {
+        <th></th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var Form in Model)
+    {
+      <tr>
+        <td>
+          <a asp-action="ViewForm" asp-route-id="@Form.FormId">@Form.FormId</a>
+        </td>
+
+        <td class="d-none d-sm-table-cell">@Form.Name</td>
+        <td class="d-none d-sm-table-cell">@Form.Description</td>
+
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <td>
+            <a asp-action="EditForm" asp-route-id="@Form.FormId" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+              <span class="d-none d-md-inline">Edit</span>
+            </a>
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

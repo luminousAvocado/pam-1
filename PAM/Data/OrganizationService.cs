@@ -17,6 +17,17 @@ namespace PAM.Data
             _logger = logger;
         }
 
+
+
+        //-------------------------------------------------------------------------------------------------
+        public ICollection<Form> GetForms()
+        {
+            return _dbContext.Forms.OrderBy(form => form.Name).ToList();
+        }
+
+
+
+        //-------------------------------------------------------------------------------------------------
         public ICollection<Location> GetLocations()
         {
             return _dbContext.Locations.OrderBy(l => l.Name).ToList();

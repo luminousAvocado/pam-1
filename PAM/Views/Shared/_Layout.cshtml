@@ -41,6 +41,7 @@
             <a class="dropdown-item" asp-controller="Unit" asp-action="Units">Units</a>
             <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
             <a class="dropdown-item" asp-controller="ProcessingUnit" asp-action="ProcessingUnits">Processing Units</a>
+            <a class="dropdown-item" asp-controller="Form" asp-action="Forms">Forms</a>
           </div>
         </li>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
