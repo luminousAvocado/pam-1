@@ -106,6 +106,7 @@ namespace PAM
             services.AddScoped<UserService>();
             services.AddScoped<RequestService>();
             services.AddScoped<SystemService>();
+            services.AddScoped<FormService>();
             services.AddScoped<TreeViewService>();
             services.AddScoped<AuditLogService>();
         }

@@ -21,4 +21,18 @@
   <tr><th>Description</th><td>@Model.Description</td></tr>
   <tr><th>Owner</th><td>@Model.Owner</td></tr>
   <tr><th>Support Unit</th><td>@Model.SupportUnit?.Name</td></tr>
+  <tr>
+    <th>Forms</th>
+    <td>
+      @if (Model.Forms.Count > 0)
+      {
+        <ul>
+          @foreach (var form in Model.Forms.OrderBy(f => f.Form.DisplayOrder).ThenBy(f => f.Form.FormId))
+          {
+            <li>@form.Form.Name</li>
+          }
+        </ul>
+      }
+    </td>
+  </tr>
 </table>

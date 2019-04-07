@@ -20,7 +20,7 @@ namespace PAM.Models
         public int? SupportUnitId { get; set; }
         public SupportUnit SupportUnit { get; set; }
 
-        public ICollection<SystemForm> Forms { get; set; }
+        public List<SystemForm> Forms { get; set; } = new List<SystemForm>();
     }
 
     [Table("UnitSystems")]

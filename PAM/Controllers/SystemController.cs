@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,18 +16,18 @@ namespace PAM.Controllers
     public class SystemController : Controller
     {
         private readonly SystemService _systemService;
+        private readonly FormService _formService;
         private readonly OrganizationService _organizationService;
         private readonly AuditLogService _auditLog;
-        private readonly IMapper _mapper;
         private readonly ILogger<SystemController> _logger;
 
-        public SystemController(SystemService systemService, OrganizationService organizationService, AuditLogService auditLog,
-            IMapper mapper, ILogger<SystemController> logger)
+        public SystemController(SystemService systemService, FormService formService, OrganizationService organizationService,
+            AuditLogService auditLog, ILogger<SystemController> logger)
         {
             _systemService = systemService;
+            _formService = formService;
             _organizationService = organizationService;
             _auditLog = auditLog;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -45,14 +45,21 @@ namespace PAM.Controllers
         [HttpGet, Authorize("IsAdmin")]
         public IActionResult AddSystem()
         {
+            ViewData["allForms"] = JsonConvert.SerializeObject(_formService.GetForms());
             ViewData["supportUnits"] = new SelectList(_organizationService.GetSupportUnits(), "SupportUnitId", "Name");
             return View(new Models.System());
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public async Task<IActionResult> AddSystem(Models.System system)
+        public async Task<IActionResult> AddSystem(Models.System system, List<int> formIds)
         {
             system = _systemService.AddSystem(system);
+            if (formIds.Count > 0)
+            {
+                foreach (var formId in formIds)
+                    system.Forms.Add(new SystemForm(system.SystemId, formId));
+                _systemService.SaveChanges();
+            }
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Create, LogResourceType.System, system.SystemId,
@@ -64,6 +71,7 @@ namespace PAM.Controllers
         [HttpGet, Authorize("IsAdmin")]
         public IActionResult EditSystem(int id)
         {
+            ViewData["allForms"] = JsonConvert.SerializeObject(_formService.GetForms());
             ViewData["supportUnits"] = new SelectList(_organizationService.GetSupportUnits(), "SupportUnitId", "Name");
             return View(_systemService.GetSystem(id));
         }
@@ -74,7 +82,10 @@ namespace PAM.Controllers
             var system = _systemService.GetSystem(id);
 
             var oldValue = JsonConvert.SerializeObject(system, Formatting.Indented);
-            _mapper.Map(update, system);
+            system.Name = update.Name;
+            system.Description = update.Description;
+            system.Owner = update.Owner;
+            system.SupportUnitId = update.SupportUnitId;
             _systemService.SaveChanges();
             var newValue = JsonConvert.SerializeObject(system, Formatting.Indented);
 

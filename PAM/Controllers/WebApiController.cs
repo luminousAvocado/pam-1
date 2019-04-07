@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -17,8 +18,8 @@ namespace PAM.Controllers
         private readonly OrganizationService _organizationSevice;
         private readonly AuditLogService _auditLog;
 
-        public WebApiController(UserService userService, SystemService systemService, OrganizationService organizationService,
-            AuditLogService auditLog)
+        public WebApiController(UserService userService, SystemService systemService,
+            OrganizationService organizationService, AuditLogService auditLog)
         {
             _userService = userService;
             _systemService = systemService;
@@ -74,6 +75,44 @@ namespace PAM.Controllers
                     $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from processing unit {unitId}");
             }
             return Ok();
+        }
+
+        [HttpPost, Authorize("IsAdmin")]
+        [Route("api/system/{systemId}/form/{formId}")]
+        public async Task<IActionResult> AddFormToSystem(int systemId, int formId)
+        {
+            var system = _systemService.GetSystem(systemId);
+            if (!system.Forms.Any(f => f.FormId == formId))
+            {
+                system.Forms.Add(new SystemForm(systemId, formId));
+                _systemService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} added form {formId} to system {systemId}");
+
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete, Authorize("IsAdmin")]
+        [Route("api/system/{systemId}/form/{formId}")]
+        public async Task<IActionResult> RemoveFormFromSystem(int systemId, int formId)
+        {
+            var system = _systemService.GetSystem(systemId);
+            if (system.Forms.Any(f => f.FormId == formId))
+            {
+                system.Forms.RemoveAll(f => f.FormId == formId);
+                _systemService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed form {formId} from system {systemId}");
+
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }

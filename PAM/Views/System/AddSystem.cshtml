@@ -2,6 +2,40 @@
 @{
   ViewData["Title"] = "Add System";
 }
+@section Scripts{
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
+  <script>
+    $(function () {
+      var forms = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["allForms"])
+      });
+      $("#addForm").typeahead({
+        source: forms.ttAdapter(),
+        displayText: function (item) {
+          return item.Name ;
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.FormId + "</td><td>" + item.Name + "</td> </tr>");
+          var btn = $("<button class='btn btn-danger float-right'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='formIds' value='" + item.FormId + "'>");
+          row.append(cell);
+          $("#forms").append(row);
+          $("#addForm").val("");
+        }
+      });
+      $(".delForm").click(function (event) {
+        event.preventDefault();
+        $(this).closest("tr").remove();
+      });
+    });
+  </script>
+}
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -12,25 +46,39 @@
 
 <form method="post">
   <div class="form-row">
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-6">
       <label asp-for="Name">Name</label>
       <input asp-for="Name" type="text" class="form-control" required>
     </div>
-    <div class="form-group col-md-8">
+    <div class="form-group col-md-6">
+      <label asp-for="Owner">Owner</label>
+      <input asp-for="Owner" type="text" class="form-control">
+    </div>
+    <div class="form-group col-12">
       <label asp-for="Description">Description</label>
       <input asp-for="Description" type="text" class="form-control">
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label asp-for="Owner">Owner</label>
-      <input asp-for="Owner" type="text" class="form-control">
-    </div>
-    <div class="form-group col-md-6">
       <label asp-for="SupportUnitId" class="form-label">Support Unit</label>
       <select asp-for="SupportUnitId" class="form-control" asp-items="ViewBag.supportUnits">
         <option value="">- NONE -</option>
       </select>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="addForm">Add Form</label>
+      <input id="addForm" type="text" class="form-control" placeholder="Search forms by name">
+    </div>
+  </div>
+  <div class="card mt-3 mb-3">
+    <div class="card-header">Forms</div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead><tr><th>Id</th><th>Name</th></tr></thead>
+        <tbody id="forms">
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="form-row">

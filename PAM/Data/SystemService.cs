@@ -16,7 +16,7 @@ namespace PAM.Data
 
         public IList<Models.System> GetSystems()
         {
-            return _dbContext.Systems.Include(s => s.SupportUnit).OrderBy(s => s.Name).ToList();
+            return _dbContext.Systems.Include(s => s.SupportUnit).Include(s => s.Forms).OrderBy(s => s.Name).ToList();
         }
 
         public IList<Models.System> GetSystems(List<int> ids)
@@ -36,7 +36,8 @@ namespace PAM.Data
 
         public Models.System GetSystem(int id)
         {
-            return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.SupportUnit).FirstOrDefault();
+            return _dbContext.Systems.Where(s => s.SystemId == id)
+                .Include(s => s.SupportUnit).Include(s => s.Forms).ThenInclude(f => f.Form).FirstOrDefault();
         }
 
         public Models.System AddSystem(Models.System system)

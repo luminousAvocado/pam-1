@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,6 +42,8 @@ namespace PAM.Models
         public bool ForContractorOnly { get; set; } = false;
         public bool Deleted { get; set; } = false;
 
+        public List<SystemForm> Systems { get; set; }
+
         public int? FileId { get; set; }
         public File File { get; set; }
     }
@@ -63,6 +66,14 @@ namespace PAM.Models
     [Table("SystemForms")]
     public class SystemForm
     {
+        public SystemForm() { }
+
+        public SystemForm(int systemId, int formId)
+        {
+            SystemId = systemId;
+            FormId = formId;
+        }
+
         public int SystemId { get; set; }
         public System System { get; set; }
 

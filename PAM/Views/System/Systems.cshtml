@@ -8,11 +8,6 @@
 @section Scripts{
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-  <script>
-    $(function () {
-      $(".main-content").parents(".container").removeClass("container").addClass("container-fluid");
-    });
-  </script>
 }
 
 <nav aria-label="breadcrumb">
@@ -30,9 +25,8 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th class="d-none d-lg-table-cell">Description</th>
-      <th class="d-none d-md-table-cell">Owner</th>
-      <th class="d-none d-md-table-cell">Support Unit</th>
+      <th class="d-none d-md-table-cell" data-sortable="true">Forms</th>
+      <th class="d-none d-md-table-cell" data-sortable="true">Support Unit</th>
       @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
       {
         <th></th>
@@ -46,8 +40,7 @@
         <td>
           <a asp-action="ViewSystem" asp-route-id="@system.SystemId">@system.Name</a>
         </td>
-        <td class="d-none d-lg-table-cell">@system.Description</td>
-        <td class="d-none d-md-table-cell">@system.Owner</td>
+        <td class="d-none d-md-table-cell">@system.Forms.Count</td>
         <td class="d-none d-md-table-cell">@system.SupportUnit?.Name</td>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
         {
