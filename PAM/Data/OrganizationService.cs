@@ -29,8 +29,26 @@ namespace PAM.Data
         {
             return _dbContext.Forms.Find(id);
         }
-        
+        public void AddForm(Form form)
+        {
+            _dbContext.Forms.Add(form);
+            _dbContext.SaveChanges();
+        }
+        public Form GetFileByName(string name)
+        {
+            return _dbContext.Forms.Where(f => f.Name == name).Include(f => f.File).FirstOrDefault();
+        }
 
+        public ICollection<Form> GetAllForms()
+        {
+            return _dbContext.Forms.ToList();
+        }
+        public void AddFile(File file)
+        {
+            _dbContext.Files.Add(file);
+            _dbContext.SaveChanges();
+        }
+     
 
         //-------------------------------------------------------------------------------------------------
         public ICollection<Location> GetLocations()

@@ -41,7 +41,7 @@ namespace PAM.Data
             return _dbContext.Systems.Where(s => s.SystemId == id).Include(s => s.ProcessingUnit).FirstOrDefault();
         }
 
-        internal IList<Models.SystemForm> GetSystemsByFormId(int id)
+        internal IList<Models.SystemForm> GetSystemFormsByFormId(int id)
         {
             return _dbContext.SystemForms.Include(a => a.System).Include(a => a.Form).Where(a => a.FormId == id).ToList();
         }
