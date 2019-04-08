@@ -17,18 +17,15 @@ namespace PAM.Controllers
         private readonly RequestService _requestService;
         private readonly OrganizationService _organizationService;
         private readonly TreeViewService _treeViewService;
-        private readonly FormService _formService;
         private readonly ILogger _logger;
 
         public PortfolioAssignmentRequestController(UserService userService, RequestService requestService,
-            OrganizationService organizationService, TreeViewService treeViewService,
-            FormService formService, ILogger<PortfolioAssignmentRequestController> logger)
+            OrganizationService organizationService, TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
         {
             _userService = userService;
             _requestService = requestService;
             _organizationService = organizationService;
             _treeViewService = treeViewService;
-            _formService = formService;
             _logger = logger;
         }
 
@@ -98,7 +95,7 @@ namespace PAM.Controllers
         public IActionResult Forms(int id)
         {
             var request = _requestService.GetRequest(id);
-            var allForms = _formService.GetAllForms();
+            var allForms = _organizationService.GetAllForms();
             /*
             var requestedSystems = request.Systems;
             foreach(var rs in requestedSystems){

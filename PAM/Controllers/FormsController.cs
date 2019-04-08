@@ -13,18 +13,18 @@ namespace PAM.Controllers
     [Authorize]
     public class FormsController : Controller
     {
-        private readonly FormService _formService;
+        private readonly OrganizationService _organizationService;
         private readonly ILogger _logger;
 
-        public FormsController(FormService formService, ILogger<PortfolioAssignmentRequestController> logger)
+        public FormsController(OrganizationService organizationService, ILogger<PortfolioAssignmentRequestController> logger)
         {
-            _formService = formService;
+            _organizationService = organizationService;
             _logger = logger;
         }
 
         public ActionResult DownloadForm(int id)
         {
-            var formData = _formService.GetFormById(id);
+            var formData = _organizationService.GetFormById(id);
             Stream stream = new MemoryStream(formData.File.Content);
             return File(stream, "application/pdf", formData.Name);
         }
@@ -32,7 +32,7 @@ namespace PAM.Controllers
         [Route("ViewForm")]
         public FileStreamResult ViewForm(int id)
         {
-            var formData = _formService.GetFormById(id);
+            var formData = _organizationService.GetFormById(id);
             Stream stream = new MemoryStream(formData.File.Content);
             return new FileStreamResult(stream, formData.Name);
         }

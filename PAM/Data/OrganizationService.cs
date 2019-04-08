@@ -110,6 +110,29 @@ namespace PAM.Data
             return unit;
         }
 
+        //Organization methods for Files & Forms
+        public void AddFile(File file)
+        {
+            _dbContext.Files.Add(file);
+            _dbContext.SaveChanges();
+        }
+
+        public Form GetFormByName(string name)
+        {
+            return _dbContext.Forms.Where(f => f.Name == name).Include(f => f.File).FirstOrDefault();
+        }
+
+        public Form GetFormById(int id)
+        {
+            return _dbContext.Forms.Where(f => f.FormId == id).Include(f => f.File).FirstOrDefault();
+        }
+
+        public ICollection<Form> GetAllForms()
+        {
+            return _dbContext.Forms.ToList();
+        }
+
+
         public void SaveChanges()
         {
             _dbContext.SaveChanges();

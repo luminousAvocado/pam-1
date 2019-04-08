@@ -24,14 +24,12 @@ namespace PAM.Controllers
     {
         private readonly IADService _adService;
         private readonly UserService _userService;
-        private readonly FormService _fileService;
         private readonly ILogger _logger;
 
-        public AccountController(IADService adService, UserService userService, FormService fileService, ILogger<AccountController> logger)
+        public AccountController(IADService adService, UserService userService, ILogger<AccountController> logger)
         {
             _adService = adService;
             _userService = userService;
-            _fileService = fileService;
             _logger = logger;
         }
 
@@ -108,7 +106,7 @@ namespace PAM.Controllers
                 await fileUpload.CopyToAsync(memoryStream);
                 saveFile.Content = memoryStream.ToArray();
             }
-            _fileService.AddFile(saveFile);
+            _organizationService.AddFile(saveFile);
 
             return Ok(new { size, filePath });
         }
