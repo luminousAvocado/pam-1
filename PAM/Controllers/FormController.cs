@@ -38,25 +38,36 @@ namespace PAM.Controllers
 
         public IActionResult Forms()
         {
+            //var testForm = _organizationService.GetForm(6);
+            //var testFile = _organizationService.GetFile("ad_contractor");
+
+            //testForm.FileId = testFile.FileId;
+            //_organizationService.SaveChanges();
+
+           
+
             return View( _organizationService.GetForms() );
         }
+
 
         public IActionResult DetailsForm(int id)
         {
             ViewData["Systems"] = _systemService.GetSystemFormsByFormId(id);
             return View(_organizationService.GetForm(id));
         }
+
         [HttpGet]
         public IActionResult AddForm()
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult AddForm(Form form)
-        {
-            _organizationService.AddForm(form);
 
-            return RedirectToAction(nameof(DetailsForm), new { id = form.FormId});
+        [HttpPost]
+        public async Task<IActionResult> AddForm(Form form,IFormFile file)
+        {
+           await Upload(file);
+           _organizationService.AddForm(form);
+           return RedirectToAction(nameof(DetailsForm), new { id = form.FormId});
         }
 
         [HttpGet, Authorize("IsAdmin")]
@@ -83,6 +94,7 @@ namespace PAM.Controllers
 
             return RedirectToAction(nameof(DetailsForm), new { id });
         }
+
         [Authorize("IsAdmin")]
         public async Task<IActionResult> RemoveForm(int id)
         {
@@ -90,26 +102,21 @@ namespace PAM.Controllers
             form.Deleted = true;
             
             _organizationService.SaveChanges();
-
+            Debug.WriteLine(form.Deleted);
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Remove, LogResourceType.Bureau, form.FormId,
                 $"{identity.GetClaim(ClaimTypes.Name)} removed bureau with id {form.FormId}");
 
             return RedirectToAction(nameof(Forms));
         }
-        public ActionResult DownloadForm(int id)
-        {
-            var formData = _organizationService.GetForm(id);
-            Stream stream = new MemoryStream(formData.File.Content);
-            return File(stream, "application/pdf", formData.Name);
-        }
-        
+
         public FileStreamResult ViewForm(int id)
         {
             var formData = _organizationService.GetForm(id);
             Stream stream = new MemoryStream(formData.File.Content);
             return new FileStreamResult(stream, formData.Name);
         }
+
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile fileUpload)
         {
@@ -138,5 +145,13 @@ namespace PAM.Controllers
             return Ok(new { size, filePath });
         }
 
+        public ActionResult Download(int id)
+        {
+            var form = _organizationService.GetForm(id);
+            var test = _organizationService.GetFileByName(form.File.Name);
+            Stream stream = new MemoryStream(test.Content);
+            return File(stream, "application/pdf", form.File.Name);
+            //return new FileStreamResult(stream, test.ContentType);
+        }
     }
 }

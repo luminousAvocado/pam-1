@@ -21,22 +21,28 @@ namespace PAM.Data
 
 
         //-------------------------------------------------------------------------------------------------
-        public ICollection<Form> GetForms()
+        public List<Form> GetForms()
         {
-            return _dbContext.Forms.OrderBy(form => form.DisplayOrder).ToList();
+            return _dbContext.Forms.OrderBy(f => f.DisplayOrder).ThenBy(f => f.FormId).ToList();
         }
+
         public Form GetForm(int id)
         {
-            return _dbContext.Forms.Find(id);
+            return _dbContext.Forms.FirstOrDefault();
         }
         public void AddForm(Form form)
         {
             _dbContext.Forms.Add(form);
             _dbContext.SaveChanges();
         }
-        public Form GetFileByName(string name)
+
+        public Form GetFileByForm(string name)
         {
             return _dbContext.Forms.Where(f => f.Name == name).Include(f => f.File).FirstOrDefault();
+        }
+        public File GetFile(String name)
+        {
+            return _dbContext.Files.Where(f => f.Name == name).FirstOrDefault();
         }
 
         public ICollection<Form> GetAllForms()
@@ -48,8 +54,11 @@ namespace PAM.Data
             _dbContext.Files.Add(file);
             _dbContext.SaveChanges();
         }
+        public File GetFileByName(string name)
+        {
+            return _dbContext.Files.Where(f => f.Name == name).FirstOrDefault();
+        }
      
-
         //-------------------------------------------------------------------------------------------------
         public ICollection<Location> GetLocations()
         {
@@ -148,5 +157,7 @@ namespace PAM.Data
         {
             _dbContext.SaveChanges();
         }
+
+      
     }
 }
