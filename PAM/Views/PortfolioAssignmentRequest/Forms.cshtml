@@ -1,5 +1,6 @@
 ﻿@model Request
 @{
+     var requiredForms = (List<Form>)ViewData["requiredForms"];
      ViewData["Title"] = "Forms";
      ViewData["id"] = @Model.RequestId;
 }
@@ -11,8 +12,10 @@
   $(function(){
     var page ='@ViewData["Title"]';
     $("li[data-title='" + page + "']").addClass("active");
-    $("#saveDraft").prop("disabled", true);
-    $("#next").prop("disabled", true);
+    if (@requiredForms.Count() > 0) {
+      $("#saveDraft").prop("disabled", true);
+      $("#next").prop("disabled", true);
+    }
     $("input:file").change(function () {
       var inputFiles = $("input:file").filter(function () {
         return this.value === "";
