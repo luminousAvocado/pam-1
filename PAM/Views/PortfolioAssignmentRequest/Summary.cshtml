@@ -112,6 +112,38 @@
   </div>
 </div>
 
+<div class="card">
+  <div class="card-header">
+    Additional Forms
+    <a class="float-right" asp-action="Forms" asp-route-id="@ViewData["id"]"><i class="fas fa-edit"></i></a>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Form Name</th>
+            <th scope="col">Uploaded File Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var ff in Model.Forms)
+          {
+            <tr>
+              <td>
+              <a asp-controller="Files" asp-action="DownloadFile" asp-route-id="@ff.Form.FormId"><i class="fas fa-download"></i></a>
+              @ff.Form.Name</td>
+              <td>
+              <a asp-controller="Files" asp-action="DownloadFile" asp-route-id="@ff.File.FileId"><i class="fas fa-download"></i></a>
+              @ff.File.Name</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <partial name="/Views/Shared/RequestPartials/_SignaturesSummary.cshtml" />
 
 <div class="row mt-3">

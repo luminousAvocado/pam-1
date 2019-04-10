@@ -14,6 +14,10 @@
 <partial name="/Views/Shared/ViewRequestPartials/_Requester.cshtml" />
 <partial name="/Views/Shared/ViewRequestPartials/_Unit.cshtml" />
 <partial name="/Views/Shared/ViewRequestPartials/_Systems.cshtml" />
+@if (Model.Forms.Any())
+{
+  <partial name="/Views/Shared/ViewRequestPartials/_Forms.cshtml" />
+}
 @if (Model.RequestType.DisplayCode == "Leaving Probation")
 {
   <partial name="/Views/Shared/ViewRequestPartials/_AdditionalInfoForLeaving.cshtml" />

@@ -1,10 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace PAM.Models
 {
@@ -39,12 +36,13 @@ namespace PAM.Models
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
         public int DisplayOrder { get; set; } = 50;
 
         public bool ForEmployeeOnly { get; set; } = false;
         public bool ForContractorOnly { get; set; } = false;
         public bool Deleted { get; set; } = false;
+
+        public List<SystemForm> Systems { get; set; }
 
         public int? FileId { get; set; }
         public File File { get; set; }
@@ -53,6 +51,15 @@ namespace PAM.Models
     [Table("FilledForms")]
     public class FilledForm
     {
+        public FilledForm() { }
+
+        public FilledForm(int requestId, int formId, int fileId)
+        {
+            RequestId = requestId;
+            FormId = formId;
+            FileId = fileId;
+        }
+
         public int FilledFormId { get; set; }
 
         public int RequestId { get; set; }
@@ -63,11 +70,20 @@ namespace PAM.Models
 
         public int? FileId { get; set; }
         public File File { get; set; }
+
     }
 
     [Table("SystemForms")]
     public class SystemForm
     {
+        public SystemForm() { }
+
+        public SystemForm(int systemId, int formId)
+        {
+            SystemId = systemId;
+            FormId = formId;
+        }
+
         public int SystemId { get; set; }
         public System System { get; set; }
 

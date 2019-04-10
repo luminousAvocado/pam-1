@@ -54,6 +54,8 @@ namespace PAM.Data
                 .Include(r => r.RequestedFor).ThenInclude(rr => rr.Unit).ThenInclude(u => u.Bureau)
                 .Include(r => r.TransferredFromUnit).ThenInclude(u => u.Bureau)
                 .Include(r => r.Systems).ThenInclude(rs => rs.System).ThenInclude(s => s.Forms)
+                .Include(r => r.Forms).ThenInclude(ff => ff.File)
+                .Include(r => r.Forms).ThenInclude(ff => ff.Form)
                 .Include(r => r.Reviews).ThenInclude(rr => rr.Reviewer)
                 .Where(r => r.RequestId == id).FirstOrDefault();
         }

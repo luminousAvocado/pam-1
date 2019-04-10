@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
+using PAM.Extensions;
 using PAM.Models;
 using PAM.Services;
 
@@ -95,22 +100,90 @@ namespace PAM.Controllers
         public IActionResult Forms(int id)
         {
             var request = _requestService.GetRequest(id);
-            var allForms = _organizationService.GetAllForms();
-            /*
+
+            var formAssociations = _organizationService.GetFormAssociations();
             var requestedSystems = request.Systems;
+            var requiredForms = new List<Form>();
+
             foreach(var rs in requestedSystems){
-                if(rs.SystemId)
+                foreach(var fa in formAssociations){
+                    if(rs.SystemId == fa.SystemId){
+                        if (requiredForms.Exists(f => f.FormId == fa.FormId)) continue;
+                        else requiredForms.Add(_organizationService.GetFormById(fa.FormId));
+                    }
+                }
             }
-            */
+
+            var identity = (ClaimsIdentity)User.Identity;
+            if (identity.GetClaim(ClaimTypes.NameIdentifier).First() == 'e')
+                requiredForms.RemoveAll(f => f.ForContractorOnly);
+            else
+                requiredForms.RemoveAll(f => f.ForEmployeeOnly);
+
             ViewData["request"] = request;
-            ViewData["requiredForms"] = allForms;
+            ViewData["requiredForms"] = requiredForms;
             return View(request);
         }
 
         [HttpPost]
-        public IActionResult Forms(int id,bool saveDraft)
+        public async Task<IActionResult> Forms(int id, List<IFormFile> completedFiles, bool saveDraft)
         {
             var request = _requestService.GetRequest(id);
+            var formAssociations = _organizationService.GetFormAssociations();
+            var requestedSystems = request.Systems;
+            var requiredForms = new List<Form>();
+            var filledForms = new List<FilledForm>();
+
+            foreach(var rs in requestedSystems){
+                foreach(var fa in formAssociations){
+                    if(rs.SystemId == fa.SystemId){
+                        if (requiredForms.Exists(f => f.FormId == fa.FormId)) continue;
+                        else requiredForms.Add(_organizationService.GetFormById(fa.FormId));
+                    }
+                }
+            }
+
+            var identity = (ClaimsIdentity)User.Identity;
+            if (identity.GetClaim(ClaimTypes.NameIdentifier).First() == 'e')
+                requiredForms.RemoveAll(f => f.ForContractorOnly);
+            else
+                requiredForms.RemoveAll(f => f.ForEmployeeOnly);
+
+            foreach (var cr in completedFiles.Zip(requiredForms, Tuple.Create))
+            {
+                long size = cr.Item1.Length;
+
+                var filePath = Path.GetTempFileName();
+                var pdfFileName = Path.GetFileNameWithoutExtension(cr.Item1.FileName);
+
+                if (cr.Item1.Length > 0)
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await cr.Item1.CopyToAsync(stream);
+                    }
+                }
+
+                var saveFile = new Models.File
+                {
+                    Name = pdfFileName,
+                    ContentType = cr.Item1.ContentType,
+                    Length = cr.Item1.Length,
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await cr.Item1.CopyToAsync(memoryStream);
+                    saveFile.Content = memoryStream.ToArray();
+                }
+
+                var file = _organizationService.AddFile(saveFile);
+                var form = _organizationService.GetFormById(cr.Item2.FormId);
+
+                filledForms.Add(new FilledForm(request.RequestId, form.FormId, file.FileId));
+            }
+            request.Forms = filledForms;
+            _requestService.SaveChanges();
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction("Signatures", new { id });
         }

@@ -111,10 +111,11 @@ namespace PAM.Data
         }
 
         //Organization methods for Files & Forms
-        public void AddFile(File file)
+        public File AddFile(File file)
         {
             _dbContext.Files.Add(file);
             _dbContext.SaveChanges();
+            return file;
         }
 
         public Form GetFormByName(string name)
@@ -127,11 +128,30 @@ namespace PAM.Data
             return _dbContext.Forms.Where(f => f.FormId == id).Include(f => f.File).FirstOrDefault();
         }
 
+        public File GetFileById(int id)
+        {
+            return _dbContext.Files.Where(f => f.FileId == id).FirstOrDefault();
+        }
+
         public ICollection<Form> GetAllForms()
         {
             return _dbContext.Forms.ToList();
         }
 
+        public ICollection<Form> GetEmployeeForms()
+        {
+            return _dbContext.Forms.Where(f => f.ForEmployeeOnly).ToList();
+        }
+
+        public ICollection<Form> GetContractorForms()
+        {
+            return _dbContext.Forms.Where(f => f.ForContractorOnly).ToList();
+        }
+
+        public ICollection<SystemForm> GetFormAssociations ()
+        {
+            return _dbContext.SystemForms.ToList();
+        }
 
         public void SaveChanges()
         {
