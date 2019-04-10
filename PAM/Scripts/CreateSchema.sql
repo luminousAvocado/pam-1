@@ -58,9 +58,10 @@ GO
 CREATE TABLE [SupportUnits] (
     [SupportUnitId] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NOT NULL,
-    [Email] nvarchar(max) NOT NULL,
+    [Email] nvarchar(450) NOT NULL,
     [Deleted] bit NOT NULL DEFAULT 0,
-    CONSTRAINT [PK_SupportUnits] PRIMARY KEY ([SupportUnitId])
+    CONSTRAINT [PK_SupportUnits] PRIMARY KEY ([SupportUnitId]),
+    CONSTRAINT [AK_SupportUnits_Email] UNIQUE ([Email])
 );
 
 GO
@@ -443,7 +444,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190405210744_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190410011328_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

@@ -69,7 +69,7 @@ namespace PAM.Controllers
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Create, LogResourceType.SupportUnit, unit.SupportUnitId,
-                $"{identity.GetClaim(ClaimTypes.Name)} created processing unit with id {unit.SupportUnitId}");
+                $"{identity.GetClaim(ClaimTypes.Name)} created support unit with id {unit.SupportUnitId}");
 
             return RedirectToAction(nameof(ViewSupportUnit), new { id = unit.SupportUnitId });
         }
@@ -95,7 +95,7 @@ namespace PAM.Controllers
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.SupportUnit, supportUnit.SupportUnitId,
-                $"{identity.GetClaim(ClaimTypes.Name)} updated processing unit with id {supportUnit.SupportUnitId}", oldValue, newValue);
+                $"{identity.GetClaim(ClaimTypes.Name)} updated support unit with id {supportUnit.SupportUnitId}", oldValue, newValue);
 
             var employees = _userService.GetEmployees(employeeIds);
             foreach (var employee in employees)
@@ -119,7 +119,7 @@ namespace PAM.Controllers
 
             var identity = (ClaimsIdentity)User.Identity;
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Remove, LogResourceType.SupportUnit, unit.SupportUnitId,
-                $"{identity.GetClaim(ClaimTypes.Name)} removed processing unit with id {unit.SupportUnitId}");
+                $"{identity.GetClaim(ClaimTypes.Name)} removed support unit with id {unit.SupportUnitId}");
 
             var employees = _userService.GetEmployeesOfSupportUnit(unit.SupportUnitId);
             foreach (var employee in employees)

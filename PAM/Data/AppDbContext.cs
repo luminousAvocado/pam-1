@@ -44,6 +44,7 @@ namespace PAM.Data
             modelBuilder.Entity<Unit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Unit>().HasQueryFilter(u => !u.Deleted);
 
+            modelBuilder.Entity<SupportUnit>().HasAlternateKey(u => u.Email);
             modelBuilder.Entity<SupportUnit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<SupportUnit>().HasQueryFilter(u => !u.Deleted);
 

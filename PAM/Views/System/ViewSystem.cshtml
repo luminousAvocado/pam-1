@@ -29,7 +29,7 @@
         <ul>
           @foreach (var form in Model.Forms.OrderBy(f => f.Form.DisplayOrder).ThenBy(f => f.Form.FormId))
           {
-            <li>@form.Form.Name</li>
+            <li><a asp-controller="Form" asp-action="ViewForm" asp-route-id="@form.FormId">@form.Form.Name</a></li>
           }
         </ul>
       }

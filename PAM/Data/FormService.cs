@@ -19,7 +19,7 @@ namespace PAM.Data
 
         public List<Form> GetForms()
         {
-            return _dbContext.Forms.OrderBy(f => f.DisplayOrder).ThenBy(f => f.FormId).ToList();
+            return _dbContext.Forms.Include(f => f.Systems).OrderBy(f => f.DisplayOrder).ThenBy(f => f.FormId).ToList();
         }
 
         public Form GetForm(int id)
@@ -34,6 +34,18 @@ namespace PAM.Data
             _dbContext.Forms.Add(form);
             _dbContext.SaveChanges();
             return form;
+        }
+
+        public File AddFile(File file)
+        {
+            _dbContext.Files.Add(file);
+            _dbContext.SaveChanges();
+            return file;
+        }
+
+        public File GetFile(int id)
+        {
+            return _dbContext.Files.Find(id);
         }
 
         public void SaveChanges()

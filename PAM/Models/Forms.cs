@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PAM.Models
 {
@@ -25,6 +26,7 @@ namespace PAM.Models
         public long Length { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
+        [JsonIgnore]
         public byte[] Content { get; set; }
     }
 
@@ -42,7 +44,7 @@ namespace PAM.Models
         public bool ForContractorOnly { get; set; } = false;
         public bool Deleted { get; set; } = false;
 
-        public List<SystemForm> Systems { get; set; }
+        public List<SystemForm> Systems { get; set; } = new List<SystemForm>();
 
         public int? FileId { get; set; }
         public File File { get; set; }

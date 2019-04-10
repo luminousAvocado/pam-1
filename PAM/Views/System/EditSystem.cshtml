@@ -29,7 +29,7 @@
                 event.preventDefault();
                 removeForm(item.FormId);
               });
-              var cell = $("<td></td>").append(btn).append("<input type='hidden' name='formIds' value='" + item.FormId + "'>");
+              var cell = $("<td></td>").append(btn);
               row.append(cell);
               $("#forms").append(row);
             },
@@ -102,7 +102,7 @@
     <div class="card-header">Forms</div>
     <div class="card-body">
       <table class="table table-hover">
-        <thead><tr><th>Id</th><th>Name</th></tr></thead>
+        <thead><tr><th>Id</th><th>Name</th><th></th></tr></thead>
         <tbody id="forms">
           @foreach (var form in Model.Forms)
           {

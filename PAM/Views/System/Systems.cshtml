@@ -41,7 +41,12 @@
           <a asp-action="ViewSystem" asp-route-id="@system.SystemId">@system.Name</a>
         </td>
         <td class="d-none d-md-table-cell">@system.Forms.Count</td>
-        <td class="d-none d-md-table-cell">@system.SupportUnit?.Name</td>
+        <td class="d-none d-md-table-cell">
+          @if (system.SupportUnit != null)
+          {
+            <a asp-controller="SupportUnit" asp-action="ViewSupportUnit" asp-route-id="@system.SupportUnit.SupportUnitId">@system.SupportUnit.Name</a>
+          }
+        </td>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
         {
           <td>
