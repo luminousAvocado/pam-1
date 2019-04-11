@@ -60,7 +60,7 @@ namespace PAM.Controllers
             Debug.WriteLine(file.FileName);
            _organizationService.AddForm(form);
            //since we dont have a refernce to pdf
-           mapFormWithFile(form, file.FileName);
+           MapFormWithFile(form, file.FileName);
            return RedirectToAction(nameof(DetailsForm), new { id = form.FormId});
         }
 
@@ -72,14 +72,21 @@ namespace PAM.Controllers
         }
 
         [HttpPost, Authorize("IsAdmin")]
-        public async Task<IActionResult> EditForm(int id, Form update)
+        public async Task<IActionResult> EditForm(int id, Form update, IFormFile file)
         {
+            
             var form = _organizationService.GetForm(id);
 
             var oldValue = JsonConvert.SerializeObject(form);
             _mapper.Map(update, form);
             _organizationService.SaveChanges();
 
+            if (file != null)
+            {
+            await Upload(file);
+            MapFormWithFile(_organizationService.GetForm(id), file.FileName);
+            }
+            
 
             var newValue = JsonConvert.SerializeObject(form);
             var identity = (ClaimsIdentity)User.Identity;
@@ -150,11 +157,13 @@ namespace PAM.Controllers
             return File(stream, "application/pdf", form.File.Name);
         }
 
-        public void mapFormWithFile(Form form, String fileName)
+        public void MapFormWithFile(Form form, String fileName)
         {
             var file = _organizationService.GetFileByName(fileName.Substring(0, fileName.IndexOf(".pdf")));
             form.File = file;
             form.FileId = file.FileId;
+
+            Debug.WriteLine(file.FileId+ "*****");
             _organizationService.SaveChanges();
         }
     }

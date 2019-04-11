@@ -35,10 +35,11 @@
       <label asp-for="DisplayOrder">Display Order</label>
       <input asp-for="DisplayOrder" type="text" class="form-control" required>
     </div>
-    <div class="form-group col-md-6">
-      <label>Re-UploadFile</label>
-      <input asp-for="File" type="file"  name="file" >
-    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="uploadFile">Re-Upload File</label>
+    <input asp-for="File" type="file" name="file" class="form-control-file">
   </div>
 
   <div class="form-row">
@@ -53,24 +54,6 @@
   </div>
 
 
-  <div class="card mt-3 mb-3">
-    <div class="card-header">Systems</div>
-    <div class="card-body">
-      <table class="table table-hover">
-        <thead><tr><th>Id</th><th>Name</th><th class="d-none d-md-table-cell">Description</th><th></th></tr></thead>
-        <tbody id="systems">
-          @foreach (var system in systemForms)
-          {
-            <tr>
-              <td>@system.System.Name</td>
-              <td class="d-none d-lg-table-cell">@system.System.Description</td>
-              <td class="d-none d-md-table-cell">@system.System.Owner</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
   <div class="form-row">
     <div class="col-6">
       <a href="javascript:confirmRemoval()" class="btn btn-danger">Remove Form</a>

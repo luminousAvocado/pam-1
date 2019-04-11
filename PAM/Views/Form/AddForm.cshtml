@@ -7,50 +7,55 @@
   <script src="~/lib/typeahead.js/bloodhound.js"></script>
 }
 
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Processing Units</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Add Processing Unit</li>
-    </ol>
-  </nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Forms">Forms</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Form</li>
+  </ol>
+</nav>
 
-  <form method="post" enctype="multipart/form-data">
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label asp-for="Name">Name</label>
-        <input asp-for="Name" type="text" class="form-control" required>
-      </div>
-      <div class="form-group col-md-6">
-        <label asp-for="Description">Description</label>
-        <input asp-for="Description" type="text" class="form-control" required>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label asp-for="DisplayOrder">Display Order</label>
-        <input asp-for="DisplayOrder" type="text" class="form-control" required>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-check form-check-inline">
-        <input asp-for="ForEmployeeOnly" class="form-check-input" type="checkbox">
-        <label asp-for="ForEmployeeOnly" class="form-check-label">Employees Only</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input asp-for="ForContractorOnly" class="form-check-input" type="checkbox">
-        <label asp-for="ForContractorOnly" class="form-check-label">Contractors Only</label>
-      </div>
-    </div>
-
+<form method="post" enctype="multipart/form-data">
+  <div class="form-row">
     <div class="form-group col-md-6">
-      <input asp-for="File" type="file" name="file" required>
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
     </div>
+    <div class="form-group col-md-6">
+      <label asp-for="Description">Description</label>
+      <input asp-for="Description" type="text" class="form-control" required>
+    </div>
+  </div>
 
-    <div class="form-row">
-      <div class="col text-right">
-        <button type="submit" class="btn btn-primary">Add</button>
-      </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="DisplayOrder">Display Order</label>
+      <input asp-for="DisplayOrder" type="text" class="form-control" required>
     </div>
-  </form>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>Upload PDF File</label>
+      <input asp-for="File" type="file" name="file" class="form-control-file" required>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-check form-check-inline">
+      <input asp-for="ForEmployeeOnly" class="form-check-input" type="checkbox">
+      <label asp-for="ForEmployeeOnly" class="form-check-label">Employees Only</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input asp-for="ForContractorOnly" class="form-check-input" type="checkbox">
+      <label asp-for="ForContractorOnly" class="form-check-label">Contractors Only</label>
+    </div>
+  </div>
+
+
+
+  <div class="form-row">
+    <div class="col text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+</form>
