@@ -23,12 +23,12 @@ namespace PAM.Data
         //-------------------------------------------------------------------------------------------------
         public List<Form> GetForms()
         {
-            return _dbContext.Forms.OrderBy(f => f.DisplayOrder).ThenBy(f => f.FormId).ToList();
+            return _dbContext.Forms.OrderBy(f => f.DisplayOrder).ToList();
         }
 
         public Form GetForm(int id)
         {
-            return _dbContext.Forms.FirstOrDefault();
+            return _dbContext.Forms.Find(id);
         }
         public void AddForm(Form form)
         {
@@ -40,9 +40,9 @@ namespace PAM.Data
         {
             return _dbContext.Forms.Where(f => f.Name == name).Include(f => f.File).FirstOrDefault();
         }
-        public File GetFile(String name)
+        public File GetFile(int? id)
         {
-            return _dbContext.Files.Where(f => f.Name == name).FirstOrDefault();
+            return _dbContext.Files.Where(f => f.FileId == id).FirstOrDefault();
         }
 
         public ICollection<Form> GetAllForms()

@@ -38,17 +38,8 @@ namespace PAM.Controllers
 
         public IActionResult Forms()
         {
-            //var testForm = _organizationService.GetForm(6);
-            //var testFile = _organizationService.GetFile("ad_contractor");
-
-            //testForm.FileId = testFile.FileId;
-            //_organizationService.SaveChanges();
-
-           
-
-            return View( _organizationService.GetForms() );
+            return View( _organizationService.GetForms());
         }
-
 
         public IActionResult DetailsForm(int id)
         {
@@ -66,7 +57,10 @@ namespace PAM.Controllers
         public async Task<IActionResult> AddForm(Form form,IFormFile file)
         {
            await Upload(file);
+            Debug.WriteLine(file.FileName);
            _organizationService.AddForm(form);
+           //since we dont have a refernce to pdf
+           mapFormWithFile(form, file.FileName);
            return RedirectToAction(nameof(DetailsForm), new { id = form.FormId});
         }
 
@@ -147,11 +141,21 @@ namespace PAM.Controllers
 
         public ActionResult Download(int id)
         {
+            Debug.WriteLine("this is the Download action");
             var form = _organizationService.GetForm(id);
-            var test = _organizationService.GetFileByName(form.File.Name);
-            Stream stream = new MemoryStream(test.Content);
+            Debug.WriteLine("this is the form id " + form.FormId);
+            var file = _organizationService.GetFile(form.FileId);
+            Debug.WriteLine("this is the file id " + file.Name);
+            Stream stream = new MemoryStream(file.Content);
             return File(stream, "application/pdf", form.File.Name);
-            //return new FileStreamResult(stream, test.ContentType);
+        }
+
+        public void mapFormWithFile(Form form, String fileName)
+        {
+            var file = _organizationService.GetFileByName(fileName.Substring(0, fileName.IndexOf(".pdf")));
+            form.File = file;
+            form.FileId = file.FileId;
+            _organizationService.SaveChanges();
         }
     }
 }

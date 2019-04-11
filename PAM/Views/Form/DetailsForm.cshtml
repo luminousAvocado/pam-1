@@ -1,4 +1,4 @@
-﻿@model PAM.Models.Form
+﻿@model Form
 @{
   var systemForms = (List<PAM.Models.SystemForm>)ViewData["Systems"];
 }
@@ -12,7 +12,7 @@
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a asp-action="ProcessingUnits">Form</a></li>
+    <li class="breadcrumb-item"><a asp-action="Forms">Forms</a></li>
     <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
   </ol>
 </nav>
