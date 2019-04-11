@@ -14,14 +14,16 @@ namespace PAM.Controllers
     public class WebApiController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly FormService _formService;
         private readonly SystemService _systemService;
         private readonly OrganizationService _organizationSevice;
         private readonly AuditLogService _auditLog;
 
-        public WebApiController(UserService userService, SystemService systemService,
+        public WebApiController(UserService userService, FormService formService, SystemService systemService,
             OrganizationService organizationService, AuditLogService auditLog)
         {
             _userService = userService;
+            _formService = formService;
             _systemService = systemService;
             _organizationSevice = organizationService;
             _auditLog = auditLog;
@@ -55,7 +57,7 @@ namespace PAM.Controllers
 
                 var identity = (ClaimsIdentity)User.Identity;
                 await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.SupportUnit, unitId,
-                    $"{identity.GetClaim(ClaimTypes.Name)} removed employee {employeeId} from processing unit {unitId}");
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed employee {employeeId} from support unit {unitId}");
             }
             return Ok();
         }
@@ -72,7 +74,7 @@ namespace PAM.Controllers
 
                 var identity = (ClaimsIdentity)User.Identity;
                 await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.SupportUnit, unitId,
-                    $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from processing unit {unitId}");
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from support unit {unitId}");
             }
             return Ok();
         }
@@ -109,6 +111,44 @@ namespace PAM.Controllers
                 var identity = (ClaimsIdentity)User.Identity;
                 await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.System, systemId,
                     $"{identity.GetClaim(ClaimTypes.Name)} removed form {formId} from system {systemId}");
+
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost, Authorize("IsAdmin")]
+        [Route("api/form/{formId}/system/{systemId}")]
+        public async Task<IActionResult> AddSystemToForm(int formId, int systemId)
+        {
+            var form = _formService.GetForm(formId);
+            if (!form.Systems.Any(s => s.SystemId == systemId))
+            {
+                form.Systems.Add(new SystemForm(systemId, formId));
+                _formService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Form, formId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} added system {systemId} to form {formId}");
+
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete, Authorize("IsAdmin")]
+        [Route("api/form/{formId}/system/{systemId}")]
+        public async Task<IActionResult> RemoveSystemFromForm(int formId, int systemId)
+        {
+            var form = _formService.GetForm(formId);
+            if (form.Systems.Any(s => s.SystemId == systemId))
+            {
+                form.Systems.RemoveAll(s => s.SystemId == systemId);
+                _formService.SaveChanges();
+
+                var identity = (ClaimsIdentity)User.Identity;
+                await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Update, LogResourceType.Form, formId,
+                    $"{identity.GetClaim(ClaimTypes.Name)} removed system {systemId} from form {formId}");
 
                 return Ok();
             }
