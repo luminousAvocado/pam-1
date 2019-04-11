@@ -114,8 +114,7 @@ namespace PAM.Controllers
                 }
             }
 
-            var identity = (ClaimsIdentity)User.Identity;
-            if (identity.GetClaim(ClaimTypes.NameIdentifier).First() == 'e')
+            if (!request.IsContractor)
                 requiredForms.RemoveAll(f => f.ForContractorOnly);
             else
                 requiredForms.RemoveAll(f => f.ForEmployeeOnly);
@@ -129,6 +128,7 @@ namespace PAM.Controllers
         public async Task<IActionResult> Forms(int id, List<IFormFile> completedFiles, bool saveDraft)
         {
             var request = _requestService.GetRequest(id);
+            request.Forms.Clear();
             var formAssociations = _organizationService.GetFormAssociations();
             var requestedSystems = request.Systems;
             var requiredForms = new List<Form>();
@@ -143,8 +143,7 @@ namespace PAM.Controllers
                 }
             }
 
-            var identity = (ClaimsIdentity)User.Identity;
-            if (identity.GetClaim(ClaimTypes.NameIdentifier).First() == 'e')
+            if (!request.IsContractor)
                 requiredForms.RemoveAll(f => f.ForContractorOnly);
             else
                 requiredForms.RemoveAll(f => f.ForEmployeeOnly);

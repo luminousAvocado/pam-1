@@ -70,48 +70,6 @@ namespace PAM.Controllers
             return View();
         }
 
-        /*
-        [HttpPost]
-        public ActionResult Download(){
-            var test = _fileService.GetFileByName("ad_contractor");
-            Stream stream = new MemoryStream(test.Content);
-            return File(stream, "application/pdf", "ad_contractor");
-            //return new FileStreamResult(stream, test.ContentType);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile fileUpload)
-        {
-            long size = fileUpload.Length;
-
-            var filePath = Path.GetTempFileName();
-            var pdfFileName = Path.GetFileNameWithoutExtension(fileUpload.FileName);
-
-            if (fileUpload.Length > 0)
-            {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await fileUpload.CopyToAsync(stream);
-                }
-            }
-            var saveFile = new PAM.Models.File
-            {
-                Name = pdfFileName,
-                ContentType = fileUpload.ContentType,
-                Length = fileUpload.Length,
-            };
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await fileUpload.CopyToAsync(memoryStream);
-                saveFile.Content = memoryStream.ToArray();
-            }
-            _organizationService.AddFile(saveFile);
-
-            return Ok(new { size, filePath });
-        }
-        */
-
         public async Task<IActionResult> Logout()
         {
             _logger.LogInformation($"{User.Identity.Name} logged out at {DateTime.Now}.");
