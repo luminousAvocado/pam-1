@@ -76,7 +76,7 @@ namespace PAM.Models
 
         public List<RequestedSystem> Systems { get; set; }
 
-        public ICollection<FilledForm> Forms { get; set; }
+        public ICollection<CompletedForm> Forms { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
 

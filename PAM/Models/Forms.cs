@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace PAM.Models
 {
     // For our purpose we just need the content byte[], so technically we could just
-    // put a byte[] inside Form and FilledForm. However, doing so would mean we have
+    // put a byte[] inside Form and CompletedForm. However, doing so would mean we have
     // to load the whole file into memory even when we just want to display the form
     // name. Because EF Core does not support lazy loading non-navigation properties,
     // we have to move the byte[] into its own class. The bright side of doing this
@@ -50,10 +50,10 @@ namespace PAM.Models
         public File File { get; set; }
     }
 
-    [Table("FilledForms")]
-    public class FilledForm
+    [Table("CompletedForms")]
+    public class CompletedForm
     {
-        public int FilledFormId { get; set; }
+        public int CompletedFormId { get; set; }
 
         public int RequestId { get; set; }
         public Request Request { get; set; }

@@ -266,15 +266,15 @@ CREATE TABLE [Requests] (
 
 GO
 
-CREATE TABLE [FilledForms] (
-    [FilledFormId] int NOT NULL IDENTITY,
+CREATE TABLE [CompletedForms] (
+    [CompletedFormId] int NOT NULL IDENTITY,
     [RequestId] int NOT NULL,
     [FormId] int NOT NULL,
     [FileId] int NULL,
-    CONSTRAINT [PK_FilledForms] PRIMARY KEY ([FilledFormId]),
-    CONSTRAINT [FK_FilledForms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_FilledForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_FilledForms_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE
+    CONSTRAINT [PK_CompletedForms] PRIMARY KEY ([CompletedFormId]),
+    CONSTRAINT [FK_CompletedForms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_CompletedForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_CompletedForms_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE
 );
 
 GO
@@ -347,19 +347,19 @@ CREATE INDEX [IX_Bureaus_BureauTypeId] ON [Bureaus] ([BureauTypeId]);
 
 GO
 
+CREATE INDEX [IX_CompletedForms_FileId] ON [CompletedForms] ([FileId]);
+
+GO
+
+CREATE INDEX [IX_CompletedForms_FormId] ON [CompletedForms] ([FormId]);
+
+GO
+
+CREATE INDEX [IX_CompletedForms_RequestId] ON [CompletedForms] ([RequestId]);
+
+GO
+
 CREATE INDEX [IX_Employees_SupportUnitId] ON [Employees] ([SupportUnitId]);
-
-GO
-
-CREATE INDEX [IX_FilledForms_FileId] ON [FilledForms] ([FileId]);
-
-GO
-
-CREATE INDEX [IX_FilledForms_FormId] ON [FilledForms] ([FormId]);
-
-GO
-
-CREATE INDEX [IX_FilledForms_RequestId] ON [FilledForms] ([RequestId]);
 
 GO
 
@@ -444,7 +444,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190410011328_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190412012002_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 
