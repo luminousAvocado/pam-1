@@ -20,7 +20,6 @@ namespace PAM.Controllers
             nameof(UnitSelection),
             nameof(AdditionalInfo),
             nameof(SystemsToUpdate),
-            nameof(Signatures),
             nameof(Summary)
         };
     }

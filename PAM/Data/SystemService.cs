@@ -72,7 +72,7 @@ namespace PAM.Data
                 if (!currentAccesses.ContainsKey(access.SystemId))
                     currentAccesses.Add(access.SystemId, access);
 
-            return currentAccesses.Where(a => a.Value.AccessType == SystemAccessType.Add || a.Value.AccessType == SystemAccessType.Update)
+            return currentAccesses.Where(a => a.Value.AccessType == SystemAccessType.Add || a.Value.AccessType == SystemAccessType.UpdateInfo)
                 .Select(a => a.Value).ToList();
         }
 

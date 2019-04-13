@@ -33,7 +33,7 @@ namespace PAM.Models
         public System System { get; set; }
     }
 
-    public enum SystemAccessType { Add, Remove, Update };
+    public enum SystemAccessType { Add, Remove, UpdateInfo, UpdateAccess };
 
     [Table("RequestedSystems")]
     public class RequestedSystem

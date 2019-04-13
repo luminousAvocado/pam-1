@@ -24,6 +24,8 @@ namespace PAM.Controllers
         private readonly UserService _userService;
         private readonly RequestService _requestService;
         private readonly FormService _formService;
+        private readonly SystemService _systemService;
+        private readonly OrganizationService _organizationService;
         private readonly AuditLogService _auditLog;
         private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
@@ -32,13 +34,15 @@ namespace PAM.Controllers
         private readonly ILogger _logger;
 
         public RequestController(IADService adService, UserService userService, RequestService requestService, FormService formService,
-            AuditLogService auditLog, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
-            IMapper mapper, ILogger<RequestController> logger)
+            SystemService systemService, OrganizationService orgnizationService, AuditLogService auditLog, IAuthorizationService authService,
+            IFluentEmail email, EmailHelper emailHelper, IMapper mapper, ILogger<RequestController> logger)
         {
             _adService = adService;
             _userService = userService;
-            _formService = formService;
             _requestService = requestService;
+            _formService = formService;
+            _systemService = systemService;
+            _organizationService = orgnizationService;
             _auditLog = auditLog;
             _authService = authService;
             _email = email;
@@ -189,15 +193,43 @@ namespace PAM.Controllers
             await _auditLog.Append(identity.GetClaimAsInt("EmployeeId"), LogActionType.Submit, LogResourceType.Request, id,
                 $"{identity.GetClaim(ClaimTypes.Name)} submitted request with id {id}");
 
-            Employee reviewer = request.OrderedReviews[0].Reviewer;
-            string receipient = reviewer.Email;
-            string emailName = "ReviewRequest";
-            var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
-            string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
-            await _email.To(receipient)
-                .Subject(subject)
-                .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
-                .SendAsync();
+            if (request.Reviews.Count > 0)
+            {
+                Employee reviewer = request.OrderedReviews[0].Reviewer;
+                string receipient = reviewer.Email;
+                string emailName = "ReviewRequest";
+                var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
+                string subject = _emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer);
+                await _email.To(receipient)
+                    .Subject(subject)
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model)
+                    .SendAsync();
+            }
+            else
+            {
+                request.RequestStatus = RequestStatus.Approved;
+                request.CompletedOn = DateTime.Now;
+                _requestService.SaveChanges();
+
+                foreach (var requestedSystem in request.Systems)
+                {
+                    var systemAccess = new SystemAccess(request, requestedSystem);
+                    _systemService.AddSystemAccess(systemAccess);
+                }
+
+                string emailName = "ProcessRequest";
+                var model = new { _emailHelper.AppUrl, _emailHelper.AppEmail, Request = request };
+                _email.Subject(_emailHelper.GetSubjectFromTemplate(emailName, model, _email.Renderer))
+                    .UsingTemplateFromFile(_emailHelper.GetBodyTemplateFile(emailName), model);
+                _email.Data.ToAddresses.Clear();
+                var supportUnitIds = request.Systems.GroupBy(s => s.System.SupportUnitId, s => s).Select(g => g.Key).ToList();
+                foreach (var supportUnitId in supportUnitIds)
+                {
+                    var supportUnit = _organizationService.GetSupportUnit((int)supportUnitId);
+                    _email.To(supportUnit.Email);
+                }
+                await _email.SendAsync();
+            }
 
             return RedirectToAction("MyRequests");
         }

@@ -222,7 +222,7 @@ namespace PAM.Controllers
                 if (!requestedSystems.Keys.Contains(systemId))
                     request.Systems.Add(new RequestedSystem(request.RequestId, systemId)
                     {
-                        AccessType = SystemAccessType.Update
+                        AccessType = SystemAccessType.UpdateInfo
                     });
 
             _requestService.SaveChanges();
@@ -326,6 +326,9 @@ namespace PAM.Controllers
             var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
             if (!authResult.Succeeded)
                 return new ForbidResult();
+
+            if (request.RequestedFor.UnitId == null)
+                return RedirectToAction(nameof(RequesterInfo), new { id });
 
             return View(request);
         }
