@@ -11,10 +11,10 @@ namespace PAM.Controllers
     [Authorize]
     public class LeavingProbationRequestController : AbstractEditRequestController
     {
-        public LeavingProbationRequestController(UserService userService, RequestService requestService,
+        public LeavingProbationRequestController(UserService userService, FormService formService, RequestService requestService,
             SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
             TreeViewService treeViewService, ILogger<LeavingProbationRequestController> logger)
-            : base(userService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
         }
 

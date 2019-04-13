@@ -17,6 +17,7 @@ namespace PAM.Controllers
     public abstract class AbstractEditRequestController : Controller
     {
         protected readonly UserService _userService;
+        protected readonly FormService _formService;
         protected readonly RequestService _requestService;
         protected readonly SystemService _systemService;
         protected readonly OrganizationService _organizationService;
@@ -24,10 +25,11 @@ namespace PAM.Controllers
         protected readonly TreeViewService _treeViewService;
         protected readonly ILogger _logger;
 
-        public AbstractEditRequestController(UserService userService, RequestService requestService, SystemService systemService,
+        public AbstractEditRequestController(UserService userService, FormService formService, RequestService requestService, SystemService systemService,
             OrganizationService orgnizationService, IAuthorizationService authService, TreeViewService treeViewService, ILogger logger)
         {
             _userService = userService;
+            _formService = formService;
             _requestService = requestService;
             _systemService = systemService;
             _organizationService = orgnizationService;
@@ -258,6 +260,38 @@ namespace PAM.Controllers
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
                 RedirectToAction(GetNextStep(nameof(AdditionalInfo)), new { id });
+        }
+
+        [HttpGet]
+        public virtual async Task<IActionResult> Forms(int id)
+        {
+            var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            var formIds = new HashSet<int>();
+            foreach (var system in request.Systems)
+                if (system.AccessType == SystemAccessType.Add)
+                    formIds.UnionWith(system.System.Forms.Select(f => f.FormId).ToHashSet());
+
+            var forms = _formService.GetForms(formIds);
+            forms.RemoveAll(f => request.IsContractor && f.ForEmployeeOnly || !request.IsContractor && f.ForContractorOnly);
+
+            request.Forms.RemoveAll(rf => !forms.Select(f => f.FormId).Contains(rf.FormId));
+            forms.RemoveAll(f => request.Forms.Select(rf => rf.FormId).Contains(f.FormId));
+
+            foreach (var form in forms)
+            {
+                request.Forms.Add(new CompletedForm()
+                {
+                    RequestId = id,
+                    Form = form
+                });
+            }
+            _requestService.SaveChanges();
+
+            return View(request);
         }
 
         [HttpGet]

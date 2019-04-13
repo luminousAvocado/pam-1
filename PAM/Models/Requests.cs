@@ -74,9 +74,9 @@ namespace PAM.Models
         public bool IsHighProfileAccess { get; set; } = false;
         public bool IsGlobalAccess { get; set; } = false;
 
-        public List<RequestedSystem> Systems { get; set; }
+        public List<RequestedSystem> Systems { get; set; } = new List<RequestedSystem>();
 
-        public ICollection<CompletedForm> Forms { get; set; }
+        public List<CompletedForm> Forms { get; set; } = new List<CompletedForm>();
 
         public ICollection<Review> Reviews { get; set; }
 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PAM.Data;
@@ -21,6 +23,7 @@ namespace PAM.Controllers
         private readonly IADService _adService;
         private readonly UserService _userService;
         private readonly RequestService _requestService;
+        private readonly FormService _formService;
         private readonly AuditLogService _auditLog;
         private readonly IAuthorizationService _authService;
         private readonly IFluentEmail _email;
@@ -28,12 +31,13 @@ namespace PAM.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public RequestController(IADService adService, UserService userService, RequestService requestService,
+        public RequestController(IADService adService, UserService userService, RequestService requestService, FormService formService,
             AuditLogService auditLog, IAuthorizationService authService, IFluentEmail email, EmailHelper emailHelper,
             IMapper mapper, ILogger<RequestController> logger)
         {
             _adService = adService;
             _userService = userService;
+            _formService = formService;
             _requestService = requestService;
             _auditLog = auditLog;
             _authService = authService;
@@ -130,6 +134,46 @@ namespace PAM.Controllers
             return RedirectEditRequest(id, request.RequestType);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UploadCompletedForm(int id, int completedFormId, [FromForm(Name = "file")] IFormFile uploadedFile)
+        {
+            var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            foreach (var completedForm in request.Forms)
+                if (completedForm.CompletedFormId == completedFormId)
+                {
+                    completedForm.File = await saveFile(uploadedFile);
+                    _requestService.SaveChanges();
+                    break;
+                }
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> DownloadCompletedForm(int id, int completedFormId)
+        {
+            var request = _requestService.GetRequest(id);
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanViewRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
+
+            foreach (var completedForm in request.Forms)
+                if (completedForm.CompletedFormId == completedFormId)
+                {
+                    if (completedForm.FileId == null) break;
+                    else
+                    {
+                        var file = _formService.GetFile((int)completedForm.FileId);
+                        return File(file.Content, file.ContentType, file.Name);
+                    }
+                }
+
+            return NotFound();
+        }
+
         public async Task<IActionResult> SubmitRequest(int id)
         {
             var request = _requestService.GetRequest(id);
@@ -211,6 +255,23 @@ namespace PAM.Controllers
                 default:
                     return RedirectToAction("RequesterInfo", "PortfolioAssignmentRequest", new { id });
             }
+        }
+
+        private async Task<Models.File> saveFile(IFormFile uploadedFile)
+        {
+            var file = new Models.File()
+            {
+                Name = Path.GetFileName(uploadedFile.FileName),
+                ContentType = uploadedFile.ContentType,
+                Length = uploadedFile.Length
+            };
+            using (var memoryStream = new MemoryStream())
+            {
+                await uploadedFile.CopyToAsync(memoryStream);
+                file.Content = memoryStream.ToArray();
+            }
+
+            return _formService.AddFile(file);
         }
     }
 }

@@ -22,6 +22,11 @@ namespace PAM.Data
             return _dbContext.Forms.Include(f => f.Systems).OrderBy(f => f.DisplayOrder).ThenBy(f => f.FormId).ToList();
         }
 
+        public List<Form> GetForms(ICollection<int> ids)
+        {
+            return _dbContext.Forms.Where(f => ids.Contains(f.FormId)).ToList();
+        }
+
         public Form GetForm(int id)
         {
             return _dbContext.Forms.Where(f => f.FormId == id)

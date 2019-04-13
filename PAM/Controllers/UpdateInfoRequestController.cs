@@ -8,10 +8,10 @@ namespace PAM.Controllers
     [Authorize]
     public class UpdateInfoRequestController : AbstractEditRequestController
     {
-        public UpdateInfoRequestController(UserService userService, RequestService requestService,
+        public UpdateInfoRequestController(UserService userService, FormService formService, RequestService requestService,
             SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
             TreeViewService treeViewService, ILogger<UpdateInfoRequestController> logger)
-            : base(userService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
         }
 

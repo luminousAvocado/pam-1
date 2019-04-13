@@ -11,10 +11,10 @@ namespace PAM.Controllers
     [Authorize]
     public class PortfolioAssignmentRequestController : AbstractEditRequestController
     {
-        public PortfolioAssignmentRequestController(UserService userService, RequestService requestService,
+        public PortfolioAssignmentRequestController(UserService userService, FormService formService, RequestService requestService,
             SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
             TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
-            : base(userService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
         }
 
@@ -22,6 +22,7 @@ namespace PAM.Controllers
             nameof(RequesterInfo),
             nameof(UnitSelection),
             nameof(AdditionalInfo),
+            nameof(Forms),
             nameof(Signatures),
             nameof(Summary)
         };

@@ -12,10 +12,10 @@ namespace PAM.Controllers
     [Authorize]
     public class TransferRequestController : AbstractEditRequestController
     {
-        public TransferRequestController(UserService userService, RequestService requestService,
+        public TransferRequestController(UserService userService, FormService formService, RequestService requestService,
             SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
             TreeViewService treeViewService, ILogger<TransferRequestController> logger)
-            : base(userService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
         }
 
@@ -24,6 +24,7 @@ namespace PAM.Controllers
             nameof(TransferFromUnit),
             nameof(TransferToUnit),
             nameof(AdditionalInfo),
+            nameof(Forms),
             nameof(Signatures),
             nameof(Summary)
         };

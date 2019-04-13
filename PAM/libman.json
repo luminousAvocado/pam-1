@@ -50,6 +50,10 @@
     {
       "library": "bootstrap-3-typeahead@4.0.2",
       "destination": "wwwroot/lib/bootstrap-3-typeahead/"
+    },
+    {
+      "library": "dropzone@5.5.1",
+      "destination": "wwwroot/lib/dropzone/"
     }
   ]
 }

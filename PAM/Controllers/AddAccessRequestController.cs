@@ -8,10 +8,10 @@ namespace PAM.Controllers
     [Authorize]
     public class AddAccessRequestController : AbstractEditRequestController
     {
-        public AddAccessRequestController(UserService userService, RequestService requestService,
+        public AddAccessRequestController(UserService userService, FormService formService, RequestService requestService,
             SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
             TreeViewService treeViewService, ILogger<AddAccessRequestController> logger)
-            : base(userService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
         }
 
@@ -20,6 +20,7 @@ namespace PAM.Controllers
             nameof(UnitSelection),
             nameof(SystemsToAdd),
             nameof(AdditionalInfo),
+            nameof(Forms),
             nameof(Signatures),
             nameof(Summary)
         };

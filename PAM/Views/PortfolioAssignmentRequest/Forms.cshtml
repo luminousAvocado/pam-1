@@ -1,0 +1,63 @@
+﻿@model Request
+@{
+  ViewData["Title"] = "Forms";
+  ViewData["id"] = @Model.RequestId;
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/css/progressbar.css" />
+  <link rel="stylesheet" href="~/lib/dropzone/min/basic.min.css" />
+}
+@section Scripts {
+  <script src="~/lib/dropzone/min/dropzone.min.js"></script>
+  <script>
+    Dropzone.autoDiscover = false;
+    $(function () {
+      var page = '@ViewData["Title"]';
+      $("li[data-title='" + page + "']").addClass("active");
+      $(".completed-form").each(function () {
+        if (!$(this).attr("data-file-id"))
+          $(this).children("a").hide();
+      });
+      $(".dropzone").each(function () {
+        var dzone = $(this);
+        $(this).dropzone({
+          acceptedFiles: ".pdf",
+          init: function () {
+            this.on("success", function (file) {
+              dzone.closest("td").prev().children("a.download").show();
+              enableNext();
+            });
+            this.on("complete", function (file) {
+              this.removeFile(file);
+            });
+          }
+        });
+      });
+      enableNext();
+    });
+    function enableNext() {
+      if ($("a.download:hidden").length == 0)
+        $("#next").removeClass("disabled");
+    }
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Request" asp-action="MyRequests">My Requests</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Request #@ViewData["id"]</li>
+  </ol>
+</nav>
+
+<partial name="/Views/Shared/ProgressBars/PortfolioAssignment.cshtml" />
+<partial name="/Views/Shared/RequestPartials/_Forms.cshtml" />
+
+<div class="form-row">
+  <div class="col-4">
+    <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Save Draft</a>
+  </div>
+  <div class="col-8 text-right">
+    <a asp-action="AdditionalInfo" asp-route-id="@ViewData["id"]" class="btn btn-secondary">Previous</a>
+    <a id="next" asp-action="Signatures" asp-route-id="@Model.RequestId" class="btn btn-primary disabled ml-3">Next</a>
+  </div>
+</div>
