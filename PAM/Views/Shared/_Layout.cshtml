@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Authorization
-@inject IAuthorizationService AuthorizationService
-@{ var identity = (ClaimsIdentity)User.Identity; }
+﻿@{ var identity = (ClaimsIdentity)User.Identity; }
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,32 +23,34 @@
           <a class="nav-link dropdown-toggle" href="#" id="requestsMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Requests</a>
           <div class="dropdown-menu" aria-labeledby="requestsMenu">
             <a class="dropdown-item" asp-controller="Request" asp-action="MyRequests">My Requests</a>
-            @if ((await AuthorizationService.AuthorizeAsync(User, "CanReviewRequests")).Succeeded)
+            @if ((await AuthorizationService.AuthorizeAsync(User, "IsApprover")).Succeeded)
             {
               <a class="dropdown-item" asp-controller="Review" asp-action="MyReviews">Review Requests</a>
             }
-            @if ((await AuthorizationService.AuthorizeAsync(User, "CanProcessRequests")).Succeeded)
+            @if ((await AuthorizationService.AuthorizeAsync(User, "IsSupport")).Succeeded)
             {
               <a class="dropdown-item" asp-controller="Processing" asp-action="MyProcessings">Process Requests</a>
             }
           </div>
         </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="organizationMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organization</a>
+          <div class="dropdown-menu" aria-labeled by="organizationMenu">
+            <a class="dropdown-item" asp-controller="Location" asp-action="Locations">Locations</a>
+            <a class="dropdown-item" asp-controller="Bureau" asp-action="Bureaus">Bureaus</a>
+            <a class="dropdown-item" asp-controller="Unit" asp-action="Units">Units</a>
+            <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
+            <a class="dropdown-item" asp-controller="SupportUnit" asp-action="SupportUnits">Support Units</a>
+            <a class="dropdown-item" asp-controller="Form" asp-action="Forms">Forms</a>
+          </div>
+        </li>
         @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
         {
-          <li class="nav-item">
-            <a class="nav-link" asp-controller="Employee" asp-action="Employees">Users</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Reports</a>
-          </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="organizationMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organization</a>
-            <div class="dropdown-menu" aria-labeled by="navDropDownMenu">
-              <a class="dropdown-item" asp-controller="Location" asp-action="Locations">Locations</a>
-              <a class="dropdown-item" asp-controller="Bureau" asp-action="Bureaus">Bureaus</a>
-              <a class="dropdown-item" asp-controller="Unit" asp-action="Units">Units</a>
-              <a class="dropdown-item" asp-controller="System" asp-action="Systems">Systems</a>
-              <a class="dropdown-item" asp-controller="ProcessingUnit" asp-action="ProcessingUnits">Processing Units</a>
+            <a class="nav-link dropdown-toggle" href="#" id="administrationMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+            <div class="dropdown-menu" aria-labeled by="administrationMenu">
+              <a class="dropdown-item" asp-controller="Employee" asp-action="Employees">Users</a>
+              <a class="dropdown-item" asp-controller="AuditLog" asp-action="SearchLog">Audit Log</a>
             </div>
           </li>
         }

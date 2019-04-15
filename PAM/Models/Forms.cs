@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PAM.Models
 {
     // For our purpose we just need the content byte[], so technically we could just
-    // put a byte[] inside Form and FilledForm. However, doing so would mean we have
+    // put a byte[] inside Form and CompletedForm. However, doing so would mean we have
     // to load the whole file into memory even when we just want to display the form
     // name. Because EF Core does not support lazy loading non-navigation properties,
     // we have to move the byte[] into its own class. The bright side of doing this
@@ -24,6 +26,7 @@ namespace PAM.Models
         public long Length { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
+        [JsonIgnore]
         public byte[] Content { get; set; }
     }
 
@@ -35,21 +38,22 @@ namespace PAM.Models
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
         public int DisplayOrder { get; set; } = 50;
 
         public bool ForEmployeeOnly { get; set; } = false;
         public bool ForContractorOnly { get; set; } = false;
         public bool Deleted { get; set; } = false;
 
+        public List<SystemForm> Systems { get; set; } = new List<SystemForm>();
+
         public int? FileId { get; set; }
         public File File { get; set; }
     }
 
-    [Table("FilledForms")]
-    public class FilledForm
+    [Table("CompletedForms")]
+    public class CompletedForm
     {
-        public int FilledFormId { get; set; }
+        public int CompletedFormId { get; set; }
 
         public int RequestId { get; set; }
         public Request Request { get; set; }
@@ -61,9 +65,17 @@ namespace PAM.Models
         public File File { get; set; }
     }
 
-    [Table("SytemForms")]
+    [Table("SystemForms")]
     public class SystemForm
     {
+        public SystemForm() { }
+
+        public SystemForm(int systemId, int formId)
+        {
+            SystemId = systemId;
+            FormId = formId;
+        }
+
         public int SystemId { get; set; }
         public System System { get; set; }
 

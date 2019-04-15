@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PAM.Data;
+using PAM.Security;
 using PAM.Services;
 
 namespace PAM
@@ -32,6 +35,12 @@ namespace PAM
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // This one is for using JsonConvert directly (as opposed to using the formatter configured in MVC)
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
             services.Configure<IISServerOptions>(options =>
             {
                 options.AutomaticAuthentication = false;
@@ -41,14 +50,25 @@ namespace PAM
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("CanProcessRequests", policyBuilder => policyBuilder.RequireClaim("ProcessingUnitId"));
-                options.AddPolicy("CanReviewRequests", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
                 options.AddPolicy("IsAdmin", policyBuilder => policyBuilder.RequireClaim("IsAdmin"));
+                options.AddPolicy("IsApprover", policyBuilder => policyBuilder.RequireClaim("IsApprover"));
+                options.AddPolicy("IsSupport", policyBuilder => policyBuilder.RequireClaim("SupportUnitId"));
+                options.AddPolicy("CanEditRequest", policyBuilder => policyBuilder.AddRequirements(new CanEditRequestRequirement()));
+                options.AddPolicy("CanViewRequest", policyBuilder => policyBuilder.AddRequirements(new CanViewRequestRequirement()));
+                options.AddPolicy("CanEnterReview", policyBuilder => policyBuilder.AddRequirements(new CanEnterReviewRequirement()));
             });
+            services.AddSingleton<IAuthorizationHandler, CanEditRequestHandler>();
+            services.AddSingleton<IAuthorizationHandler, CanViewRequestHandler>();
+            services.AddSingleton<IAuthorizationHandler, CanEnterReviewHandler>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services
@@ -61,7 +81,8 @@ namespace PAM
                         Port = Configuration.GetValue<int>("SMTP:Port"),
                         Credentials = new NetworkCredential(
                             Configuration.GetValue<string>("SMTP:Username"),
-                            Configuration.GetValue<string>("SMTP:Password"))
+                            Configuration.GetValue<string>("SMTP:Password")),
+                        EnableSsl = Configuration.GetValue<bool>("SMTP:EnableSSL")
                     }
                 );
             services.AddSingleton(
@@ -85,7 +106,9 @@ namespace PAM
             services.AddScoped<UserService>();
             services.AddScoped<RequestService>();
             services.AddScoped<SystemService>();
+            services.AddScoped<FormService>();
             services.AddScoped<TreeViewService>();
+            services.AddScoped<AuditLogService>();
         }
 
         public void Configure(IApplicationBuilder app)

@@ -1,0 +1,38 @@
+﻿@model Request
+
+@if (Model.Forms.Count > 0)
+{
+  <p>Please download the PDF forms, fill them out, and upload them before moving onto the next step.</p>
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Form</th>
+        <th scope="col">Completed Form</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var form in Model.Forms)
+      {
+        <tr>
+          <td>
+            <a asp-controller="Form" asp-action="DownloadForm" asp-route-id="@form.FormId">@form.Form.Name</a>
+          </td>
+          <td class="completed-form" data-file-id="@form.FileId">
+              <a class="btn btn-success download" asp-controller="Request" asp-action="DownloadCompletedForm" asp-route-id="@Model.RequestId"
+                 asp-route-completedFormId="@form.CompletedFormId">Download</a>
+          </td>
+          <td>
+            <form action="@Context.Request.PathBase/Request/UploadCompletedForm/@Model.RequestId" class="dropzone">
+              <input type="hidden" name="completedFormId" value="@form.CompletedFormId" />
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+else
+{
+  <p>No additional form required for the requested system(s).</p>
+}

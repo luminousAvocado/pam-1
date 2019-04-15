@@ -93,19 +93,19 @@ namespace PAM.Data
             return _dbContext.Units.Where(u => u.ParentId == parentId).ToList();
         }
 
-        public ICollection<ProcessingUnit> GetProcessingUnits()
+        public ICollection<SupportUnit> GetSupportUnits()
         {
-            return _dbContext.ProcessingUnits.ToList();
+            return _dbContext.SupportUnits.ToList();
         }
 
-        public ProcessingUnit GetProcessingUnit(int id)
+        public SupportUnit GetSupportUnit(int id)
         {
-            return _dbContext.ProcessingUnits.Find(id);
+            return _dbContext.SupportUnits.Find(id);
         }
 
-        public ProcessingUnit AddProcessingUnit(ProcessingUnit unit)
+        public SupportUnit AddSupportUnit(SupportUnit unit)
         {
-            _dbContext.ProcessingUnits.Add(unit);
+            _dbContext.SupportUnits.Add(unit);
             _dbContext.SaveChanges();
             return unit;
         }

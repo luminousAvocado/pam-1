@@ -43,16 +43,6 @@ CREATE TABLE [Locations] (
 
 GO
 
-CREATE TABLE [ProcessingUnits] (
-    [ProcessingUnitId] int NOT NULL IDENTITY,
-    [Name] nvarchar(max) NOT NULL,
-    [Email] nvarchar(max) NOT NULL,
-    [Deleted] bit NOT NULL DEFAULT 0,
-    CONSTRAINT [PK_ProcessingUnits] PRIMARY KEY ([ProcessingUnitId])
-);
-
-GO
-
 CREATE TABLE [RequestTypes] (
     [RequestTypeId] int NOT NULL IDENTITY,
     [Code] nvarchar(max) NOT NULL,
@@ -61,6 +51,17 @@ CREATE TABLE [RequestTypes] (
     [Description] nvarchar(max) NULL,
     [Enabled] bit NOT NULL,
     CONSTRAINT [PK_RequestTypes] PRIMARY KEY ([RequestTypeId])
+);
+
+GO
+
+CREATE TABLE [SupportUnits] (
+    [SupportUnitId] int NOT NULL IDENTITY,
+    [Name] nvarchar(max) NOT NULL,
+    [Email] nvarchar(450) NOT NULL,
+    [Deleted] bit NOT NULL DEFAULT 0,
+    CONSTRAINT [PK_SupportUnits] PRIMARY KEY ([SupportUnitId]),
+    CONSTRAINT [AK_SupportUnits_Email] UNIQUE ([Email])
 );
 
 GO
@@ -92,7 +93,6 @@ GO
 CREATE TABLE [Forms] (
     [FormId] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NOT NULL,
-    [Description] nvarchar(max) NULL,
     [DisplayOrder] int NOT NULL,
     [ForEmployeeOnly] bit NOT NULL,
     [ForContractorOnly] bit NOT NULL,
@@ -100,6 +100,17 @@ CREATE TABLE [Forms] (
     [FileId] int NULL,
     CONSTRAINT [PK_Forms] PRIMARY KEY ([FormId]),
     CONSTRAINT [FK_Forms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION
+);
+
+GO
+
+CREATE TABLE [RequiredSignatures] (
+    [RequiredSignatureId] int NOT NULL IDENTITY,
+    [RequestTypeId] int NOT NULL,
+    [Title] nvarchar(max) NOT NULL,
+    [Order] int NOT NULL,
+    CONSTRAINT [PK_RequiredSignatures] PRIMARY KEY ([RequiredSignatureId]),
+    CONSTRAINT [FK_RequiredSignatures_RequestTypes_RequestTypeId] FOREIGN KEY ([RequestTypeId]) REFERENCES [RequestTypes] ([RequestTypeId]) ON DELETE CASCADE
 );
 
 GO
@@ -122,13 +133,13 @@ CREATE TABLE [Employees] (
     [Phone] nvarchar(max) NULL,
     [CellPhone] nvarchar(max) NULL,
     [SupervisorName] nvarchar(max) NULL,
-    [ProcessingUnitId] int NULL,
+    [SupportUnitId] int NULL,
     [IsAdmin] bit NOT NULL,
     [IsApprover] bit NOT NULL,
     CONSTRAINT [PK_Employees] PRIMARY KEY ([EmployeeId]),
     CONSTRAINT [AK_Employees_Email] UNIQUE ([Email]),
     CONSTRAINT [AK_Employees_Username] UNIQUE ([Username]),
-    CONSTRAINT [FK_Employees_ProcessingUnits_ProcessingUnitId] FOREIGN KEY ([ProcessingUnitId]) REFERENCES [ProcessingUnits] ([ProcessingUnitId]) ON DELETE NO ACTION
+    CONSTRAINT [FK_Employees_SupportUnits_SupportUnitId] FOREIGN KEY ([SupportUnitId]) REFERENCES [SupportUnits] ([SupportUnitId]) ON DELETE NO ACTION
 );
 
 GO
@@ -139,20 +150,9 @@ CREATE TABLE [Systems] (
     [Description] nvarchar(max) NULL,
     [Owner] nvarchar(max) NULL,
     [Retired] bit NOT NULL DEFAULT 0,
-    [ProcessingUnitId] int NULL,
+    [SupportUnitId] int NULL,
     CONSTRAINT [PK_Systems] PRIMARY KEY ([SystemId]),
-    CONSTRAINT [FK_Systems_ProcessingUnits_ProcessingUnitId] FOREIGN KEY ([ProcessingUnitId]) REFERENCES [ProcessingUnits] ([ProcessingUnitId]) ON DELETE NO ACTION
-);
-
-GO
-
-CREATE TABLE [RequiredSignatures] (
-    [RequiredSignatureId] int NOT NULL IDENTITY,
-    [RequestTypeId] int NOT NULL,
-    [Title] nvarchar(max) NOT NULL,
-    [Order] int NOT NULL,
-    CONSTRAINT [PK_RequiredSignatures] PRIMARY KEY ([RequiredSignatureId]),
-    CONSTRAINT [FK_RequiredSignatures_RequestTypes_RequestTypeId] FOREIGN KEY ([RequestTypeId]) REFERENCES [RequestTypes] ([RequestTypeId]) ON DELETE CASCADE
+    CONSTRAINT [FK_Systems_SupportUnits_SupportUnitId] FOREIGN KEY ([SupportUnitId]) REFERENCES [SupportUnits] ([SupportUnitId]) ON DELETE NO ACTION
 );
 
 GO
@@ -173,12 +173,28 @@ CREATE TABLE [Units] (
 
 GO
 
-CREATE TABLE [SytemForms] (
+CREATE TABLE [AuditLog] (
+    [AuditLogEntryId] int NOT NULL IDENTITY,
+    [EmployeeId] int NOT NULL,
+    [ActionType] nvarchar(max) NOT NULL,
+    [ResourceType] nvarchar(max) NOT NULL,
+    [ResourceId] int NOT NULL,
+    [Message] nvarchar(max) NULL,
+    [Timestamp] datetime2 NOT NULL,
+    [OldValue] nvarchar(max) NULL,
+    [NewValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AuditLog] PRIMARY KEY ([AuditLogEntryId]),
+    CONSTRAINT [FK_AuditLog_Employees_EmployeeId] FOREIGN KEY ([EmployeeId]) REFERENCES [Employees] ([EmployeeId]) ON DELETE CASCADE
+);
+
+GO
+
+CREATE TABLE [SystemForms] (
     [SystemId] int NOT NULL,
     [FormId] int NOT NULL,
-    CONSTRAINT [PK_SytemForms] PRIMARY KEY ([SystemId], [FormId]),
-    CONSTRAINT [FK_SytemForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_SytemForms_Systems_SystemId] FOREIGN KEY ([SystemId]) REFERENCES [Systems] ([SystemId]) ON DELETE CASCADE
+    CONSTRAINT [PK_SystemForms] PRIMARY KEY ([SystemId], [FormId]),
+    CONSTRAINT [FK_SystemForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_SystemForms_Systems_SystemId] FOREIGN KEY ([SystemId]) REFERENCES [Systems] ([SystemId]) ON DELETE CASCADE
 );
 
 GO
@@ -250,15 +266,15 @@ CREATE TABLE [Requests] (
 
 GO
 
-CREATE TABLE [FilledForms] (
-    [FilledFormId] int NOT NULL IDENTITY,
+CREATE TABLE [CompletedForms] (
+    [CompletedFormId] int NOT NULL IDENTITY,
     [RequestId] int NOT NULL,
     [FormId] int NOT NULL,
     [FileId] int NULL,
-    CONSTRAINT [PK_FilledForms] PRIMARY KEY ([FilledFormId]),
-    CONSTRAINT [FK_FilledForms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_FilledForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_FilledForms_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE
+    CONSTRAINT [PK_CompletedForms] PRIMARY KEY ([CompletedFormId]),
+    CONSTRAINT [FK_CompletedForms_Files_FileId] FOREIGN KEY ([FileId]) REFERENCES [Files] ([FileId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_CompletedForms_Forms_FormId] FOREIGN KEY ([FormId]) REFERENCES [Forms] ([FormId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_CompletedForms_Requests_RequestId] FOREIGN KEY ([RequestId]) REFERENCES [Requests] ([RequestId]) ON DELETE CASCADE
 );
 
 GO
@@ -314,12 +330,16 @@ CREATE TABLE [SystemAccesses] (
 
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'LastName', N'MiddleName', N'Name', N'Phone', N'ProcessingUnitId', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'LastName', N'MiddleName', N'Name', N'Phone', N'Service', N'State', N'SupervisorName', N'SupportUnitId', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] ON;
-INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [LastName], [MiddleName], [Name], [Phone], [ProcessingUnitId], [Service], [State], [SupervisorName], [Title], [Username], [Zip])
+INSERT INTO [Employees] ([EmployeeId], [Address], [CellPhone], [City], [Department], [Email], [FirstName], [IsAdmin], [IsApprover], [LastName], [MiddleName], [Name], [Phone], [Service], [State], [SupervisorName], [SupportUnitId], [Title], [Username], [Zip])
 VALUES (1, NULL, NULL, NULL, NULL, N'pam@localhost.localdomain', N'Pam', 1, 0, N'Admin', NULL, N'Pam Admin (e111111)', NULL, NULL, NULL, NULL, NULL, NULL, N'e111111', NULL);
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'LastName', N'MiddleName', N'Name', N'Phone', N'ProcessingUnitId', N'Service', N'State', N'SupervisorName', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'EmployeeId', N'Address', N'CellPhone', N'City', N'Department', N'Email', N'FirstName', N'IsAdmin', N'IsApprover', N'LastName', N'MiddleName', N'Name', N'Phone', N'Service', N'State', N'SupervisorName', N'SupportUnitId', N'Title', N'Username', N'Zip') AND [object_id] = OBJECT_ID(N'[Employees]'))
     SET IDENTITY_INSERT [Employees] OFF;
+
+GO
+
+CREATE INDEX [IX_AuditLog_EmployeeId] ON [AuditLog] ([EmployeeId]);
 
 GO
 
@@ -327,19 +347,19 @@ CREATE INDEX [IX_Bureaus_BureauTypeId] ON [Bureaus] ([BureauTypeId]);
 
 GO
 
-CREATE INDEX [IX_Employees_ProcessingUnitId] ON [Employees] ([ProcessingUnitId]);
+CREATE INDEX [IX_CompletedForms_FileId] ON [CompletedForms] ([FileId]);
 
 GO
 
-CREATE INDEX [IX_FilledForms_FileId] ON [FilledForms] ([FileId]);
+CREATE INDEX [IX_CompletedForms_FormId] ON [CompletedForms] ([FormId]);
 
 GO
 
-CREATE INDEX [IX_FilledForms_FormId] ON [FilledForms] ([FormId]);
+CREATE INDEX [IX_CompletedForms_RequestId] ON [CompletedForms] ([RequestId]);
 
 GO
 
-CREATE INDEX [IX_FilledForms_RequestId] ON [FilledForms] ([RequestId]);
+CREATE INDEX [IX_Employees_SupportUnitId] ON [Employees] ([SupportUnitId]);
 
 GO
 
@@ -399,11 +419,11 @@ CREATE INDEX [IX_SystemAccesses_SystemId] ON [SystemAccesses] ([SystemId]);
 
 GO
 
-CREATE INDEX [IX_Systems_ProcessingUnitId] ON [Systems] ([ProcessingUnitId]);
+CREATE INDEX [IX_SystemForms_FormId] ON [SystemForms] ([FormId]);
 
 GO
 
-CREATE INDEX [IX_SytemForms_FormId] ON [SytemForms] ([FormId]);
+CREATE INDEX [IX_Systems_SupportUnitId] ON [Systems] ([SupportUnitId]);
 
 GO
 
@@ -424,7 +444,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190325214311_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190412012002_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

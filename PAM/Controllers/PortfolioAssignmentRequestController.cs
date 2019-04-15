@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,52 +9,32 @@ using PAM.Services;
 namespace PAM.Controllers
 {
     [Authorize]
-    public class PortfolioAssignmentRequestController : Controller
+    public class PortfolioAssignmentRequestController : AbstractEditRequestController
     {
-        private readonly UserService _userService;
-        private readonly RequestService _requestService;
-        private readonly OrganizationService _organizationService;
-        private readonly TreeViewService _treeViewService;
-        private readonly ILogger _logger;
-
-        public PortfolioAssignmentRequestController(UserService userService, RequestService requestService,
-            OrganizationService organizationService, TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
+        public PortfolioAssignmentRequestController(UserService userService, FormService formService, RequestService requestService,
+            SystemService systemService, OrganizationService orgnizationService, IAuthorizationService authService,
+            TreeViewService treeViewService, ILogger<PortfolioAssignmentRequestController> logger)
+            : base(userService, formService, requestService, systemService, orgnizationService, authService, treeViewService, logger)
         {
-            _userService = userService;
-            _requestService = requestService;
-            _organizationService = organizationService;
-            _treeViewService = treeViewService;
-            _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult RequesterInfo(int id)
-        {
-            var request = _requestService.GetRequest(id);
-            ViewData["request"] = request;
-            return View(request.RequestedFor);
-        }
+        protected override string[] Steps { get; } = {
+            nameof(RequesterInfo),
+            nameof(UnitSelection),
+            nameof(AdditionalInfo),
+            nameof(Forms),
+            nameof(Signatures),
+            nameof(Summary)
+        };
 
         [HttpPost]
-        public IActionResult RequesterInfo(int id, Requester requester, bool saveDraft = false)
-        {
-            _userService.UpdateRequester(requester);
-            return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction(nameof(UnitSelection), new { id });
-        }
-
-        [HttpGet]
-        public IActionResult UnitSelection(int id)
+        public override async Task<IActionResult> UnitSelection(int id, int unitId, bool saveDraft = false)
         {
             var request = _requestService.GetRequest(id);
-            ViewData["tree"] = _treeViewService.GenerateTreeInJson();
-            return View(request);
-        }
+            var authResult = await _authService.AuthorizeAsync(User, request, "CanEditRequest");
+            if (!authResult.Succeeded)
+                return new ForbidResult();
 
-        [HttpPost]
-        public IActionResult UnitSelection(int id, int unitId, bool saveDraft = false)
-        {
-            var request = _requestService.GetRequest(id);
             var unit = _organizationService.GetUnit(unitId);
 
             request.RequestedFor.UnitId = unit.UnitId;
@@ -67,49 +47,7 @@ namespace PAM.Controllers
             _requestService.SaveChanges();
 
             return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("AdditionalInfo", new { id });
-        }
-
-        [HttpGet]
-        public IActionResult AdditionalInfo(int id)
-        {
-            return View(_requestService.GetRequest(id));
-        }
-
-        [HttpPost]
-        public IActionResult AdditionalInfo(int id, Request update, bool saveDraft = false)
-        {
-            var request = _requestService.GetRequest(id);
-            request.IsContractor = update.IsContractor;
-            request.CaseloadType = update.CaseloadType;
-            request.CaseloadFunction = update.CaseloadFunction;
-            request.CaseloadNumber = update.CaseloadNumber;
-            _requestService.SaveChanges();
-            return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("Signatures", new { id });
-        }
-
-        [HttpGet]
-        public IActionResult Signatures(int id)
-        {
-            var request = _requestService.GetRequest(id);
-            var reviews = request.OrderedReviews;
-            ViewData["request"] = request;
-            return View(reviews);
-        }
-
-        [HttpPost]
-        public IActionResult Signatures(int id, List<Review> reviews, bool saveDraft)
-        {
-            var request = _requestService.GetRequest(id);
-            request.Reviews = reviews;
-            return saveDraft ? RedirectToAction("MyRequests", "Request") :
-                RedirectToAction("Summary", new { id });
-        }
-
-        public IActionResult Summary(int id)
-        {
-            return View(_requestService.GetRequest(id));
+                RedirectToAction(GetNextStep(nameof(UnitSelection)), new { id });
         }
     }
 }

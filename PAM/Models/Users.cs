@@ -44,8 +44,8 @@ namespace PAM.Models
 
         public string SupervisorName { get; set; }
 
-        public int? ProcessingUnitId { get; set; }
-        public ProcessingUnit ProcessingUnit { get; set; }
+        public int? SupportUnitId { get; set; }
+        public SupportUnit SupportUnit { get; set; }
 
         public bool IsAdmin { get; set; } = false;
         public bool IsApprover { get; set; } = false;
@@ -76,9 +76,9 @@ namespace PAM.Models
 
             SupervisorName = identity.GetClaim("Supervisor");
 
-            var claim = identity.GetClaim("ProcessingUnitId");
+            var claim = identity.GetClaim("SupportUnitId");
             if (claim != null)
-                ProcessingUnitId = Int32.Parse(claim);
+                SupportUnitId = Int32.Parse(claim);
 
             IsAdmin = identity.GetClaim("IsAdmin") != null ? true : false;
             IsApprover = identity.GetClaim("IsApprover") != null ? true : false;
@@ -109,7 +109,7 @@ namespace PAM.Models
 
             if (SupervisorName != null) claims.Add(new Claim("Supervisor", SupervisorName));
 
-            if (ProcessingUnitId != null) claims.Add(new Claim("ProcessingUnitId", ProcessingUnitId.ToString()));
+            if (SupportUnitId != null) claims.Add(new Claim("SupportUnitId", SupportUnitId.ToString()));
 
             if (IsAdmin) claims.Add(new Claim("IsAdmin", "true"));
             if (IsApprover) claims.Add(new Claim("IsApprover", "true"));

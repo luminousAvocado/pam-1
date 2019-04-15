@@ -1,0 +1,57 @@
+﻿@model ICollection<PAM.Models.SupportUnit>
+@{
+  ViewData["Title"] = "Support Units";
+}
+@section StyleSheets{
+  <link rel="stylesheet" href="~/lib/bootstrap-table/bootstrap-table.min.css">
+}
+@section Scripts{
+  <script src="~/lib/core-js/core.min.js"></script>
+  <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Support Units</li>
+  </ol>
+</nav>
+
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddSupportUnit" class="btn btn-primary float-right">Add Support Unit</a></p>
+}
+
+<p class="clearfix">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="d-none d-md-table-cell">Email</th>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <th></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var unit in Model)
+      {
+        <tr>
+          <td>
+            <a asp-action="ViewSupportUnit" asp-route-id="@unit.SupportUnitId">@unit.Name</a>
+          </td>
+          <td class="d-none d-md-table-cell">@unit.Email</td>
+          @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+          {
+            <td>
+              <a asp-action="EditSupportUnit" asp-route-id="@unit.SupportUnitId" class="btn btn-primary">
+                <i class="fas fa-edit"></i>
+                <span class="d-none d-sm-inline">Edit</span>
+              </a>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</p>

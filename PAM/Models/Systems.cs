@@ -17,10 +17,10 @@ namespace PAM.Models
         public string Owner { get; set; }
         public bool Retired { get; set; }
 
-        public int? ProcessingUnitId { get; set; }
-        public ProcessingUnit ProcessingUnit { get; set; }
+        public int? SupportUnitId { get; set; }
+        public SupportUnit SupportUnit { get; set; }
 
-        public ICollection<SystemForm> Forms { get; set; }
+        public List<SystemForm> Forms { get; set; } = new List<SystemForm>();
     }
 
     [Table("UnitSystems")]
@@ -33,7 +33,7 @@ namespace PAM.Models
         public System System { get; set; }
     }
 
-    public enum SystemAccessType { Add, Remove, Update };
+    public enum SystemAccessType { Add, Remove, UpdateInfo, UpdateAccess };
 
     [Table("RequestedSystems")]
     public class RequestedSystem

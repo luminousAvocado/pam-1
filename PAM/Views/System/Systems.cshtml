@@ -8,11 +8,6 @@
 @section Scripts{
   <script src="~/lib/core-js/core.min.js"></script>
   <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
-  <script>
-    $(function () {
-      $(".main-content").parents(".container").removeClass("container").addClass("container-fluid");
-    });
-  </script>
 }
 
 <nav aria-label="breadcrumb">
@@ -21,16 +16,21 @@
   </ol>
 </nav>
 
-<p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+@if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+{
+  <p><a asp-action="AddSystem" class="btn btn-primary float-right">Add System</a></p>
+}
 
 <table data-toggle="table" data-search="true" data-search-align="left" data-pagination="true" data-page-size="25">
   <thead>
     <tr>
       <th>Name</th>
-      <th class="d-none d-lg-table-cell">Description</th>
-      <th class="d-none d-md-table-cell">Owner</th>
-      <th class="d-none d-md-table-cell">Processing Unit</th>
-      <th></th>
+      <th class="d-none d-md-table-cell" data-sortable="true">Forms</th>
+      <th class="d-none d-md-table-cell" data-sortable="true">Support Unit</th>
+      @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+      {
+        <th></th>
+      }
     </tr>
   </thead>
   <tbody>
@@ -40,15 +40,22 @@
         <td>
           <a asp-action="ViewSystem" asp-route-id="@system.SystemId">@system.Name</a>
         </td>
-        <td class="d-none d-lg-table-cell">@system.Description</td>
-        <td class="d-none d-md-table-cell">@system.Owner</td>
-        <td class="d-none d-md-table-cell">@system.ProcessingUnit?.Name</td>
-        <td>
-          <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
-            <i class="fas fa-edit"></i>
-            <span class="d-none d-md-inline">Edit</span>
-          </a>
+        <td class="d-none d-md-table-cell">@system.Forms.Count</td>
+        <td class="d-none d-md-table-cell">
+          @if (system.SupportUnit != null)
+          {
+            <a asp-controller="SupportUnit" asp-action="ViewSupportUnit" asp-route-id="@system.SupportUnit.SupportUnitId">@system.SupportUnit.Name</a>
+          }
         </td>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded)
+        {
+          <td class="text-nowrap">
+            <a asp-action="EditSystem" asp-route-id="@system.SystemId" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+              <span class="d-none d-lg-inline">Edit</span>
+            </a>
+          </td>
+        }
       </tr>
     }
   </tbody>

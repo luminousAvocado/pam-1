@@ -1,0 +1,89 @@
+﻿@model Form
+@{
+  ViewData["Title"] = "Add Form";
+}
+@section Scripts{
+  <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js"></script>
+  <script src="~/lib/typeahead.js/bloodhound.js"></script>
+  <script>
+    $(function () {
+      var systems = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name", "Description"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: @Html.Raw(@ViewData["systems"])
+      });
+      $("#addSystem").typeahead({
+        source: systems.ttAdapter(),
+        displayText: function (item) {
+          return item.Name + (item.Description ? " - " + item.Description : "");
+        },
+        afterSelect: function (item) {
+          var row = $("<tr><td>" + item.SystemId + "</td><td>" + item.Name + "</td><td class='d-none d-md-table-cell'>"
+            + (item.Description ? item.Description : "") + "</td></tr>");
+          var btn = $("<button class='btn btn-danger'><i class='fas fa-trash-alt'></i></button>");
+          btn.click(function () {
+            row.remove();
+          });
+          var cell = $("<td></td>").append(btn).append("<input type='hidden' name='systemIds' value='" + item.SystemId + "'>");
+          row.append(cell);
+          $("#systems").append(row);
+          $("#addSystem").val("");
+        }
+      });
+    });
+  </script>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-action="Forms">Forms</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Form</li>
+  </ol>
+</nav>
+
+<form method="post" enctype="multipart/form-data">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label asp-for="Name">Name</label>
+      <input asp-for="Name" type="text" class="form-control" required>
+    </div>
+    <div class="form-group col-md-6">
+      <label asp-for="DisplayOrder" class="form-label">Display Order</label>
+      <input asp-for="DisplayOrder" type="text" class="form-control" required>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" asp-for="ForEmployeeOnly">
+      <label class="form-check-label" asp-for="ForEmployeeOnly">For Employee Only</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" asp-for="ForContractorOnly">
+      <label class="form-check-label" asp-for="ForContractorOnly">For Contractor Only</label>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="addSystem">Add System</label>
+      <input id="addSystem" type="text" class="form-control" placeholder="Search systems by name or description">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="file">PDF File</label>
+      <input id="file" type="file" accept=".pdf" name="uploadedFile" class="form-control-file">
+    </div>
+  </div>
+  <div class="card mb-3">
+    <div class="card-header">Systems</div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead><tr><th>Id</th><th>Name</th><th class="d-none d-md-table-cell">Description</th><th></th></tr></thead>
+        <tbody id="systems"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col text-right">
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+</form>
