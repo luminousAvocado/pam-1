@@ -81,7 +81,10 @@ namespace PAM.Controllers
             {
                 // If RequestedFor doesn't have an AD account, we need their username, email, etc.
                 // to create a PAM Employee record for them. This function is not implemented yet.
-                throw new NotImplementedException();
+                return RedirectToAction("Unimplemented", "Error", new ErrorViewModel()
+                {
+                    Message = "Requester must have an AD account."
+                });
             }
 
             Request request = new Request();
@@ -102,6 +105,11 @@ namespace PAM.Controllers
                 if (review.ReviewerTitle.Equals("Supervisor"))
                 {
                     Employee supervisor = _adService.GetEmployeeByName(request.RequestedFor.SupervisorName);
+                    if (supervisor == null)
+                        return RedirectToAction("Unimplemented", "Error", new ErrorViewModel()
+                        {
+                            Message = "Requester must have a supervisor."
+                        });
                     supervisor = _userService.HasEmployee(supervisor.Username) ?
                         _userService.UpdateEmployee(supervisor) : _userService.CreateEmployee(supervisor);
                     supervisor.IsApprover = true;
