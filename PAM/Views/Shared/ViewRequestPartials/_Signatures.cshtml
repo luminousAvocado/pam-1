@@ -3,34 +3,41 @@
 <div class="card">
   <div class="card-header">Signature(s)</div>
   <div class="card-body">
-    @foreach (var review in Model.Reviews)
+    @if (!Model.Reviews.Any())
     {
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label>@review.ReviewerTitle</label>
-          <span class="form-control">@review.Reviewer.Name</span>
-        </div>
-        <div class="form-group col-md-6">
-          <label>Decision</label>
-          <div class="form-control">
-            @if (review.Completed)
+      <p>No signature(s) are required for this request.</p>
+    }
+    @if (Model.Reviews.Any())
+    {
+      @foreach (var review in Model.Reviews)
+      {
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>@review.ReviewerTitle</label>
+            <span class="form-control">@review.Reviewer.Name</span>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Decision</label>
+            <div class="form-control">
+              @if (review.Completed)
+              {
+                @if ((bool)review.Approved)
+                {
+                  <strong class="text-success">APPROVED</strong> <small>on @review.Timestamp.Value.ToString("MM/dd/yyyy")</small>
+                }
+                else
+                {
+                  <strong class="text-danger">DENIED</strong> <small>on @review.Timestamp.Value.ToString("MM/dd/yyyy")</small>
+                }
+              }
+            </div>
+            @if (review.Completed && review.Comments != null)
             {
-              @if ((bool)review.Approved)
-              {
-                <strong class="text-success">APPROVED</strong> <small>on @review.Timestamp.Value.ToString("MM/dd/yyyy")</small>
-              }
-              else
-              {
-                <strong class="text-danger">DENIED</strong> <small>on @review.Timestamp.Value.ToString("MM/dd/yyyy")</small>
-              }
+              <small class="form-text">@review.Comments</small>
             }
           </div>
-          @if (review.Completed && review.Comments != null)
-          {
-            <small class="form-text">@review.Comments</small>
-          }
         </div>
-      </div>
+      }
     }
   </div>
 </div>
