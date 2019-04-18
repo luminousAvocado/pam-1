@@ -1,13 +1,13 @@
 ﻿@model Request
 
 <div class="card">
-  <div class="card-header">Signature(s)</div>
+  <div class="card-header">Signatures</div>
   <div class="card-body">
     @if (!Model.Reviews.Any())
     {
-      <p>No signature(s) are required for this request.</p>
+      <p>No signature required for this request.</p>
     }
-    @if (Model.Reviews.Any())
+    else
     {
       @foreach (var review in Model.Reviews)
       {

@@ -12,7 +12,7 @@
   </ol>
 </nav>
 
-<a asp-action="CreateRequest" class="btn btn-primary float-right mr-2">New Request</a>
+<a asp-action="CreateRequest" class="btn btn-primary float-right">New Request</a>
 
 @if (!allRequests.Any())
 {
@@ -21,7 +21,7 @@
 
 @if (allRequests.Any())
 {
-  <ul class="nav nav-tabs ml-2 mr-2">
+  <ul class="nav nav-tabs">
     @if (draftRequests.Any())
     {
       <li class="nav-item">
