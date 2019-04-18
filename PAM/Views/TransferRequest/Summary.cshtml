@@ -11,6 +11,8 @@
   $(function(){
     var page ='@ViewData["Title"]';
     $("li[data-title='" + page + "']").addClass("active");
+    if ($(".requested-system").length == 0)
+      $(".submit-request").addClass("disabled");
   });
   </script>
 }
@@ -29,7 +31,7 @@
     <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
-    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
+    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary submit-request">Submit Request</a>
   </div>
 </div>
 
@@ -75,7 +77,7 @@
         <tbody>
           @foreach (var requestedSystem in Model.Systems.OrderBy(s => s.AccessType))
           {
-            <tr>
+            <tr class="requested-system">
               <td>@requestedSystem.System.SystemId</td>
               <td>@requestedSystem.System.Name</td>
               <td class="d-none d-md-table-cell">@requestedSystem.System.Description</td>
@@ -132,6 +134,6 @@
     <a asp-controller="Request" asp-action="MyRequests" class="btn btn-secondary">Back to Drafts</a>
   </div>
   <div class="col-6 text-right">
-    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary">Submit Request</a>
+    <a asp-controller="Request" asp-action="SubmitRequest" asp-route-id="@ViewData["id"]" class="btn btn-primary submit-request">Submit Request</a>
   </div>
 </div>

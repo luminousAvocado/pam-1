@@ -193,6 +193,9 @@ namespace PAM.Controllers
             if (!authResult.Succeeded)
                 return new ForbidResult();
 
+            if (request.Systems.Count == 0)
+                return RedirectEditRequest(id, request.RequestType);
+
             request.RequestStatus = RequestStatus.UnderReview;
             request.SubmittedOn = DateTime.Now;
             _requestService.SaveChanges();
