@@ -120,7 +120,7 @@ namespace PAM
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/Default");
                 _logger.LogInformation($"Environment: {_env.EnvironmentName}");
             }
 
