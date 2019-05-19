@@ -87,9 +87,12 @@ namespace PAM.Services
             employee.CellPhone = result.GetProperty("mobile");
 
             string supervisor = result.GetProperty("supervisor") ?? result.GetProperty("manager");
-            int startIndex = supervisor.IndexOf("CN=") + 3;
-            int endIndex = supervisor.IndexOf(',', startIndex);
-            employee.SupervisorName = supervisor.Substring(startIndex, (endIndex - startIndex));
+            if (supervisor != null)
+            {
+                int startIndex = supervisor.IndexOf("CN=") + 3;
+                int endIndex = supervisor.IndexOf(',', startIndex);
+                employee.SupervisorName = supervisor.Substring(startIndex, (endIndex - startIndex));
+            }
 
             return employee;
         }

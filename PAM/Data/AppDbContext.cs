@@ -44,7 +44,7 @@ namespace PAM.Data
             modelBuilder.Entity<Unit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<Unit>().HasQueryFilter(u => !u.Deleted);
 
-            modelBuilder.Entity<SupportUnit>().HasAlternateKey(u => u.Email);
+            modelBuilder.Entity<SupportUnit>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<SupportUnit>().Property(u => u.Deleted).HasDefaultValue(false);
             modelBuilder.Entity<SupportUnit>().HasQueryFilter(u => !u.Deleted);
 
@@ -76,7 +76,7 @@ namespace PAM.Data
                 v => (SystemAccessType)Enum.Parse(typeof(SystemAccessType), v));
 
             modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Username);
-            modelBuilder.Entity<Employee>().HasAlternateKey(e => e.Email);
+            modelBuilder.Entity<Employee>().HasIndex(e => e.Email).IsUnique();
             modelBuilder.Entity<Employee>().HasData(new Employee()
             {
                 EmployeeId = 1,
