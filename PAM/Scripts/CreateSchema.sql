@@ -60,8 +60,7 @@ CREATE TABLE [SupportUnits] (
     [Name] nvarchar(max) NOT NULL,
     [Email] nvarchar(450) NOT NULL,
     [Deleted] bit NOT NULL DEFAULT 0,
-    CONSTRAINT [PK_SupportUnits] PRIMARY KEY ([SupportUnitId]),
-    CONSTRAINT [AK_SupportUnits_Email] UNIQUE ([Email])
+    CONSTRAINT [PK_SupportUnits] PRIMARY KEY ([SupportUnitId])
 );
 
 GO
@@ -137,7 +136,6 @@ CREATE TABLE [Employees] (
     [IsAdmin] bit NOT NULL,
     [IsApprover] bit NOT NULL,
     CONSTRAINT [PK_Employees] PRIMARY KEY ([EmployeeId]),
-    CONSTRAINT [AK_Employees_Email] UNIQUE ([Email]),
     CONSTRAINT [AK_Employees_Username] UNIQUE ([Username]),
     CONSTRAINT [FK_Employees_SupportUnits_SupportUnitId] FOREIGN KEY ([SupportUnitId]) REFERENCES [SupportUnits] ([SupportUnitId]) ON DELETE NO ACTION
 );
@@ -359,6 +357,10 @@ CREATE INDEX [IX_CompletedForms_RequestId] ON [CompletedForms] ([RequestId]);
 
 GO
 
+CREATE UNIQUE INDEX [IX_Employees_Email] ON [Employees] ([Email]);
+
+GO
+
 CREATE INDEX [IX_Employees_SupportUnitId] ON [Employees] ([SupportUnitId]);
 
 GO
@@ -403,6 +405,10 @@ CREATE INDEX [IX_Reviews_ReviewerId] ON [Reviews] ([ReviewerId]);
 
 GO
 
+CREATE UNIQUE INDEX [IX_SupportUnits_Email] ON [SupportUnits] ([Email]);
+
+GO
+
 CREATE INDEX [IX_SystemAccesses_ConfirmedById] ON [SystemAccesses] ([ConfirmedById]);
 
 GO
@@ -444,7 +450,7 @@ CREATE INDEX [IX_UnitSystems_SystemId] ON [UnitSystems] ([SystemId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20190412012002_InitialSchema', N'2.2.1-servicing-10028');
+VALUES (N'20190519201812_InitialSchema', N'2.2.1-servicing-10028');
 
 GO
 

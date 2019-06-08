@@ -21,7 +21,8 @@
       });
       var accessSystemIds = @Html.Raw(ViewData["accessSystemIds"]);
       $(".additionalSystem").each(function () {
-        if (accessSystemIds.includes(parseInt($(this).attr("data-system-id"))))
+        // if (accessSystemIds.includes(parseInt($(this).attr("data-system-id"))))
+        if (accessSystemIds.indexOf(parseInt($(this).attr("data-system-id"))) > -1)
           $(this).remove();
       });
       $(".delSystem").click(function (event) {
@@ -39,7 +40,8 @@
           return item.Name + (item.Description ? " - " + item.Description : "");
         },
         afterSelect: function (item) {
-          if (accessSystemIds.includes(item.SystemId)) {
+          // if (accessSystemIds.includes(item.SystemId)) {
+          if (accessSystemIds.indexOf(item.SystemId) > -1) {
             $("#addSystem").val("");
             return;
           }

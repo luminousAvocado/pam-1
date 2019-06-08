@@ -90,10 +90,10 @@ namespace PAM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Approve(int id, string password, string comments)
+        public async Task<IActionResult> Approve(int id, string signature, string comments)
         {
             string username = ((ClaimsIdentity)User.Identity).GetClaim(ClaimTypes.NameIdentifier);
-            if (!_adService.Authenticate(username, password))
+            if (!_adService.Authenticate(username, signature)) // signature is the AD password
                 RedirectToAction(nameof(EditReview), new { id });
 
             Review review = _requestService.GetReview(id);

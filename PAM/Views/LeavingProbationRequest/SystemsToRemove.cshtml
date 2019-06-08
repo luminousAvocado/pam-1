@@ -22,11 +22,13 @@
       var requestedSystemIds = @Html.Raw(ViewData["requestedSystemIds"]);
       var accessSystemIds = @Html.Raw(ViewData["accessSystemIds"]);
       $("input[type='checkbox'][name='systemIds']").each(function () {
-        if (requestedSystemIds.includes(parseInt($(this).val())))
+        // if (requestedSystemIds.includes(parseInt($(this).val())))
+        if (requestedSystemIds.indexOf(parseInt($(this).val())) > -1)
           $(this).prop("checked", true);
       });
       $(".additionalSystem").each(function () {
-        if (accessSystemIds.includes(parseInt($(this).attr("data-system-id"))))
+        // if (accessSystemIds.includes(parseInt($(this).attr("data-system-id"))))
+        if (accessSystemIds.indexOf(parseInt($(this).attr("data-system-id"))) > -1)
           $(this).remove();
       });
       $(".delSystem").click(function (event) {
